@@ -261,6 +261,11 @@ namespace FeltAdmin.Viewmodels
                 m_orionResultUpdater.AddSums(newRegistrations, this.OrionResultViewModel.OrionResults);
                 this.OrionCommunicationViewModel.UpdateChangesToOrion();
             }
+
+            if (finale.Any())
+            {
+
+            }
         }
 
         void OrionTeamsSetupViewModel_MoveRegistrations(object sender, FeltAdminCommon.Orion.MoveEventArgs e)
