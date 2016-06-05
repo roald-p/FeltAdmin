@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeltAdmin", "FeltAdmin\FeltAdmin.csproj", "{90876549-5C93-4138-9ADE-3939DDD7B505}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeltAdminTest", "Test\FeltAdminTest\FeltAdminTest.csproj", "{372A99DE-965B-4F3F-B685-210018C4C81B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeltAdminServer", "Server\FeltAdminServer\FeltAdminServer.csproj", "{72499A9A-E85B-497E-89B5-1EF86F885B06}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeltResult", "FeltResult\FeltResult\FeltResult.csproj", "{8290A2C8-E413-480E-83FC-64F40B04019D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeltAdminCommon", "Common\FeltAdminCommon\FeltAdminCommon.csproj", "{CBC07E4A-577F-472C-B467-06BFE7D24E9E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FeltSpooler", "FeltSpooler\FeltSpooler.csproj", "{C1CD2CA8-8972-420C-92E2-FD727615CD69}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{90876549-5C93-4138-9ADE-3939DDD7B505}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{90876549-5C93-4138-9ADE-3939DDD7B505}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{90876549-5C93-4138-9ADE-3939DDD7B505}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{90876549-5C93-4138-9ADE-3939DDD7B505}.Release|Any CPU.Build.0 = Release|Any CPU
+		{372A99DE-965B-4F3F-B685-210018C4C81B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{372A99DE-965B-4F3F-B685-210018C4C81B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{372A99DE-965B-4F3F-B685-210018C4C81B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{372A99DE-965B-4F3F-B685-210018C4C81B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72499A9A-E85B-497E-89B5-1EF86F885B06}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72499A9A-E85B-497E-89B5-1EF86F885B06}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72499A9A-E85B-497E-89B5-1EF86F885B06}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72499A9A-E85B-497E-89B5-1EF86F885B06}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8290A2C8-E413-480E-83FC-64F40B04019D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8290A2C8-E413-480E-83FC-64F40B04019D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8290A2C8-E413-480E-83FC-64F40B04019D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8290A2C8-E413-480E-83FC-64F40B04019D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBC07E4A-577F-472C-B467-06BFE7D24E9E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBC07E4A-577F-472C-B467-06BFE7D24E9E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBC07E4A-577F-472C-B467-06BFE7D24E9E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBC07E4A-577F-472C-B467-06BFE7D24E9E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1CD2CA8-8972-420C-92E2-FD727615CD69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1CD2CA8-8972-420C-92E2-FD727615CD69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1CD2CA8-8972-420C-92E2-FD727615CD69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1CD2CA8-8972-420C-92E2-FD727615CD69}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
