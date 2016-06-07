@@ -363,8 +363,8 @@
         <DataTemplate x:Key="FlyttetSkytter" DataType="Viewmodels:OrionTeamsSetupViewModel">
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <ListView Grid.Row="0" ItemsSource="{Binding MovedOrionRegistrations}" ItemTemplate="{StaticResource FlyttetSkytterTemplate}"/>
                 <Button Grid.Row="1" Command="{Binding TransferMovedOrionCommand}" Content="Fjern valgte hold og send til orions"/>

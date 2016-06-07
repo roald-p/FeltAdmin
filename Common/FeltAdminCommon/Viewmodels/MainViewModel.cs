@@ -250,22 +250,22 @@ namespace FeltAdmin.Viewmodels
 
         void LeonCommunication_NewLeonRegistrations(object sender, LeonCommunication.LeonEventArgs e)
         {
-            var finale = e.NewRegistrations.Where(r => r.Team > 100);
-            var innledende = e.NewRegistrations.Where(r => r.Team <= 100);
+            //var finale = e.NewRegistrations.Where(r => r.Team > 100);
+            //var innledende = e.NewRegistrations.Where(r => r.Team <= 100);
 
-            if (innledende.Any())
-            {
-                var innledendelist = innledende.ToList();
-                Leon.AddNewRegistrations(innledendelist);
-                var newRegistrations = this.OrionTeamsSetupViewModel.AddNewRegistrations(innledendelist);
+            //if (innledende.Any())
+            //{
+                //var innledendelist = innledende.ToList();
+                Leon.AddNewRegistrations(e.NewRegistrations);
+                var newRegistrations = this.OrionTeamsSetupViewModel.AddNewRegistrations(e.NewRegistrations);
                 m_orionResultUpdater.AddSums(newRegistrations, this.OrionResultViewModel.OrionResults);
                 this.OrionCommunicationViewModel.UpdateChangesToOrion();
-            }
+            //}
 
-            if (finale.Any())
-            {
+            //if (finale.Any())
+            //{
 
-            }
+            //}
         }
 
         void OrionTeamsSetupViewModel_MoveRegistrations(object sender, FeltAdminCommon.Orion.MoveEventArgs e)
