@@ -85,6 +85,7 @@
     <Compile Include="Helpers\DataHelper.cs" />
     <Compile Include="Helpers\Settings.cs" />
     <Compile Include="Helpers\SettingsHelper.cs" />
+    <Compile Include="Leon\FinishedPerson.cs" />
     <Compile Include="Leon\LeonPerson.cs" />
     <Compile Include="Leon\LeonReader.cs" />
     <Compile Include="Leon\LeonWriter.cs" />

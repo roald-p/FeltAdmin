@@ -8,6 +8,7 @@ namespace FeltAdmin.Database.API
         OrionSetup = 2,
         OrionResult = 3,
         LeonResult = 4,
-        MinneRegistration = 5
+        MinneRegistration = 5,
+        FinishedShooter = 6
     }
 }

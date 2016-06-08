@@ -12,6 +12,8 @@ using FeltAdmin.Diagnostics;
 using FeltAdmin.Leon;
 using FeltAdmin.Orion;
 
+using FeltAdminCommon.Leon;
+
 namespace FeltAdmin.Database.Engine
 {
     public class DatabaseApi
@@ -174,6 +176,9 @@ namespace FeltAdmin.Database.Engine
                         break;
                     case TableName.MinneRegistration:
                         result.Add(MinneRegistration.Parse(line));
+                        break;
+                    case TableName.FinishedShooter:
+                        result.Add(FinishedPerson.Parse(line));
                         break;
                 }
             }

@@ -2,9 +2,13 @@
 using System.Linq;
 using System.Windows.Documents;
 
+using FeltAdmin.Database.API;
+using FeltAdmin.Database.Engine;
 using FeltAdmin.Helpers;
 using FeltAdmin.Leon;
 using FeltAdmin.Orion;
+
+using FeltAdminCommon.Leon;
 
 using Microsoft.Practices.Prism.Commands;
 using System.Windows.Input;
@@ -221,6 +225,16 @@ namespace FeltAdmin.Viewmodels
                 this.OrionTeamsSetupViewModel.OrionRegistrations,
                 this.OrionResultViewModel.OrionResults,
                 out finishedShooters);
+            if (finishedShooters.Any())
+            {
+                var finishedPersons = Leon.LeonPersons.Where(l => finishedShooters.Contains(l.ShooterId));
+                var maxTeamNumber = finishedPersons.Max(f => f.Team);
+                var shouldBeFinished = Leon.LeonPersons.Where(l => l.Team <= maxTeamNumber).Select(l => l.ShooterId);
+                var finishedRegistrations =
+                    DatabaseApi.LoadCompetitionFromTable(TableName.FinishedShooter).OfType<FinishedPerson>().Select(f => f.ShooterId);
+                var missingPersons = shouldBeFinished.Except(finishedRegistrations).Except(finishedShooters);
+                finishedShooters.AddRange(missingPersons);
+            }
 
             this.OrionCommunicationViewModel.UpdateChangesToOrion(updatedRegistrations);
             this.OrionResultViewModel.AddNewRegistrations(newResults);

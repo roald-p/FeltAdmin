@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 
 using FeltAdminCommon.Helpers;
+using FeltAdminCommon.Leon;
 
 namespace FeltAdmin.Leon
 {
@@ -137,6 +138,15 @@ namespace FeltAdmin.Leon
 
                     leonResultsBane.Add(leonLine);
                 }
+
+                var finishedPerson = new FinishedPerson
+                                     {
+                                         Name = leonPerson.Name,
+                                         ShooterId = leonPerson.ShooterId,
+                                         Target = leonPerson.Target,
+                                         Team = leonPerson.Team
+                                     };
+                DatabaseApi.Save(finishedPerson);
             }
 
             if (leonResultsFelt.Any())

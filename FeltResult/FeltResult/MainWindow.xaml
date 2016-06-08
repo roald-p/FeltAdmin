@@ -42,7 +42,7 @@
                     <ColumnDefinition Width="40" SharedSizeGroup="E"/>
                     <ColumnDefinition Width="100" SharedSizeGroup="F"/>
                     <ColumnDefinition Width="60" SharedSizeGroup="G"/>
-                    <ColumnDefinition Width="150" SharedSizeGroup="H"/>
+                    <ColumnDefinition Width="170" SharedSizeGroup="H"/>
                     <ColumnDefinition Width="100" SharedSizeGroup="I"/>
                 </Grid.ColumnDefinitions>
                 <Button Margin="5" Command="{Binding ToggleStarCommand}">
