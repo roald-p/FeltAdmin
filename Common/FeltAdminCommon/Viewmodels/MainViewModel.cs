@@ -24,6 +24,19 @@ namespace FeltAdmin.Viewmodels
 
         public OrionResultViewModel OrionResultViewModel { get; set; }
 
+        public string LeonTeamToRegister
+        {
+            get
+            {
+                return this.m_leonTeamToRegister;
+            }
+            set
+            {
+                this.m_leonTeamToRegister = value;
+                this.OnPropertyChanged("LeonTeamToRegister");
+            }
+        }
+
         public LeonViewModel Leon
         {
             get
@@ -67,6 +80,8 @@ namespace FeltAdmin.Viewmodels
 
         private DelegateCommand m_startProductionCommand;
 
+        private DelegateCommand m_etterRegistrerCommand;
+
         private OrionSetupViewModel m_mainOrionViewModel;
 
         private DatabaseSetup m_databaseSetup;
@@ -83,9 +98,38 @@ namespace FeltAdmin.Viewmodels
 
         private bool m_productionMode;
 
+        private string m_leonTeamToRegister;
+
         public delegate void DisableDbSelect(object sender);
 
         public event DisableDbSelect DisableDb;
+
+        public ICommand EtterRegistrerCommand
+        {
+            get
+            {
+                if (m_etterRegistrerCommand == null)
+                {
+                    m_etterRegistrerCommand = new DelegateCommand(this.EtterRegistrerExecute);
+                }
+
+                return m_etterRegistrerCommand;
+            }
+        }
+
+        public void EtterRegistrerExecute()
+        {
+            if (string.IsNullOrWhiteSpace(this.LeonTeamToRegister))
+            {
+                return;
+            }
+
+            int maxTeam = 0;
+            if (int.TryParse(this.LeonTeamToRegister, out maxTeam))
+            {
+                this.RegisterResults(maxTeam);
+            }
+        }
 
         public ICommand SaveSettingsCommand
         {
@@ -137,6 +181,7 @@ namespace FeltAdmin.Viewmodels
 
         public void StartProductionExecute()
         {
+            SaveSettingsExecute();
             var settings = SettingsHelper.GetSettings();
 
             LeonCommunication.NewLeonRegistrations += LeonCommunication_NewLeonRegistrations;
@@ -213,6 +258,37 @@ namespace FeltAdmin.Viewmodels
             else
             {
                 LeonCommunication = new LeonCommunication();
+            }
+        }
+
+        private void RegisterResults(int uptoTeamNumber)
+        {
+            if (this.Leon == null || this.OrionResultViewModel == null || this.MainOrionViewModel == null)
+            {
+                return;
+            }
+
+            var toBeRegistered = Leon.LeonPersons.Where(l => l.Team <= uptoTeamNumber).Select(l => l.ShooterId).ToList();
+            if (toBeRegistered != null && toBeRegistered.Any())
+            {
+                if (m_minneViewModel != null && m_minneViewModel.MinneRegistrations != null)
+                {
+                    LeonWriter.WriteLeonResults(
+                        toBeRegistered,
+                        this.OrionResultViewModel.OrionResults,
+                        this.MainOrionViewModel,
+                        this.Leon.LeonPersons,
+                        this.m_minneViewModel.MinneRegistrations);
+                }
+                else
+                {
+                    LeonWriter.WriteLeonResults(
+                        toBeRegistered,
+                        this.OrionResultViewModel.OrionResults,
+                        this.MainOrionViewModel,
+                        this.Leon.LeonPersons,
+                        null);
+                }
             }
         }
 
