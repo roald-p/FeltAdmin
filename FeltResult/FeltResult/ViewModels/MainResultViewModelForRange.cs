@@ -355,6 +355,11 @@ namespace FeltResult.ViewModels
                 SelectedTeamIndex = 1;
             }
 
+            if (!m_allRegistrations.Any())
+            {
+                return;
+            }
+
             var maxTeamIndex = m_allRegistrations.Max(r => r.Team);
             if (SelectedTeamIndex > maxTeamIndex)
             {
