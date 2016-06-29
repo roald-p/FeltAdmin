@@ -152,9 +152,17 @@ namespace FeltAdminServer
                             var orionResult = CalculateOrionAndRange.GetResultForThisRange(results, orion, rangeViewModel);
                             if (orionResult == null)
                             {
-                                var fh = new FeltHold { Hits = 0, InnerHits = 0 };
-                                resultForShooter.FeltHolds.Add(fh);
-                                series.Add("x/x");
+                                if (rangeViewModel.ResultType == ResultType.Felt)
+                                {
+                                    var fh = new FeltHold { Hits = 0, InnerHits = 0 };
+                                    resultForShooter.FeltHolds.Add(fh);
+                                    series.Add("x/x");
+                                }
+                                else
+                                {
+                                    resultForShooter.Minne = 0;
+                                    resultForShooter.MinneInner = 0;
+                                }
                             }
                             else
                             {
