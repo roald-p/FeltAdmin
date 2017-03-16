@@ -98,8 +98,23 @@ namespace FeltAdmin.Leon
             minneReg.Name = touples[3];
             minneReg.ClubName = touples[4];
             minneReg.Class = touples[5];
-            minneReg.SumIn = int.Parse(touples[6]);
-            minneReg.ShooterId = int.Parse(touples[7]);
+            if (!string.IsNullOrEmpty(touples[6]))
+            {
+                int sum = 0;
+                if (int.TryParse(touples[6], out sum))
+                {
+                    minneReg.SumIn = sum;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(touples[7]))
+            {
+                int id = 0;
+                if (int.TryParse(touples[7], out id))
+                {
+                    minneReg.ShooterId = id;
+                }
+            }
 
             return minneReg;
         }
