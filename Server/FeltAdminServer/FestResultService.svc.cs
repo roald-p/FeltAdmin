@@ -202,39 +202,39 @@ namespace FeltAdminServer
                     }
                 }
 
-                ////foreach (var orionResult in results)
-                ////{
-                ////    if (orionResult.ResultType == ResultType.Felt)
-                ////    {
-                ////        if (orionResult.DoubleRange)
-                ////        {
-                ////            var fh1 = new FeltHold { Hits = orionResult.GetSum(ResultType.Felt, 1), InnerHits = orionResult.GetInnerHits(1) };
-                ////            var fh2 = new FeltHold { Hits = orionResult.GetSum(ResultType.Felt, 2), InnerHits = orionResult.GetInnerHits(2) };
-                ////            resultForShooter.FeltHolds.Add(fh1);
-                ////            resultForShooter.TotalSum += fh1.Hits;
-                ////            resultForShooter.TotalInnerHits += fh1.InnerHits;
-                ////            series.Add(string.Format("{0}/{1}", fh1.Hits, fh1.InnerHits));
+                //////foreach (var orionResult in results)
+                //////{
+                //////    if (orionResult.ResultType == ResultType.Felt)
+                //////    {
+                //////        if (orionResult.DoubleRange)
+                //////        {
+                //////            var fh1 = new FeltHold { Hits = orionResult.GetSum(ResultType.Felt, 1), InnerHits = orionResult.GetInnerHits(1) };
+                //////            var fh2 = new FeltHold { Hits = orionResult.GetSum(ResultType.Felt, 2), InnerHits = orionResult.GetInnerHits(2) };
+                //////            resultForShooter.FeltHolds.Add(fh1);
+                //////            resultForShooter.TotalSum += fh1.Hits;
+                //////            resultForShooter.TotalInnerHits += fh1.InnerHits;
+                //////            series.Add(string.Format("{0}/{1}", fh1.Hits, fh1.InnerHits));
 
-                ////            resultForShooter.FeltHolds.Add(fh2);
-                ////            resultForShooter.TotalSum += fh2.Hits;
-                ////            resultForShooter.TotalInnerHits += fh2.InnerHits;
-                ////            series.Add(string.Format("{0}/{1}", fh2.Hits, fh2.InnerHits));
-                ////        }
-                ////        else
-                ////        {
-                ////            var fh = new FeltHold { Hits = orionResult.GetSum(), InnerHits = orionResult.GetInnerHits() };
-                ////            resultForShooter.FeltHolds.Add(fh);
-                ////            resultForShooter.TotalSum += fh.Hits;
-                ////            resultForShooter.TotalInnerHits += fh.InnerHits;
-                ////            series.AddRange(orionResult.GetPrintableSeries());
-                ////        }
-                ////    }
-                ////    else
-                ////    {
-                ////        resultForShooter.Minne = orionResult.GetSum();
-                ////        resultForShooter.MinneInner = orionResult.GetInnerHits();
-                ////    }
-                ////}
+                //////            resultForShooter.FeltHolds.Add(fh2);
+                //////            resultForShooter.TotalSum += fh2.Hits;
+                //////            resultForShooter.TotalInnerHits += fh2.InnerHits;
+                //////            series.Add(string.Format("{0}/{1}", fh2.Hits, fh2.InnerHits));
+                //////        }
+                //////        else
+                //////        {
+                //////            var fh = new FeltHold { Hits = orionResult.GetSum(), InnerHits = orionResult.GetInnerHits() };
+                //////            resultForShooter.FeltHolds.Add(fh);
+                //////            resultForShooter.TotalSum += fh.Hits;
+                //////            resultForShooter.TotalInnerHits += fh.InnerHits;
+                //////            series.AddRange(orionResult.GetPrintableSeries());
+                //////        }
+                //////    }
+                //////    else
+                //////    {
+                //////        resultForShooter.Minne = orionResult.GetSum();
+                //////        resultForShooter.MinneInner = orionResult.GetInnerHits();
+                //////    }
+                //////}
 
                 resultForShooter.TotalResult = string.Join(" ", series);
                 result.Add(resultForShooter);
