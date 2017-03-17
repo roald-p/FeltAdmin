@@ -97,8 +97,23 @@ namespace FeltAdmin.Leon
             leonPerson.Name = touples[3];
             leonPerson.ClubName = touples[4];
             leonPerson.Class = touples[5];
-            leonPerson.SumIn = int.Parse(touples[6]);
-            leonPerson.ShooterId = int.Parse(touples[7]);
+            if (!string.IsNullOrEmpty(touples[6]))
+            {
+                int sum = 0;
+                if (int.TryParse(touples[6], out sum))
+                {
+                    leonPerson.SumIn = sum;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(touples[7]))
+            {
+                int id = 0;
+                if (int.TryParse(touples[7], out id))
+                {
+                    leonPerson.ShooterId = id;
+                }
+            }
 
             return leonPerson;
         }

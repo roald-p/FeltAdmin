@@ -411,6 +411,15 @@
             <TabItem Header="Etterregistrer" Content="{Binding}" ContentTemplate="{StaticResource Etterregistrer}" Visibility="{Binding ProductionMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
         </TabControl>
         <StackPanel VerticalAlignment="Bottom" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="{Binding InitDatabaseMode, Converter={StaticResource OppositeBoolToVisibilityConverter}}">
+            <Button Command="{Binding UseSelectedTemplateCommand}" Margin="5" HorizontalAlignment="Left" Content="Bruke Template" IsEnabled="{Binding SetupModeTemplateAvailable}"/>
+            <ComboBox
+            HorizontalAlignment="Left"
+            Margin="10,5,0,0"
+            VerticalAlignment="Top"
+            Width="120"
+            ItemsSource="{Binding TemplatesfileNames}"
+            SelectedItem="{Binding SelectedTemplatesfileName}" Visibility="{Binding TemplateVisibility}"/>
+            <Button Command="{Binding SaveSettingsAsTemplateCommand}" Margin="5" HorizontalAlignment="Left" Content="Lagre Template" IsEnabled="{Binding SetupMode}"/>
             <Button Command="{Binding SaveSettingsCommand}" Margin="5" HorizontalAlignment="Left" Content="Lagre oppsett" IsEnabled="{Binding SetupMode}"/>
             <Button Command="{Binding StartProductionCommand}" Margin="5" HorizontalAlignment="Left" Content="Start" IsEnabled="{Binding SetupMode}"/>
             <!--<Button Margin="5" HorizontalAlignment="Left" Content="Registrer alt"/>-->

@@ -216,5 +216,12 @@ namespace FeltAdmin.Database.Engine
         {
             return m_databasePath;
         }
+
+        public static string GetTemplatePaths()
+        {
+            string template = Path.GetFileName(m_databasePath);
+            return template;
+        }
+        
     }
 }
