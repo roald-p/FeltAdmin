@@ -48,7 +48,12 @@ namespace FeltAdmin.Viewmodels
         {
             get
             {
-                return Parent.SetupMode;
+                if (Parent != null)
+                {
+                    return Parent.SetupMode;
+                }
+
+                return true;
             }
         }
 

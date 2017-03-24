@@ -23,11 +23,11 @@ namespace FeltAdminTest.Database
             var expectedPath1 = Path.Combine(@"C:\FeltAdmin\TEST\Database", "TestStevne_2016.02.26-1");
             var expectedPath2 = Path.Combine(@"C:\FeltAdmin\TEST\Database", "TestStevne_2016.02.26-2");
 
-            DatabaseApi.CreateNewCompetition("TestStevne", new DateTime(2016, 2, 26));
+            DatabaseApi.CreateNewCompetition("FeltAdmin","TestStevne", new DateTime(2016, 2, 26));
             Thread.Sleep(100);
-            DatabaseApi.CreateNewCompetition("TestStevne", new DateTime(2016, 2, 26));
+            DatabaseApi.CreateNewCompetition("FeltAdmin","TestStevne", new DateTime(2016, 2, 26));
             Thread.Sleep(100);
-            DatabaseApi.CreateNewCompetition("TestStevne", new DateTime(2016, 2, 26));
+            DatabaseApi.CreateNewCompetition("FeltAdmin", "TestStevne", new DateTime(2016, 2, 26));
 
             var directories = DatabaseApi.GetAllCompetitions();
 
@@ -80,7 +80,7 @@ namespace FeltAdminTest.Database
                 Log.Error(ex, "Test");
             }
 
-            DatabaseApi.CreateNewCompetition(competitionName, date);
+            DatabaseApi.CreateNewCompetition("FeltAdmin", competitionName, date);
         }
 
         private void SaveLeonPersons(int number)

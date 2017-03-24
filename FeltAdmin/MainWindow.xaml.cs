@@ -6,6 +6,12 @@ using System.Windows;
 
 namespace FeltAdmin
 {
+    using System.IO;
+    using System.Security.Cryptography;
+    using System.Text;
+
+    using FeltAdminCommon.Lisens;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -19,7 +25,13 @@ namespace FeltAdmin
 
             var logfile = ConfigurationLoader.GetAppSettingsValue("LogFile");
 
-            var LoggingLevelsString = ConfigurationLoader.GetAppSettingsValue("LoggingLevels");
+            var Skytterlag = ConfigurationLoader.GetAppSettingsValue("Skytterlag");
+            var Lisens = ConfigurationLoader.GetAppSettingsValue("Lisens");
+
+
+          
+
+             var LoggingLevelsString = ConfigurationLoader.GetAppSettingsValue("LoggingLevels");
             LoggingLevels enumLowestTrace = LoggingLevels.Info;
             if (!string.IsNullOrEmpty(LoggingLevelsString))
             {
@@ -31,6 +43,11 @@ namespace FeltAdmin
 
             var fileAppsender = new FileAppender(logfile, enumLowestTrace, LoggingLevels.Trace);
             Log.AddAppender(fileAppsender);
+            if (!LisensChecker.Validate(Skytterlag, DateTime.Now, Lisens))
+            {
+                Log.Error("Lisens not valid for {0}", Skytterlag);
+                Application.Current.Shutdown();
+            }
 
             Log.Info("FeltAdmin started");
 
@@ -38,10 +55,35 @@ namespace FeltAdmin
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += CurrentDomainUnhandledException;
         }
+        public static byte[] StringToByteArray(String hex)
+        {
+            int NumberChars = hex.Length;
+            byte[] bytes = new byte[NumberChars / 2];
+            for (int i = 0; i < NumberChars; i += 2)
+                bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
+            return bytes;
+        }
+
+
+
+        public static string ByteArrayToString(byte[] ba)
+        {
+            string hex = BitConverter.ToString(ba);
+            return hex.Replace("-", "");
+        }
 
         void model_DisableDb(object sender)
         {
-            tabControl.SelectedIndex = 1;
+            var index = sender as int?;
+            if (index.HasValue)
+            {
+                tabControl.SelectedIndex = index.Value;
+            }
+            else
+            {
+                tabControl.SelectedIndex = 1;
+            }
+            
         }
 
         private static void CurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -58,5 +100,6 @@ namespace FeltAdmin
             ////model.Leon = new LeonViewModel { LeonRegistrations = new ObservableCollection<LeonPerson>(leonPersons) };
             return model;
         }
+       
     }
 }

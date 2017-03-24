@@ -92,6 +92,7 @@
     <Compile Include="Leon\LeonWriter.cs" />
     <Compile Include="Leon\MinneReader.cs" />
     <Compile Include="Leon\MinneRegistration.cs" />
+    <Compile Include="Lisens\Lisens.cs" />
     <Compile Include="Orion\MoveEventArgs.cs" />
     <Compile Include="Orion\OrionGenerate.cs" />
     <Compile Include="Orion\OrionReader.cs" />

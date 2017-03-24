@@ -18,6 +18,8 @@ namespace FeltAdmin.Database.Engine
 {
     public class DatabaseApi
     {
+        
+        private static string m_templatePath = ConfigurationLoader.GetAppSettingsValue("TemplatePath");
         private static string m_databaseBasePath = ConfigurationLoader.GetAppSettingsValue("DatabasePath");
         private static string m_databaseBasePath100m = ConfigurationLoader.GetAppSettingsValue("DatabasePath100m");
         private static string m_databaseBasePath200m = ConfigurationLoader.GetAppSettingsValue("DatabasePath200m");
@@ -37,7 +39,7 @@ namespace FeltAdmin.Database.Engine
             }
         }
 
-        public static void CreateNewCompetition(string nameOfEvent, DateTime startOfEvent)
+        public static void CreateNewCompetition(string usetemplate ,string nameOfEvent, DateTime startOfEvent)
         {
             if (string.IsNullOrEmpty(m_databaseBasePath))
             {
@@ -48,6 +50,11 @@ namespace FeltAdmin.Database.Engine
             {
                 Directory.CreateDirectory(m_databaseBasePath);
             }
+            var path = GetTemplatePaths();
+            var templateFile = usetemplate + ".template";
+            var templateFullName = Path.Combine(path, templateFile);
+
+
 
             var nameOfEventWithDate = string.Format("{0}_{1}", nameOfEvent, startOfEvent.ToString("yyyy.MM.dd"));
             m_databasePath = Path.Combine(m_databaseBasePath, nameOfEventWithDate);
@@ -69,6 +76,10 @@ namespace FeltAdmin.Database.Engine
 
                 Directory.CreateDirectory(m_databasePath);
             }
+
+            string databasetemplateFile = Path.Combine(m_databasePath, "FeltAdmin.xml");
+
+            File.Copy(templateFullName, databasetemplateFile);
         }
 
         public static List<string> GetAllCompetitions100m()
@@ -219,8 +230,7 @@ namespace FeltAdmin.Database.Engine
 
         public static string GetTemplatePaths()
         {
-            string template = Path.GetFileName(m_databasePath);
-            return template;
+            return m_templatePath;
         }
         
     }

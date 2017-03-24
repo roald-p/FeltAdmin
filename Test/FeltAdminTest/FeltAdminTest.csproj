@@ -49,13 +49,16 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework" />
+        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
+          <Private>False</Private>
+        </Reference>
       </ItemGroup>
     </Otherwise>
   </Choose>
   <ItemGroup>
     <Compile Include="Database\DatabaseApiTests.cs" />
     <Compile Include="LeonReaderTests.cs" />
+    <Compile Include="Lisens\Lisenstests.cs" />
     <Compile Include="Orion\OrionGenerateTests.cs" />
     <Compile Include="Orion\OrionResultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

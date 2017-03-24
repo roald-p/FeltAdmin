@@ -10,9 +10,9 @@ using System.Windows;
 [assembly: AssemblyTitle("FeltAdmin")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("DIPS ASA")]
+[assembly: AssemblyCompany("RAPLAN Data")]
 [assembly: AssemblyProduct("FeltAdmin")]
-[assembly: AssemblyCopyright("Copyright © DIPS ASA 2015")]
+[assembly: AssemblyCopyright("Copyright © RAPLAN Data 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

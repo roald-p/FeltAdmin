@@ -4,7 +4,7 @@
         xmlns:Converters="clr-namespace:FeltAdmin.Converters;assembly=FeltAdminCommon"
         xmlns:Viewmodels="clr-namespace:FeltAdmin.Viewmodels;assembly=FeltAdminCommon"
         xmlns:Orion="clr-namespace:FeltAdmin.Orion;assembly=FeltAdminCommon"
-        Title="MainWindow" Height="561.525" Width="854"
+        Title="FeltAdmin" Height="561" Width="854" 
         >
     <Window.Resources>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -224,7 +224,7 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
                 <StackPanel Grid.Row="0" Orientation="Vertical" Margin="5">
-                    <TextBlock Margin="5" FontSize="16" FontWeight="Bold" Foreground="CadetBlue">Velg database:</TextBlock>
+                    <TextBlock Margin="5" FontSize="16" FontWeight="Bold" Foreground="CadetBlue">Velg Stevne:</TextBlock>
                     <Border BorderThickness="2" BorderBrush="CadetBlue">
                         <StackPanel Orientation="Vertical">
                             <ComboBox MinWidth="100" MaxWidth="500" Width="Auto" Margin="5" HorizontalAlignment="Left" ItemsSource="{Binding DataBaseNames, Mode=TwoWay}" SelectedItem="{Binding SelectedDatabase, Mode=TwoWay}"/>
@@ -233,17 +233,47 @@
                     </Border>
                 </StackPanel>
                 <StackPanel Grid.Row="1" Orientation="Vertical" Margin="5,20,5,5">
-                    <TextBlock Margin="5" FontSize="16" FontWeight="Bold" Foreground="CadetBlue">Opprett ny database:</TextBlock>
+                    <TextBlock Margin="5" FontSize="16" FontWeight="Bold" Foreground="CadetBlue">Opprett nytt Stevne:</TextBlock>
                     <Border BorderThickness="2" BorderBrush="CadetBlue">
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Margin="5">Stevnenavn:</TextBlock>
                                 <TextBox MinWidth="100" Margin="5" Text="{Binding NewDatabaseName}"/>
+                                <TextBlock Margin="5">Definisjon:</TextBlock>
+                                <ComboBox
+                                    HorizontalAlignment="Left"
+                                    Margin="10,5,0,0"
+                                    VerticalAlignment="Top"
+                                    Width="120"
+                                    ItemsSource="{Binding AvailableTemplates}"
+                                    SelectedItem="{Binding SelectedAvailableTemplate}" />
                             </StackPanel>
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Margin="5">Startdato:</TextBlock>
                                 <DatePicker Margin="5" SelectedDate="{Binding NewDatabaseStartTime}"/>
                                 <Button Command="{Binding CreateDatabaseCommand}" Margin="5" HorizontalAlignment="Left" Content="Opprett database"/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </StackPanel>
+                <StackPanel Grid.Row="2" Orientation="Vertical" Margin="5,20,5,5">
+                    <TextBlock Margin="5" FontSize="16" FontWeight="Bold" Foreground="CadetBlue">Definisfjoner:</TextBlock>
+                    <Border BorderThickness="2" BorderBrush="CadetBlue">
+                        <StackPanel Orientation="Vertical">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Margin="5">Navn:</TextBlock>
+                                <TextBox MinWidth="100" Margin="5" Text="{Binding NewTemplateName}"/>
+                                <ComboBox
+                                    HorizontalAlignment="Left"
+                                    Margin="10,5,0,0"
+                                    VerticalAlignment="Top"
+                                    Width="120"
+                                    ItemsSource="{Binding TemplatesfileNames}"
+                                    SelectedItem="{Binding SelectedTemplatesfileName}" Visibility="{Binding TemplateVisibility}"/>      
+                            </StackPanel>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Command="{Binding CreateTemplateCommand}" Margin="5" Width="70" HorizontalAlignment="Left" Content=" Opprett "/>
+                                <Button Command="{Binding ChangeTemplateCommand}" Margin="5" Width="70" HorizontalAlignment="Left" Content=" Vis "/>
                             </StackPanel>
                         </StackPanel>
                     </Border>
@@ -394,15 +424,25 @@
         </Grid.RowDefinitions>
         <TabControl Grid.Row="0" x:Name="tabControl">
             <TabItem Header="Database" Content="{Binding DatabaseSetup}" ContentTemplate="{StaticResource DatabaseTemplate}" Visibility="{Binding InitDatabaseMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
-            <TabItem Header="Leon" Visibility="{Binding InitDatabaseMode, Converter={StaticResource OppositeBoolToVisibilityConverter}}">
+            <TabItem Header="Leon Oppsett" Visibility="{Binding InitTemplateMode, Converter={StaticResource OppositeBoolToVisibilityConverter}}">
                 <TabControl>
                     <TabItem Header="Kommunikasjon" Content="{Binding LeonCommunication}" ContentTemplate="{StaticResource LeonCommunicationSetup}"/>
+                </TabControl>
+            </TabItem>
+            <TabItem Header="Orion Oppsett" Visibility="{Binding InitTemplateMode, Converter={StaticResource OppositeBoolToVisibilityConverter}}">
+                <TabControl>
+                    <TabItem Header="Oppsett" Content="{Binding MainOrionViewModel}" ContentTemplate="{StaticResource OrionSetup}"/>
+                </TabControl>
+            </TabItem>
+            
+            <TabItem Header="Leon" Visibility="{Binding InitProductionMode, Converter={StaticResource OppositeBoolToVisibilityConverter}}">
+                <TabControl>
                     <TabItem Header="Lagoppsett" Content="{Binding Leon}" ContentTemplate="{StaticResource LeonRegistration}"/>
                 </TabControl>
             </TabItem>
-            <TabItem Header="Orion" Visibility="{Binding InitDatabaseMode, Converter={StaticResource OppositeBoolToVisibilityConverter}}">
+
+            <TabItem Header="Orion" Visibility="{Binding InitProductionMode, Converter={StaticResource OppositeBoolToVisibilityConverter}}" Height="23" VerticalAlignment="Top">
                 <TabControl>
-                    <TabItem Header="Oppsett" Content="{Binding MainOrionViewModel}" ContentTemplate="{StaticResource OrionSetup}"/>
                     <TabItem Header="Lagoppsett" Content="{Binding OrionTeamsSetupViewModel}" ContentTemplate="{StaticResource OrionTeamsSetup}"/>
                     <!--<TabItem Header="Kommunikasjon" Content="{Binding OrionCommunicationViewModel}" ContentTemplate="{StaticResource OrionCommunication}"/>-->
                 </TabControl>
@@ -411,17 +451,10 @@
             <TabItem Header="Etterregistrer" Content="{Binding}" ContentTemplate="{StaticResource Etterregistrer}" Visibility="{Binding ProductionMode, Converter={StaticResource BoolToVisibilityConverter}}"/>
         </TabControl>
         <StackPanel VerticalAlignment="Bottom" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Right" Visibility="{Binding InitDatabaseMode, Converter={StaticResource OppositeBoolToVisibilityConverter}}">
-            <Button Command="{Binding UseSelectedTemplateCommand}" Margin="5" HorizontalAlignment="Left" Content="Bruke Template" IsEnabled="{Binding SetupModeTemplateAvailable}"/>
-            <ComboBox
-            HorizontalAlignment="Left"
-            Margin="10,5,0,0"
-            VerticalAlignment="Top"
-            Width="120"
-            ItemsSource="{Binding TemplatesfileNames}"
-            SelectedItem="{Binding SelectedTemplatesfileName}" Visibility="{Binding TemplateVisibility}"/>
-            <Button Command="{Binding SaveSettingsAsTemplateCommand}" Margin="5" HorizontalAlignment="Left" Content="Lagre Template" IsEnabled="{Binding SetupMode}"/>
-            <Button Command="{Binding SaveSettingsCommand}" Margin="5" HorizontalAlignment="Left" Content="Lagre oppsett" IsEnabled="{Binding SetupMode}"/>
-            <Button Command="{Binding StartProductionCommand}" Margin="5" HorizontalAlignment="Left" Content="Start" IsEnabled="{Binding SetupMode}"/>
+
+            <Button Command="{Binding SaveSettingsAsTemplateCommand}" Margin="5" HorizontalAlignment="Left" Content="Lagre Template" IsEnabled="{Binding SetupMode}" Visibility="{Binding InitTemplateMode, Converter={StaticResource OppositeBoolToVisibilityConverter}}"/>
+            <Button Command="{Binding ExitSettingsCommand}" Margin="5" HorizontalAlignment="Left" Content="Avslutt" IsEnabled="{Binding SetupMode}" Visibility="{Binding InitTemplateMode, Converter={StaticResource OppositeBoolToVisibilityConverter}}"/>
+            <Button Command="{Binding StartProductionCommand}" Margin="5" HorizontalAlignment="Left" Content="Start" IsEnabled="{Binding SetupMode}" Visibility="{Binding InitProductionMode, Converter={StaticResource OppositeBoolToVisibilityConverter}}" />
             <!--<Button Margin="5" HorizontalAlignment="Left" Content="Registrer alt"/>-->
         </StackPanel>
     </Grid>

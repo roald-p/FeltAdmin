@@ -21,6 +21,8 @@ namespace FeltAdmin.Viewmodels
     using System.Windows;
     using System.Windows.Forms;
 
+    using FeltAdmin.Diagnostics;
+
     public class MainViewModel : ViewModelBase
     {
         private LeonCommunication m_leonCommunication;
@@ -85,7 +87,9 @@ namespace FeltAdmin.Viewmodels
         private DelegateCommand m_saveSettingsCommand;
 
         private DelegateCommand m_saveSettingsAsTemplateCommand;
-        
+
+        private DelegateCommand m_exitSettingsCommand;
+
         private DelegateCommand m_startProductionCommand;
 
         private DelegateCommand m_etterRegistrerCommand;
@@ -95,6 +99,10 @@ namespace FeltAdmin.Viewmodels
         private DatabaseSetup m_databaseSetup;
 
         private bool m_initDatabaseMode;
+
+        private bool m_initTemplateMode;
+
+        private bool m_initProductionMode;
 
         private LeonViewModel m_leon;
 
@@ -108,9 +116,24 @@ namespace FeltAdmin.Viewmodels
 
         private string m_leonTeamToRegister;
 
+        private string m_selectedTemplatesfileName;
+
+      
+        
         public delegate void DisableDbSelect(object sender);
 
         public event DisableDbSelect DisableDb;
+
+        public MainViewModel()
+        {
+            this.InitDatabaseMode = true;
+            this.InitTemplateMode = true;
+            this.InitProductionMode = true;
+            this.DatabaseSetup = new DatabaseSetup();
+            this.DatabaseSetup.DbSelected += DatabaseSetup_DbSelected;
+            this.DatabaseSetup.TemplateSelected += TemplateSetup_SelectTemplate;
+            this.DatabaseSetup.ChangeTemplate += TemplateChange_SelectTemplate;
+        }
 
         public ICommand EtterRegistrerCommand
         {
@@ -155,7 +178,7 @@ namespace FeltAdmin.Viewmodels
 
         private void UseSelectedTemplateExecute()
         {
-            var templateName = SelectedTemplatesfileName;
+            var templateName = m_selectedTemplatesfileName;
 
             var settings = SettingsHelper.GetTemplateSettings(templateName);
             if (settings.OrionSetting != null)
@@ -187,6 +210,27 @@ namespace FeltAdmin.Viewmodels
                 LeonCommunication = new LeonCommunication();
             }
         }
+
+        
+       public ICommand ExitSettingsCommand
+        {
+            get
+            {
+                if (m_exitSettingsCommand == null)
+                {
+                    m_exitSettingsCommand = new DelegateCommand(this.ExitSettingsTemplateExecute, CanExitSettings);
+                }
+
+                return m_exitSettingsCommand;
+            }
+        }
+
+        private bool CanExitSettings()
+        {
+            return true;
+        }
+
+       
 
         public ICommand SaveSettingsAsTemplateCommand
         {
@@ -276,6 +320,10 @@ namespace FeltAdmin.Viewmodels
             var minneRange = settings.OrionSetting.OrionViewModels.SelectMany(o => o.RangeViews).SingleOrDefault(r => r.MinneShooting == true);
             if (minneRange != null)
             {
+                if (string.IsNullOrEmpty(minneRange.CommunicationSetup.SelectedPath))
+                {
+                    minneRange.CommunicationSetup.SelectedPath = LeonCommunication.CommunicationSetup.SelectedPath;
+                }
                 this.m_minneViewModel = new MinneViewModel(minneRange.CommunicationSetup);
                 this.m_minneViewModel.LoadFromDB();
                 this.m_minneViewModel.StartReadNewRegistrations();
@@ -286,26 +334,36 @@ namespace FeltAdmin.Viewmodels
         }
 
 
+        private void ExitSettingsTemplateExecute()
+        {
+            this.InitTemplateMode = true;
+            this.InitDatabaseMode = true;
+            LeonCommunication = null;
+            MainOrionViewModel = null;
+            if (DisableDb != null)
+            {
+                DisableDb(0);
+            }
+        }
+
+
         public void SaveSettingsTemplateExecute()
         {
-            var settings = SettingsHelper.GetSettings();
+            var settings = new Settings();
             settings.OrionSetting = MainOrionViewModel;
             settings.LeonCommunicationSetting = LeonCommunication;
 
-            SaveFileDialog dlg = new SaveFileDialog();
-            var templateDir=SettingsHelper.GetTemplateDir();
-            dlg.InitialDirectory = templateDir;
-            dlg.Filter = "Template files (*.template)|*.template|All Files (*.*)|*.*";
-            dlg.RestoreDirectory = true;
-            dlg.CheckFileExists = false;
-
-            if (dlg.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            if (string.IsNullOrEmpty(m_selectedTemplatesfileName))
             {
-                string selectedFileName = dlg.FileName;
-                var ext = Path.GetFileName(selectedFileName);
-                CheckTemplate(ext);
-                SettingsHelper.SaveSettingsAsTemplate(selectedFileName,settings);
+                Log.Error("SaveSettingsTemplateExecute filename is empty ");
+                return;
             }
+
+            var fileName = m_selectedTemplatesfileName + ".template";
+            var tempDir=SettingsHelper.GetTemplateDir();
+            var fileNameFull = Path.Combine(tempDir, fileName);
+            SettingsHelper.SaveSettingsAsTemplate(fileNameFull, settings);
+            
         }
 
       
@@ -318,20 +376,57 @@ namespace FeltAdmin.Viewmodels
             SettingsHelper.SaveSettings(settings);
         }
 
-        public MainViewModel()
+      
+
+    
+
+  
+
+        void TemplateSetup_SelectTemplate(object sender)
         {
-            this.InitDatabaseMode = true;
-            m_templatesfileNames = new ObservableCollection<string>();
-            this.DatabaseSetup = new DatabaseSetup();
-            this.DatabaseSetup.DbSelected += DatabaseSetup_DbSelected;
+            var setupTemplate = sender as DatabaseSetup;
+            ;
+            m_selectedTemplatesfileName = setupTemplate.ChoosenTemplateName;
+            this.InitTemplateMode = false;
+            this.InitDatabaseMode = false;
+            LeonCommunication = new LeonCommunication();
+            MainOrionViewModel = new OrionSetupViewModel();
+            MainOrionViewModel.Parent = this;
+         
+
+            if (DisableDb != null)
+            {
+                DisableDb(this);
+            }
+            
+        }
+
+        void TemplateChange_SelectTemplate(object sender)
+        {
+            var setupTemplate = sender as DatabaseSetup;
+            ;
+            m_selectedTemplatesfileName = setupTemplate.ChoosenTemplateName;
+            this.InitTemplateMode = false;
+            this.InitDatabaseMode = false;
+            var settings = SettingsHelper.GetTemplateSettings(m_selectedTemplatesfileName);
+            LeonCommunication = settings.LeonCommunicationSetting;
+            MainOrionViewModel = settings.OrionSetting;
+            MainOrionViewModel.Parent = this;
+            if (DisableDb != null)
+            {
+                DisableDb(1);
+            }
+            
         }
 
         void DatabaseSetup_DbSelected(object sender)
         {
             this.InitDatabaseMode = false;
+            this.InitTemplateMode = true;
+            this.InitProductionMode = false;
             if (DisableDb != null)
             {
-                DisableDb(this);
+                DisableDb(3);
             }
 
             var settings = SettingsHelper.GetSettings();
@@ -341,16 +436,7 @@ namespace FeltAdmin.Viewmodels
             }
             else
             {
-                if (SettingsHelper.IsTemplateAvaliable())
-                {
-                    var names=SettingsHelper.GetTemplatesNames();
-                    foreach (var tempName in names)
-                    {
-                        CheckTemplate(tempName);
-                    }
-                }
-
-                MainOrionViewModel = new OrionSetupViewModel();
+                Log.Error("DatabaseSetup_DbSelected OrionSetting template not set");
             }
 
             MainOrionViewModel.Parent = this;
@@ -361,7 +447,7 @@ namespace FeltAdmin.Viewmodels
             }
             else
             {
-                LeonCommunication = new LeonCommunication();
+                Log.Error("DatabaseSetup_DbSelected LeonCommunicationSetting template not set");
             }
         }
 
@@ -508,6 +594,32 @@ namespace FeltAdmin.Viewmodels
             }
         }
 
+        
+         public bool InitProductionMode
+        {
+            get
+            {
+                return this.m_initProductionMode;
+            }
+            set
+            {
+                this.m_initProductionMode = value;
+                this.OnPropertyChanged("InitProductionMode");
+            }
+        }
+        public bool InitTemplateMode
+        {
+            get
+            {
+                return this.m_initTemplateMode;
+            }
+            set
+            {
+                this.m_initTemplateMode = value;
+                this.OnPropertyChanged("InitTemplateMode");
+            }
+        }
+
         public bool InitDatabaseMode
         {
             get
@@ -523,47 +635,18 @@ namespace FeltAdmin.Viewmodels
 
         private void CheckTemplate(string ext)
         {
-            if (!m_templatesfileNames.Contains(ext))
-            {
-                var name=Path.GetFileNameWithoutExtension(ext);
-                m_templatesfileNames.Add(name);
-            }
+        //    if (!m_templatesfileNames.Contains(ext))
+        //    {
+        //        var name=Path.GetFileNameWithoutExtension(ext);
+        //        m_templatesfileNames.Add(name);
+        //    }
             
-            m_SelectedTemplatesfileName = m_templatesfileNames[0];
-            this.OnPropertyChanged("TemplatesfileNames");
-            this.OnPropertyChanged("SelectedTemplatesfileName");
+        //    m_SelectedTemplatesfileName = m_templatesfileNames[0];
+        //    this.OnPropertyChanged("TemplatesfileNames");
+        //    this.OnPropertyChanged("SelectedTemplatesfileName");
         }
 
-        private ObservableCollection<string> m_templatesfileNames;
-        public ObservableCollection<string> TemplatesfileNames
-        {
-            get
-            {
-                return this.m_templatesfileNames;
-            }
-            set
-            {
-                this.m_templatesfileNames = value;
-                this.OnPropertyChanged("TemplatesfileNames");
-            }
-
-        }
-
-        private string m_SelectedTemplatesfileName;
-        public string SelectedTemplatesfileName
-        {
-            get
-            {
-                return this.m_SelectedTemplatesfileName;
-            }
-            set
-            {
-                this.m_SelectedTemplatesfileName = value;
-                this.OnPropertyChanged("SelectedTemplatesfileName");
-                this.OnPropertyChanged("SetupModeTemplateAvailable");
-            }
-        }
-
+   
         public Visibility TemplateVisibility
         {
             get
@@ -584,7 +667,7 @@ namespace FeltAdmin.Viewmodels
         {
             get
             {
-                if (SetupMode && !string.IsNullOrEmpty(m_SelectedTemplatesfileName))
+                if (SetupMode)
                 {
                     return true;
                 }
