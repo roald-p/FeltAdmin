@@ -26,7 +26,7 @@ namespace FeltSpooler.ViewModel
 
         private string m_selectedPath;
 
-        private List<string> m_allFilesList;
+        private List<FileNameInfo> m_allFilesList;
 
         private static readonly byte[] s_updFileContent = new byte[] { 0x4B };
 
@@ -84,14 +84,14 @@ namespace FeltSpooler.ViewModel
         {
             if (m_allFilesList != null && m_allFilesList.Any())
             {
-                var filename = m_allFilesList.First();
-                var fi = new FileInfo(filename);
+                var fileinfo = m_allFilesList.First();
+                var fi = new FileInfo(fileinfo.FileName);
                 var name = fi.Name;
                 bool copied = false;
                 if (name.Contains("Leon"))
                 {
                     var path = m_settings.LeonCommunicationSetting.CommunicationSetup.SelectedPath;
-                    copied = CopyFile(path, filename, LeonFile, LeonUpd);
+                    copied = CopyFile(path, fileinfo.FileName, LeonFile, LeonUpd);
                 }
                 else if (name.Contains("Minne"))
                 {
@@ -99,7 +99,7 @@ namespace FeltSpooler.ViewModel
                     if (range != null)
                     {
                         var path = range.CommunicationSetup.SelectedPath;
-                        copied = CopyFile(path, filename, LeonFile, LeonUpd);
+                        copied = CopyFile(path, fileinfo.FileName, LeonFile, LeonUpd);
                     }
                     else
                     {
@@ -108,7 +108,7 @@ namespace FeltSpooler.ViewModel
                 }
                 else if (name.Contains("Orion"))
                 {
-                    var tokens = filename.Split('_');
+                    var tokens = fileinfo.FileName.Split('_');
                     if (tokens.Length > 3)
                     {
                         int id;
@@ -118,7 +118,7 @@ namespace FeltSpooler.ViewModel
                             if (orion != null)
                             {
                                 var path = orion.CommunicationSetup.SelectedPath;
-                                copied = CopyFile(path, filename, OrionFile, OrionUpd);
+                                copied = CopyFile(path, fileinfo.FileName, OrionFile, OrionUpd);
                             }
                         }
                     }
@@ -152,13 +152,13 @@ namespace FeltSpooler.ViewModel
             return false;
         }
 
-        public ObservableCollection<string> AllFilesList
+        public ObservableCollection<FileNameInfo> AllFilesList
         {
             get
             {
                 if (m_allFilesList != null && m_allFilesList.Any())
                 {
-                    return new ObservableCollection<string>(m_allFilesList);
+                    return new ObservableCollection<FileNameInfo>(m_allFilesList);
                 }
 
                 return null;
@@ -190,8 +190,14 @@ namespace FeltSpooler.ViewModel
                 var backupDir = Path.Combine(m_selectedPath, "Backup");
                 if (Directory.Exists(backupDir))
                 {
+                    var allFiles = new List<FileNameInfo>();
                     var files = Directory.EnumerateFiles(backupDir);
-                    m_allFilesList = files.OrderBy(f => f).ToList();
+                    foreach (var file in files)
+                    {
+                        var time = File.GetLastWriteTime(file);
+                        allFiles.Add(new FileNameInfo { FileName = file, CreatedTime = time });
+                    }
+                    m_allFilesList = allFiles.OrderBy(f => f.CreatedTime).ToList();
                     this.OnPropertyChanged("AllFilesList");
                 }
             }

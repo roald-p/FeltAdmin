@@ -12,6 +12,8 @@ using System.Windows.Input;
 using FeltAdmin.Database.Engine;
 using FeltAdmin.Diagnostics;
 
+using FeltAdminCommon.Viewmodels;
+
 using Microsoft.Practices.Prism.Commands;
 
 namespace FeltAdmin.Viewmodels
@@ -20,9 +22,9 @@ namespace FeltAdmin.Viewmodels
 
     public class DatabaseSetup : ViewModelBase
     {
-        private ObservableCollection<string> m_dataBaseNames;
+        private ObservableCollection<DataBaseViewModel> m_dataBaseNames;
 
-        private string m_selectedDatabase;
+        private DataBaseViewModel m_selectedDatabase;
 
         private DelegateCommand m_createDatabaseCommand;
 
@@ -67,8 +69,14 @@ namespace FeltAdmin.Viewmodels
             var existing = DatabaseApi.GetAllCompetitions();
             if (existing != null && existing.Any())
             {
-                DataBaseNames = new ObservableCollection<string>(existing);
-                SelectedDatabase = DataBaseNames.First();
+                var dataBaseViewModels = new List<DataBaseViewModel>();
+                foreach (var dbPath in existing)
+                {
+                    dataBaseViewModels.Add(new DataBaseViewModel { DatabasePath = dbPath });
+                }
+
+                SelectedDatabase = dataBaseViewModels.First();
+                DataBaseNames = new ObservableCollection<DataBaseViewModel>(dataBaseViewModels);
             }
         }
         public string SelectedAvailableTemplate
@@ -357,7 +365,7 @@ namespace FeltAdmin.Viewmodels
             }
         }
 
-        public ObservableCollection<string> DataBaseNames
+        public ObservableCollection<DataBaseViewModel> DataBaseNames
         {
             get
             {
@@ -370,7 +378,7 @@ namespace FeltAdmin.Viewmodels
             }
         }
 
-        public string SelectedDatabase
+        public DataBaseViewModel SelectedDatabase
         {
             get
             {
@@ -380,7 +388,7 @@ namespace FeltAdmin.Viewmodels
             {
                 this.m_selectedDatabase = value;
                 this.OnPropertyChanged("SelectedDatabase");
-                if (!DatabaseApi.SelectCompetition(this.m_selectedDatabase))
+                if (!DatabaseApi.SelectCompetition(this.m_selectedDatabase.DatabasePath))
                 {
                     Log.Error("Unable to select database:" + value);
                     throw new ConfigurationErrorsException("Unable to select database:" + value);

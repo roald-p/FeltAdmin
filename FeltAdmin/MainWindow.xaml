@@ -215,7 +215,15 @@
                 </DataGrid>
             </Grid>
         </DataTemplate>
- 
+
+        <DataTemplate x:Key="NewCompetitionHeader">
+            <TextBlock Margin="5" FontSize="16" FontWeight="Bold" Foreground="CadetBlue">Opprett nytt Stevne:</TextBlock>
+        </DataTemplate>
+
+        <DataTemplate x:Key="EditTemplates">
+            <TextBlock Margin="5" FontSize="16" FontWeight="Bold" Foreground="CadetBlue">Rediger stevnemaler:</TextBlock>
+        </DataTemplate>
+
         <DataTemplate x:Key="DatabaseTemplate" DataType="Viewmodels:DatabaseSetup">
             <Grid>
                 <Grid.RowDefinitions>
@@ -227,57 +235,81 @@
                     <TextBlock Margin="5" FontSize="16" FontWeight="Bold" Foreground="CadetBlue">Velg Stevne:</TextBlock>
                     <Border BorderThickness="2" BorderBrush="CadetBlue">
                         <StackPanel Orientation="Vertical">
-                            <ComboBox MinWidth="100" MaxWidth="500" Width="Auto" Margin="5" HorizontalAlignment="Left" ItemsSource="{Binding DataBaseNames, Mode=TwoWay}" SelectedItem="{Binding SelectedDatabase, Mode=TwoWay}"/>
-                            <Button Command="{Binding InitDbDoneCommand}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,10,5,10" Width="200" Content="Ferdig"/>
+                            <ComboBox MinWidth="200" MaxWidth="500" Width="Auto" Margin="5" HorizontalAlignment="Left" ItemsSource="{Binding DataBaseNames, Mode=TwoWay}" DisplayMemberPath="DatabaseName" SelectedItem="{Binding SelectedDatabase, Mode=TwoWay}"/>
+                            <Button Command="{Binding InitDbDoneCommand}" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,10,5,10" Width="200" Content="Start"/>
                         </StackPanel>
                     </Border>
                 </StackPanel>
-                <StackPanel Grid.Row="1" Orientation="Vertical" Margin="5,20,5,5">
-                    <TextBlock Margin="5" FontSize="16" FontWeight="Bold" Foreground="CadetBlue">Opprett nytt Stevne:</TextBlock>
-                    <Border BorderThickness="2" BorderBrush="CadetBlue">
-                        <StackPanel Orientation="Vertical">
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Margin="5">Stevnenavn:</TextBlock>
-                                <TextBox MinWidth="100" Margin="5" Text="{Binding NewDatabaseName}"/>
-                                <TextBlock Margin="5">Definisjon:</TextBlock>
-                                <ComboBox
+                <Expander Grid.Row="1" HeaderTemplate="{StaticResource NewCompetitionHeader}">
+                    <StackPanel Orientation="Vertical" Margin="5,20,5,5">
+                        <Border BorderThickness="2" BorderBrush="CadetBlue">
+                            <StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock MinWidth="100" Margin="5">Definisjon:</TextBlock>
+                                    <ComboBox
+                                    HorizontalAlignment="Left"
+                                    Margin="5"
+                                    VerticalAlignment="Top"
+                                    Width="200"
+                                    ItemsSource="{Binding AvailableTemplates}"
+                                    SelectedItem="{Binding SelectedAvailableTemplate}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock MinWidth="100" Margin="5">Stevnenavn:</TextBlock>
+                                    <TextBox MinWidth="200" Margin="5" Text="{Binding NewDatabaseName}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock MinWidth="100" Margin="5">Startdato:</TextBlock>
+                                    <DatePicker Width="200" Margin="5" SelectedDate="{Binding NewDatabaseStartTime}"/>
+                                </StackPanel>
+                                <Button Width="310" Command="{Binding CreateDatabaseCommand}" Margin="5" HorizontalAlignment="Left" Content="Opprett database"/>
+                            </StackPanel>
+                            <!--<StackPanel Orientation="Vertical">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Margin="5">Stevnenavn:</TextBlock>
+                                    <TextBox MinWidth="100" Margin="5" Text="{Binding NewDatabaseName}"/>
+                                    <TextBlock Margin="5">Definisjon:</TextBlock>
+                                    <ComboBox
                                     HorizontalAlignment="Left"
                                     Margin="10,5,0,0"
                                     VerticalAlignment="Top"
                                     Width="120"
                                     ItemsSource="{Binding AvailableTemplates}"
                                     SelectedItem="{Binding SelectedAvailableTemplate}" />
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <TextBlock Margin="5">Startdato:</TextBlock>
-                                <DatePicker Margin="5" SelectedDate="{Binding NewDatabaseStartTime}"/>
-                                <Button Command="{Binding CreateDatabaseCommand}" Margin="5" HorizontalAlignment="Left" Content="Opprett database"/>
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-                </StackPanel>
-                <StackPanel Grid.Row="2" Orientation="Vertical" Margin="5,20,5,5">
-                    <TextBlock Margin="5" FontSize="16" FontWeight="Bold" Foreground="CadetBlue">Definisfjoner:</TextBlock>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Margin="5">Startdato:</TextBlock>
+                                    <DatePicker Margin="5" SelectedDate="{Binding NewDatabaseStartTime}"/>
+                                    <Button Command="{Binding CreateDatabaseCommand}" Margin="5" HorizontalAlignment="Left" Content="Opprett database"/>
+                                </StackPanel>
+                            </StackPanel>-->
+                        </Border>
+                    </StackPanel>
+                </Expander>
+                <Expander Grid.Row="2" HeaderTemplate="{StaticResource EditTemplates}">
+                    <StackPanel Orientation="Vertical" Margin="5,20,5,5">
                     <Border BorderThickness="2" BorderBrush="CadetBlue">
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Margin="5">Navn:</TextBlock>
-                                <TextBox MinWidth="100" Margin="5" Text="{Binding NewTemplateName}"/>
-                                <ComboBox
+                                <TextBlock Width="120" Margin="5">Ny stevnemal, navn:</TextBlock>
+                                <TextBox MinWidth="200" Margin="5" Text="{Binding NewTemplateName}"/>
+                                    <Button Command="{Binding CreateTemplateCommand}" Margin="5" Width="70" HorizontalAlignment="Left" Content="Opprett"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Width="120" Margin="5">Rediger stevnemal:</TextBlock>
+                                    <ComboBox
                                     HorizontalAlignment="Left"
-                                    Margin="10,5,0,0"
+                                    Margin="5"
                                     VerticalAlignment="Top"
-                                    Width="120"
+                                    Width="200"
                                     ItemsSource="{Binding TemplatesfileNames}"
-                                    SelectedItem="{Binding SelectedTemplatesfileName}" Visibility="{Binding TemplateVisibility}"/>      
-                            </StackPanel>
-                            <StackPanel Orientation="Horizontal">
-                                <Button Command="{Binding CreateTemplateCommand}" Margin="5" Width="70" HorizontalAlignment="Left" Content=" Opprett "/>
-                                <Button Command="{Binding ChangeTemplateCommand}" Margin="5" Width="70" HorizontalAlignment="Left" Content=" Vis "/>
-                            </StackPanel>
+                                    SelectedItem="{Binding SelectedTemplatesfileName}" Visibility="{Binding TemplateVisibility}"/>
+                                    <Button Command="{Binding ChangeTemplateCommand}" Margin="5" Width="70" HorizontalAlignment="Left" Content="Rediger"/>
+                                </StackPanel>
                         </StackPanel>
                     </Border>
                 </StackPanel>
+                </Expander>
             </Grid>
         </DataTemplate>
 

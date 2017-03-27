@@ -104,6 +104,7 @@
     <Compile Include="RangeClass.cs" />
     <Compile Include="Viewmodels\CommunicationSetup.cs" />
     <Compile Include="Viewmodels\DatabaseSetup.cs" />
+    <Compile Include="Viewmodels\DataBaseViewModel.cs" />
     <Compile Include="Viewmodels\LeonCommunication.cs" />
     <Compile Include="Viewmodels\LeonViewModel.cs" />
     <Compile Include="Viewmodels\MainViewModel.cs" />
