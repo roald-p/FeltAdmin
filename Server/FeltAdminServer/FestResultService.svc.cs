@@ -134,7 +134,7 @@ namespace FeltAdminServer
             var resultsForShooter = actualResults.GroupBy(r => r.ShooterId);
             foreach (var shooterRes in resultsForShooter)
             {
-                var results = shooterRes.OrderBy(r => r.OrionId).ThenBy(r => r.Target);
+                var results = shooterRes.OrderBy(r => r.Team);
                 var resultForShooter = new Result();
                 resultForShooter.ShooterId = results.First().ShooterId;
                 resultForShooter.Class = results.First().Class;
@@ -143,13 +143,14 @@ namespace FeltAdminServer
                 resultForShooter.FeltHolds = new List<FeltHold>();
                 var series = new List<string>();
 
-                foreach (var orion in settings.OrionSetting.OrionViewModels)
-                {
-                    foreach (var rangeViewModel in orion.RangeViews)
+                var allRanges = settings.OrionSetting.OrionViewModels.SelectMany(o => o.RangeViews).OrderBy(r => r.RangeId);
+                ////foreach (var orion in settings.OrionSetting.OrionViewModels)
+                ////{
+                foreach (var rangeViewModel in allRanges)
                     {
                         if (rangeViewModel.RangeType == RangeType.Shooting)
                         {
-                            var orionResult = CalculateOrionAndRange.GetResultForThisRange(results, orion, rangeViewModel);
+                            var orionResult = CalculateOrionAndRange.GetResultForThisRange(results, rangeViewModel.Parent, rangeViewModel);
                             if (orionResult == null)
                             {
                                 if (rangeViewModel.ResultType == ResultType.Felt)
@@ -200,7 +201,7 @@ namespace FeltAdminServer
                             }
                         }
                     }
-                }
+                ////}
 
                 //////foreach (var orionResult in results)
                 //////{

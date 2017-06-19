@@ -34,14 +34,27 @@ namespace FeltAdmin.Helpers
                 if (File.Exists(settingsfile))
                 {
                     XmlSerializer mySerializer = XmlSerializer.FromTypes(new[] { typeof(Settings) })[0];
-                    //var mySerializer = new XmlSerializer(typeof(Settings));
+                    //// var mySerializer = new XmlSerializer(typeof(Settings));
                     using (var myFileStream = new FileStream(settingsfile, FileMode.Open))
                     {
-                        return (Settings)mySerializer.Deserialize(myFileStream);
+                        var setting = (Settings)mySerializer.Deserialize(myFileStream);
+                        SetParent(setting);
+                        return setting;
                     }
                 }
 
                 return new Settings();
+            }
+        }
+
+        private static void SetParent(Settings setting)
+        {
+            foreach (var orionViewModel in setting.OrionSetting.OrionViewModels)
+            {
+                foreach (var rangeViewModel in orionViewModel.RangeViews)
+                {
+                    rangeViewModel.Parent = orionViewModel;
+                }
             }
         }
 

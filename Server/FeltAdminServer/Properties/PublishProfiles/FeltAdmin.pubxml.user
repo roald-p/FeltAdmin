@@ -10,25 +10,25 @@ by editing this MSBuild file. In order to learn more about this please visit htt
   </PropertyGroup>
   <ItemGroup>
     <File Include="bin/FeltAdmin.exe">
-      <publishTime>03/14/2016 22:45:33</publishTime>
+      <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="bin/FeltAdminCommon.dll">
-      <publishTime>06/29/2016 09:47:17</publishTime>
+      <publishTime>06/20/2017 00:02:18</publishTime>
     </File>
     <File Include="bin/FeltAdminCommon.pdb">
-      <publishTime>06/29/2016 09:47:17</publishTime>
+      <publishTime>06/20/2017 00:02:18</publishTime>
     </File>
     <File Include="bin/FeltAdminServer.dll">
-      <publishTime>06/29/2016 09:50:19</publishTime>
+      <publishTime>06/20/2017 00:34:59</publishTime>
     </File>
     <File Include="bin/FeltAdminServer.pdb">
-      <publishTime>06/29/2016 09:50:19</publishTime>
+      <publishTime>06/20/2017 00:34:58</publishTime>
     </File>
     <File Include="bin/Microsoft.Practices.Prism.dll">
-      <publishTime>11/07/2015 16:35:19</publishTime>
+      <publishTime>07/11/2015 16:35:19</publishTime>
     </File>
     <File Include="bin/Microsoft.Practices.ServiceLocation.dll">
-      <publishTime>11/07/2015 16:35:19</publishTime>
+      <publishTime>07/11/2015 16:35:19</publishTime>
     </File>
     <File Include="FestResultService.svc">
       <publishTime>03/14/2016 20:32:07</publishTime>

@@ -28,9 +28,6 @@ namespace FeltAdmin
             var Skytterlag = ConfigurationLoader.GetAppSettingsValue("Skytterlag");
             var Lisens = ConfigurationLoader.GetAppSettingsValue("Lisens");
 
-
-          
-
              var LoggingLevelsString = ConfigurationLoader.GetAppSettingsValue("LoggingLevels");
             LoggingLevels enumLowestTrace = LoggingLevels.Info;
             if (!string.IsNullOrEmpty(LoggingLevelsString))
@@ -63,8 +60,6 @@ namespace FeltAdmin
                 bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
             return bytes;
         }
-
-
 
         public static string ByteArrayToString(byte[] ba)
         {

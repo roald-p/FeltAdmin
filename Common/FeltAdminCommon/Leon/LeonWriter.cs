@@ -56,13 +56,14 @@ namespace FeltAdmin.Leon
                 List<string> allFeltSeries = new List<string>();
                 List<string> allMinneSeries = new List<string>();
 
-                foreach (var orion in orionSetup.OrionViewModels)
-                {
-                    foreach (var rangeViewModel in orion.RangeViews)
+                var allRanges = orionSetup.OrionViewModels.SelectMany(o => o.RangeViews).OrderBy(r => r.RangeId);
+                ////foreach (var orion in orionSetup.OrionViewModels)
+                ////{
+                foreach (var rangeViewModel in allRanges)
                     {
                         if (rangeViewModel.RangeType == RangeType.Shooting)
                         {
-                            var resultForThisRange = CalculateOrionAndRange.GetResultForThisRange(allResultsForShooter, orion, rangeViewModel);
+                            var resultForThisRange = CalculateOrionAndRange.GetResultForThisRange(allResultsForShooter, rangeViewModel.Parent, rangeViewModel);
                             if (resultForThisRange == null)
                             {
                                 if (rangeViewModel.ResultType == ResultType.Felt)
@@ -85,7 +86,7 @@ namespace FeltAdmin.Leon
                             }
                         }
                     }
-                }
+                ////}
 
                 ////foreach (var orionResult in allResultsForShooter)
                 ////{

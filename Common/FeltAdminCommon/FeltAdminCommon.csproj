@@ -99,6 +99,7 @@
     <Compile Include="Orion\OrionRegistration.cs" />
     <Compile Include="Orion\OrionResult.cs" />
     <Compile Include="Orion\OrionResultsEventArgs.cs" />
+    <Compile Include="Orion\OrionResultUpdater - Copy.cs" />
     <Compile Include="Orion\OrionResultUpdater.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RangeClass.cs" />

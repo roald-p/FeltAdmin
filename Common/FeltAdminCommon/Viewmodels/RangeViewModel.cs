@@ -24,9 +24,29 @@ namespace FeltAdmin.Viewmodels
 
         private bool m_doubleRange;
 
-        public RangeViewModel()
+        private OrionViewModel m_parent;
+
+        public RangeViewModel(OrionViewModel parent)
         {
             this.CommunicationSetup = new CommunicationSetup();
+            m_parent = parent;
+        }
+
+        public RangeViewModel()
+        {
+        }
+
+        [XmlIgnore]
+        public OrionViewModel Parent
+        {
+            get
+            {
+                return m_parent;
+            }
+            set
+            {
+                m_parent = value;
+            }
         }
 
         [XmlIgnore]

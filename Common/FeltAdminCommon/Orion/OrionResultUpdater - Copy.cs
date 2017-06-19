@@ -6,11 +6,11 @@ using System.Linq;
 namespace FeltAdmin.Orion
 {
     // ToDo: Fixx
-    public class OrionResultUpdater
+    public class OrionResultUpdater_backup
     {
         private OrionSetupViewModel m_orionSetupViewModel;
 
-        public OrionResultUpdater(OrionSetupViewModel orionSetupViewModel)
+        public OrionResultUpdater_backup(OrionSetupViewModel orionSetupViewModel)
         {
             m_orionSetupViewModel = orionSetupViewModel;
         }
@@ -37,18 +37,25 @@ namespace FeltAdmin.Orion
                 }
 
                 var registrationsForShooter =
-                    allRegistrations.Where(r => r.ShooterId == orionResult.ShooterId).OrderBy(r => r.RangeId);
+                    allRegistrations.Where(r => r.ShooterId == orionResult.ShooterId).OrderBy(r => r.OrionId).ThenBy(r => r.RangeId);
 
                 var sum = 0;
 
                 if (allResults != null)
                 {
-                    var allResultsForShooter = allResults.Where(o => o.ShooterId == orionResult.ShooterId).OrderBy(r => r.Team);
+                    var allResultsForShooter = allResults.Where(o => o.ShooterId == orionResult.ShooterId).OrderBy(r => r.OrionId).ThenBy(r => r.Team);
                     foreach (var prevResult in allResultsForShooter)
                     {
                         int prevOrionId;
                         var prevRange = this.GetRange(prevResult, out prevOrionId);
-                        if (prevRange.RangeId < currentRange.RangeId)
+                        if (prevOrionId < currentOrionId)
+                        {
+                            if (prevRange.ResultType == currentRange.ResultType)
+                            {
+                                sum += prevResult.GetSum(prevRange.ResultType);
+                            }
+                        }
+                        else if (prevOrionId == currentOrionId && prevRange.RangeId < currentRange.RangeId)
                         {
                             if (prevRange.ResultType == currentRange.ResultType)
                             {
@@ -62,7 +69,11 @@ namespace FeltAdmin.Orion
 
                 foreach (var registration in registrationsForShooter)
                 {
-                    if (registration.RangeId <= currentRange.RangeId)
+                    if (registration.OrionId < nextOrionId)
+                    {
+                        continue;
+                    }
+                    if (registration.OrionId == orionResult.OrionId && registration.RangeId <= currentRange.RangeId)
                     {
                         continue;
                     }
@@ -129,78 +140,34 @@ namespace FeltAdmin.Orion
             return null;
         }
 
-        private RangeViewModel GetRange(OrionResult orionResult)
+        private int GetNextOrionIdAndRangeId(OrionResult orionResult, out int rangeId)
         {
+            rangeId = 0;
             foreach (var orionViewModel in m_orionSetupViewModel.OrionViewModels)
             {
                 if (orionResult.OrionId == orionViewModel.OrionId)
                 {
                     foreach (var rangeViewModel in orionViewModel.RangeViews)
                     {
-                        if (rangeViewModel.RangeType == RangeType.Shooting && orionResult.Target >= rangeViewModel.FirstTarget && orionResult.Target <= rangeViewModel.LastTarget)
+                        if (rangeViewModel.RangeType == RangeType.Shooting && orionResult.Target < rangeViewModel.FirstTarget)
                         {
-                            return rangeViewModel;
+                            rangeId = rangeViewModel.RangeId;
+                            return orionViewModel.OrionId;
+                        }
+                    }
+                }
+                else if (orionResult.OrionId < orionViewModel.OrionId)
+                {
+                    foreach (var rangeViewModel in orionViewModel.RangeViews)
+                    {
+                        if (rangeViewModel.RangeType == RangeType.Shooting)
+                        {
+                            rangeId = rangeViewModel.RangeId;
+                            return orionViewModel.OrionId;
                         }
                     }
                 }
             }
-
-            Log.Error(
-                string.Format(
-                    "Could not find rangeid for result: {0} Orionid={1} Lag={2} Skive={3} Serie={4}",
-                    orionResult.Name,
-                    orionResult.OrionId,
-                    orionResult.Team,
-                    orionResult.Target,
-                    orionResult.AllSeries));
-
-            return null;
-        }
-
-        private int GetNextOrionIdAndRangeId(OrionResult orionResult, out int rangeId)
-        {
-            rangeId = 0;
-            var allRanges = m_orionSetupViewModel.OrionViewModels.SelectMany(o => o.RangeViews).OrderBy(r => r.RangeId);
-            var currentRange = GetRange(orionResult);
-            foreach (var rangeViewModel in allRanges)
-            {
-                if (rangeViewModel.RangeId <= currentRange.RangeId)
-                {
-                    continue;
-                }
-
-                if (rangeViewModel.RangeType == RangeType.Shooting)
-                {
-                    rangeId = rangeViewModel.RangeId;
-                    return rangeViewModel.Parent.OrionId;
-                }
-            }
-
-            ////foreach (var orionViewModel in m_orionSetupViewModel.OrionViewModels)
-            ////{
-            ////    if (orionResult.OrionId == orionViewModel.OrionId)
-            ////    {
-            ////        foreach (var rangeViewModel in orionViewModel.RangeViews)
-            ////        {
-            ////            if (rangeViewModel.RangeType == RangeType.Shooting && orionResult.Target < rangeViewModel.FirstTarget)
-            ////            {
-            ////                rangeId = rangeViewModel.RangeId;
-            ////                return orionViewModel.OrionId;
-            ////            }
-            ////        }
-            ////    }
-            ////    else if (orionResult.OrionId < orionViewModel.OrionId)
-            ////    {
-            ////        foreach (var rangeViewModel in orionViewModel.RangeViews)
-            ////        {
-            ////            if (rangeViewModel.RangeType == RangeType.Shooting)
-            ////            {
-            ////                rangeId = rangeViewModel.RangeId;
-            ////                return orionViewModel.OrionId;
-            ////            }
-            ////        }
-            ////    }
-            ////}
 
             return 0;
         }

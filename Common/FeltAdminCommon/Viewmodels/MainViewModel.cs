@@ -210,7 +210,6 @@ namespace FeltAdmin.Viewmodels
                 LeonCommunication = new LeonCommunication();
             }
         }
-
         
        public ICommand ExitSettingsCommand
         {
@@ -229,8 +228,6 @@ namespace FeltAdmin.Viewmodels
         {
             return true;
         }
-
-       
 
         public ICommand SaveSettingsAsTemplateCommand
         {
@@ -376,16 +373,9 @@ namespace FeltAdmin.Viewmodels
             SettingsHelper.SaveSettings(settings);
         }
 
-      
-
-    
-
-  
-
         void TemplateSetup_SelectTemplate(object sender)
         {
             var setupTemplate = sender as DatabaseSetup;
-            ;
             m_selectedTemplatesfileName = setupTemplate.ChoosenTemplateName;
             this.InitTemplateMode = false;
             this.InitDatabaseMode = false;
@@ -404,7 +394,6 @@ namespace FeltAdmin.Viewmodels
         void TemplateChange_SelectTemplate(object sender)
         {
             var setupTemplate = sender as DatabaseSetup;
-            ;
             m_selectedTemplatesfileName = setupTemplate.ChoosenTemplateName;
             this.InitTemplateMode = false;
             this.InitDatabaseMode = false;
@@ -416,7 +405,6 @@ namespace FeltAdmin.Viewmodels
             {
                 DisableDb(1);
             }
-            
         }
 
         void DatabaseSetup_DbSelected(object sender)
@@ -593,7 +581,6 @@ namespace FeltAdmin.Viewmodels
                 this.OnPropertyChanged("DatabaseSetup");
             }
         }
-
         
          public bool InitProductionMode
         {
@@ -645,7 +632,6 @@ namespace FeltAdmin.Viewmodels
         //    this.OnPropertyChanged("TemplatesfileNames");
         //    this.OnPropertyChanged("SelectedTemplatesfileName");
         }
-
    
         public Visibility TemplateVisibility
         {

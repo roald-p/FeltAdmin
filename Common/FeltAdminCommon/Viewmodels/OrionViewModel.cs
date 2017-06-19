@@ -93,7 +93,7 @@ namespace FeltAdmin.Viewmodels
 
         public void AddRangeExecute()
         {
-            var newRange = new RangeViewModel();
+            var newRange = new RangeViewModel(this);
             newRange.RangeType = RangeType.Shooting;
             if (m_rangeView == null)
             {
@@ -112,7 +112,7 @@ namespace FeltAdmin.Viewmodels
 
         public void AddPauseExecute()
         {
-            var newRange = new RangeViewModel();
+            var newRange = new RangeViewModel(this);
             newRange.RangeType = RangeType.Pause;
             if (m_rangeView == null)
             {

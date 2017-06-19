@@ -21,6 +21,40 @@ namespace FeltAdmin.Orion
         public static List<OrionRegistration> GenerateOrionForShooter(LeonPerson person, OrionSetupViewModel orionViewModel)
         {
             var result = new List<OrionRegistration>();
+            var allRanges = orionViewModel.OrionViewModels.SelectMany(o => o.RangeViews).OrderBy(r => r.RangeId);
+            int currentTeam = person.Team;
+            foreach (var range in allRanges)
+            {
+                if (range.RangeType == RangeType.Pause)
+                {
+                    currentTeam++;
+                    continue;
+                }
+
+                var orionRegistration = new OrionRegistration
+                                        {
+                                            OrionId = range.Parent.OrionId,
+                                            Team = currentTeam,
+                                            Target = range.FirstTarget + person.Target - 1,
+                                            Name = person.Name,
+                                            ClubName = person.ClubName,
+                                            Class = person.Class,
+                                            SumIn = person.SumIn,
+                                            ShooterId = person.ShooterId,
+                                            RangeId = range.RangeId,
+                                            RangeName = range.Name
+                                        };
+
+                result.Add(orionRegistration);
+                currentTeam++;
+            }
+
+            return result;
+        }
+
+        public static List<OrionRegistration> GenerateOrionForShooter_old(LeonPerson person, OrionSetupViewModel orionViewModel)
+        {
+            var result = new List<OrionRegistration>();
             foreach (var orion in orionViewModel.OrionViewModels)
             {
                 int currentTeam = person.Team;
@@ -33,19 +67,19 @@ namespace FeltAdmin.Orion
                     }
 
                     var orionRegistration = new OrionRegistration
-                                            {
-                                                OrionId = orion.OrionId,
-                                                Team = currentTeam,
-                                                Target = range.FirstTarget + person.Target - 1,
-                                                Name = person.Name,
-                                                ClubName = person.ClubName,
-                                                Class = person.Class,
-                                                SumIn = person.SumIn,
-                                                ShooterId = person.ShooterId,
-                                                RangeId = range.RangeId,
-                                                RangeName = range.Name
-                                            };
- 
+                    {
+                        OrionId = orion.OrionId,
+                        Team = currentTeam,
+                        Target = range.FirstTarget + person.Target - 1,
+                        Name = person.Name,
+                        ClubName = person.ClubName,
+                        Class = person.Class,
+                        SumIn = person.SumIn,
+                        ShooterId = person.ShooterId,
+                        RangeId = range.RangeId,
+                        RangeName = range.Name
+                    };
+
                     result.Add(orionRegistration);
                     currentTeam++;
                 }

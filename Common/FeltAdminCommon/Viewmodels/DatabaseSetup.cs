@@ -204,8 +204,6 @@ namespace FeltAdmin.Viewmodels
             }
         }
 
-        
-
         public ICommand CreateDatabaseCommand
         {
             get
