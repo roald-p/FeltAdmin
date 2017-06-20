@@ -123,7 +123,14 @@ namespace FeltAdmin.Viewmodels
             }
             else
             {
-                newRange.RangeId = m_rangeView.Max(r => r.RangeId) + 1;
+                if (m_rangeView.Count > 0)
+                {
+                    newRange.RangeId = m_rangeView.Max(r => r.RangeId) + 1;
+                }
+                else
+                {
+                    newRange.RangeId = 1;
+                }
             }
 
             m_rangeView.Add(newRange);
