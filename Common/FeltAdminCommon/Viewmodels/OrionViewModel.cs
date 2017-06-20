@@ -88,6 +88,7 @@ namespace FeltAdmin.Viewmodels
             m_rangeView.Remove(SelectedRange);
             this.OnPropertyChanged("RangeViews");
             this.OnPropertyChanged("RangeVisible");
+            this.OnPropertyChanged("SortedRanges");
     
         }
 
@@ -108,6 +109,7 @@ namespace FeltAdmin.Viewmodels
             m_rangeView.Add(newRange);
             this.OnPropertyChanged("RangeViews");
             this.OnPropertyChanged("RangeVisible");
+            this.OnPropertyChanged("SortedRanges");
         }
 
         public void AddPauseExecute()
@@ -127,6 +129,7 @@ namespace FeltAdmin.Viewmodels
             m_rangeView.Add(newRange);
             this.OnPropertyChanged("RangeViews");
             this.OnPropertyChanged("RangeVisible");
+            this.OnPropertyChanged("SortedRanges");
 
         }
 
@@ -189,6 +192,7 @@ namespace FeltAdmin.Viewmodels
                 this.m_rangeView = value;
                 this.OnPropertyChanged("RangeViews");
                 this.OnPropertyChanged("RangeVisible");
+                this.OnPropertyChanged("SortedRanges");
             }
         }
     }

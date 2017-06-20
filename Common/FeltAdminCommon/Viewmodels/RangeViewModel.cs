@@ -76,6 +76,20 @@ namespace FeltAdmin.Viewmodels
             }
         }
 
+        [XmlIgnore]
+        public string DoubleRangeStr
+        {
+            get
+            {
+                if (m_doubleRange)
+                {
+                    return "Dobbelthold";
+                }
+
+                return "Enkelthold";
+            }
+        }
+
         public bool MinneShooting
         {
             get
@@ -140,6 +154,30 @@ namespace FeltAdmin.Viewmodels
             }
         }
 
+        [XmlIgnore]
+        public string NameOrType
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(m_name))
+                {
+                    return m_name;
+                }
+
+                if (m_rangeType == RangeType.Shooting)
+                {
+                    if (m_minneShooting)
+                    {
+                        return "Minneskyting";
+                    }
+
+                    return "Skyting";
+                }
+
+                return "Pause";
+            }
+        }
+
         public string Name
         {
             get
@@ -188,6 +226,34 @@ namespace FeltAdmin.Viewmodels
             }
         }
 
+        [XmlIgnore]
+        public bool IsShooting
+        {
+            get
+            {
+                return m_rangeType == RangeType.Shooting;
+            }
+        }
+
+        [XmlIgnore]
+        public string ResultTypeStr
+        {
+            get
+            {
+                if (m_resultType == ResultType.Bane)
+                {
+                    return "Bane";
+                }
+                
+                if (m_resultType == ResultType.Felt)
+                {
+                    return "Felt";
+                }
+
+                return null;
+            }
+        }
+
         public ResultType ResultType
         {
             get
@@ -198,6 +264,20 @@ namespace FeltAdmin.Viewmodels
             {
                 this.m_resultType = value;
                 this.OnPropertyChanged("ResultType");
+            }
+        }
+
+        [XmlIgnore]
+        public string OrionIdStr
+        {
+            get
+            {
+                if (m_parent != null)
+                {
+                    return m_parent.OrionId.ToString();
+                }
+
+                return "OrionId ikke satt";
             }
         }
     }

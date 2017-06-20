@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Documents;
 
@@ -346,6 +347,17 @@ namespace FeltAdmin.Viewmodels
 
         public void SaveSettingsTemplateExecute()
         {
+            var errors = MainOrionViewModel.Validate();
+            var moreErrors = LeonCommunication.Validate();
+
+            if (errors.Count > 0 || moreErrors.Count > 0)
+            {
+                errors.AddRange(moreErrors);
+                var messages = string.Join(Environment.NewLine, errors);
+                System.Windows.MessageBox.Show(messages, "Feil i konfigurasjon", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             var settings = new Settings();
             settings.OrionSetting = MainOrionViewModel;
             settings.LeonCommunicationSetting = LeonCommunication;
@@ -360,10 +372,9 @@ namespace FeltAdmin.Viewmodels
             var tempDir=SettingsHelper.GetTemplateDir();
             var fileNameFull = Path.Combine(tempDir, fileName);
             SettingsHelper.SaveSettingsAsTemplate(fileNameFull, settings);
-            
-        }
 
-      
+            System.Windows.MessageBox.Show("Stevnemal lagret","Konfigurasjon", MessageBoxButton.OK);
+        }
 
         public void SaveSettingsExecute()
         {

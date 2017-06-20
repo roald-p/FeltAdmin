@@ -24,7 +24,8 @@
                 <TextBox Margin="5" Text="{Binding Name, Mode=TwoWay}"/>
             </StackPanel>
         </DataTemplate>
-
+        
+        
         <DataTemplate x:Key="RangeView" DataType="Viewmodels:OrionViewModel">
             <StackPanel DataContext="{Binding}" Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
@@ -100,6 +101,74 @@
                     </Border>
                 </Grid>
             </StackPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="OrionCompetitionView" DataType="Viewmodels:OrionSetupViewModel">
+            <DataGrid ItemsSource="{Binding SortedRanges}" AutoGenerateColumns="False" IsReadOnly="True">
+                <DataGrid.RowStyle>
+                    <Style TargetType="DataGridRow">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding RangeType}" Value="2">
+                                <Setter Property="Background" Value="Wheat"></Setter>
+                            </DataTrigger>
+                            <DataTrigger Binding="{Binding RangeType}" Value="1">
+                                <Setter Property="Background" Value="LightGray"></Setter>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </DataGrid.RowStyle>
+                <DataGrid.Columns>
+                    <DataGridTemplateColumn Header="Orion" Width="SizeToCells" MinWidth="50" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="5,0,0,5" Text="{Binding OrionIdStr}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="HoldId" Width="SizeToCells" MinWidth="50" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="5,0,0,5" Text="{Binding RangeId}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Navn" Width="SizeToCells" MinWidth="80" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding NameOrType}" HorizontalAlignment="Center"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Resultattype" Width="SizeToCells" MinWidth="80" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="5,0,0,5" Text="{Binding ResultTypeStr}" HorizontalAlignment="Center" Visibility="{Binding IsShooting, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Første skive" Width="SizeToCells" MinWidth="80" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="5,0,0,5" Text="{Binding FirstTarget}" HorizontalAlignment="Center" Visibility="{Binding IsShooting, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Siste skive" Width="SizeToCells" MinWidth="80" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="5,0,0,5" Text="{Binding LastTarget}" HorizontalAlignment="Center" Visibility="{Binding IsShooting, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTemplateColumn Header="Holdtype" Width="SizeToCells" MinWidth="80" IsReadOnly="True">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock Margin="5,0,0,5" Text="{Binding DoubleRangeStr}" Visibility="{Binding IsShooting, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                </DataGrid.Columns>
+            </DataGrid>
         </DataTemplate>
 
         <DataTemplate x:Key="OrionSetup" DataType="Viewmodels:OrionSetupViewModel">
@@ -464,6 +533,7 @@
             <TabItem Header="Orion Oppsett" Visibility="{Binding InitTemplateMode, Converter={StaticResource OppositeBoolToVisibilityConverter}}">
                 <TabControl>
                     <TabItem Header="Oppsett" Content="{Binding MainOrionViewModel}" ContentTemplate="{StaticResource OrionSetup}"/>
+                    <TabItem Header="Se Konkurranseoppsett" Content="{Binding MainOrionViewModel}" ContentTemplate="{StaticResource OrionCompetitionView}"/>
                 </TabControl>
             </TabItem>
             

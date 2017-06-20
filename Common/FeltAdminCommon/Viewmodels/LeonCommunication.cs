@@ -120,5 +120,19 @@ namespace FeltAdmin.Viewmodels
             m_dispatcherTimer.Tick -= dispatcherTimer_Tick;
             m_dispatcherTimer = null;
         }
+
+        internal List<string> Validate()
+        {
+            var errors = new List<string>();
+            if (string.IsNullOrWhiteSpace(this.CommunicationSetup.SelectedPath))
+            {
+                errors.Add("Kommunikasjonskatalog ikke satt opp for Leon");
+            }
+            else if (!Directory.Exists(this.CommunicationSetup.SelectedPath))
+            {
+                errors.Add("Kommunikasjonskatalog for Leon finnes ikke: " + this.CommunicationSetup.SelectedPath);
+            }
+            return errors;
+        }
     }
 }
