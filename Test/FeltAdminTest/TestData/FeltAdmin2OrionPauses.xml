@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <OrionSetting>
+    <OrionViewModels>
+      <OrionViewModel>
+        <CommunicationSetup>
+          <SelectedPath>D:\FeltAdmin\200m\orion1</SelectedPath>
+        </CommunicationSetup>
+        <OrionId>2</OrionId>
+        <RangeViews>
+          <RangeViewModel>
+            <DoubleRange>false</DoubleRange>
+            <MinneShooting>true</MinneShooting>
+            <CommunicationSetup>
+              <SelectedPath>D:\FeltAdmin\200m\leonminne</SelectedPath>
+            </CommunicationSetup>
+            <RangeType>Shooting</RangeType>
+            <RangeId>1</RangeId>
+            <Name>Minneskyting</Name>
+            <FirstTarget>1</FirstTarget>
+            <LastTarget>3</LastTarget>
+            <ResultType>Bane</ResultType>
+          </RangeViewModel>
+          <RangeViewModel>
+            <DoubleRange>false</DoubleRange>
+            <MinneShooting>false</MinneShooting>
+            <CommunicationSetup />
+            <RangeType>Pause</RangeType>
+            <RangeId>2</RangeId>
+            <FirstTarget>0</FirstTarget>
+            <LastTarget>0</LastTarget>
+            <ResultType>Bane</ResultType>
+          </RangeViewModel>
+          <RangeViewModel>
+            <DoubleRange>false</DoubleRange>
+            <MinneShooting>false</MinneShooting>
+            <CommunicationSetup />
+            <RangeType>Shooting</RangeType>
+            <RangeId>3</RangeId>
+            <Name>Hold 1</Name>
+            <FirstTarget>5</FirstTarget>
+            <LastTarget>7</LastTarget>
+            <ResultType>Felt</ResultType>
+          </RangeViewModel>
+          <RangeViewModel>
+            <DoubleRange>false</DoubleRange>
+            <MinneShooting>false</MinneShooting>
+            <CommunicationSetup />
+            <RangeType>Pause</RangeType>
+            <RangeId>4</RangeId>
+            <FirstTarget>0</FirstTarget>
+            <LastTarget>0</LastTarget>
+            <ResultType>Bane</ResultType>
+          </RangeViewModel>
+          <RangeViewModel>
+            <DoubleRange>true</DoubleRange>
+            <MinneShooting>false</MinneShooting>
+            <CommunicationSetup />
+            <RangeType>Shooting</RangeType>
+            <RangeId>9</RangeId>
+            <Name>Hold 4</Name>
+            <FirstTarget>14</FirstTarget>
+            <LastTarget>16</LastTarget>
+            <ResultType>Felt</ResultType>
+          </RangeViewModel>
+        </RangeViews>
+      </OrionViewModel>
+      <OrionViewModel>
+        <CommunicationSetup>
+          <SelectedPath>D:\FeltAdmin\200m\orion2</SelectedPath>
+        </CommunicationSetup>
+        <OrionId>3</OrionId>
+        <RangeViews>
+          <RangeViewModel>
+            <DoubleRange>false</DoubleRange>
+            <MinneShooting>false</MinneShooting>
+            <CommunicationSetup />
+            <RangeType>Shooting</RangeType>
+            <RangeId>5</RangeId>
+            <Name>Hold 2</Name>
+            <FirstTarget>1</FirstTarget>
+            <LastTarget>3</LastTarget>
+            <ResultType>Felt</ResultType>
+          </RangeViewModel>
+          <RangeViewModel>
+            <DoubleRange>false</DoubleRange>
+            <MinneShooting>false</MinneShooting>
+            <CommunicationSetup />
+            <RangeType>Pause</RangeType>
+            <RangeId>6</RangeId>
+            <FirstTarget>0</FirstTarget>
+            <LastTarget>0</LastTarget>
+            <ResultType>Bane</ResultType>
+          </RangeViewModel>
+          <RangeViewModel>
+            <DoubleRange>false</DoubleRange>
+            <MinneShooting>false</MinneShooting>
+            <CommunicationSetup />
+            <RangeType>Shooting</RangeType>
+            <RangeId>7</RangeId>
+            <Name>Hold 3</Name>
+            <FirstTarget>4</FirstTarget>
+            <LastTarget>6</LastTarget>
+            <ResultType>Bane</ResultType>
+          </RangeViewModel>
+          <RangeViewModel>
+            <DoubleRange>false</DoubleRange>
+            <MinneShooting>false</MinneShooting>
+            <CommunicationSetup />
+            <RangeType>Pause</RangeType>
+            <RangeId>8</RangeId>
+            <FirstTarget>0</FirstTarget>
+            <LastTarget>0</LastTarget>
+            <ResultType>Bane</ResultType>
+          </RangeViewModel>
+        </RangeViews>
+      </OrionViewModel>
+    </OrionViewModels>
+  </OrionSetting>
+  <LeonCommunicationSetting>
+    <CommunicationSetup>
+      <SelectedPath>D:\FeltAdmin\200m\Leon</SelectedPath>
+    </CommunicationSetup>
+  </LeonCommunicationSetting>
+</Settings>

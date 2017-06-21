@@ -59,6 +59,7 @@
     <Compile Include="Database\DatabaseApiTests.cs" />
     <Compile Include="LeonReaderTests.cs" />
     <Compile Include="Lisens\Lisenstests.cs" />
+    <Compile Include="Orion\OrionGeneratePausedTests.cs" />
     <Compile Include="Orion\OrionGenerateTests.cs" />
     <Compile Include="Orion\OrionResultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -83,6 +84,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestData\FeltAdmin.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\FeltAdmin2OrionPauses.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
