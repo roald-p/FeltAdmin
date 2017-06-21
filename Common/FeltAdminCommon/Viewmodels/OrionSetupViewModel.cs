@@ -189,6 +189,12 @@ namespace FeltAdmin.Viewmodels
         internal List<string> Validate()
         {
             var errors = new List<string>();
+            if (SortedRanges == null)
+            {
+                errors.Add("Det finnes ingen holdid generert ");
+                return errors;
+            }
+
             var ids = SortedRanges.GroupBy(r => r.RangeId);
             var duplicateIds = ids.Where(i => i.Count() > 1);
             if (duplicateIds.Any())

@@ -374,6 +374,18 @@ namespace FeltAdmin.Viewmodels
             SettingsHelper.SaveSettingsAsTemplate(fileNameFull, settings);
 
             System.Windows.MessageBox.Show("Stevnemal lagret","Konfigurasjon", MessageBoxButton.OK);
+            if (!this.DatabaseSetup.TemplatesfileNames.Contains(m_selectedTemplatesfileName))
+            {
+                this.DatabaseSetup.TemplatesfileNames.Add(m_selectedTemplatesfileName);
+                this.OnPropertyChanged("TemplatesfileNames");
+            }
+
+            if (!this.DatabaseSetup.AvailableTemplates.Contains(m_selectedTemplatesfileName))
+            {
+                this.DatabaseSetup.AvailableTemplates.Add(m_selectedTemplatesfileName);
+                this.OnPropertyChanged("AvailableTemplates");
+            }
+            
         }
 
         public void SaveSettingsExecute()
