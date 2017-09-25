@@ -73,13 +73,12 @@ namespace FeltAdmin.Viewmodels
         private void InitGet()
         {
             var path = this.m_communicationSetup.SelectedPath;
+            LeonWriter.RegisterPath(path);
             var registrations = this.GetNewRegistrations(path);
             if (registrations != null && registrations.Any())
             {
                 this.AddNewRegistrations(registrations, true);
             }
-
-            LeonWriter.CheckTmpFile(path, true);
         }
 
         public List<MinneRegistration> GetNewRegistrations(string path)

@@ -24,6 +24,10 @@ namespace FeltSpooler.ViewModel
 
         private DelegateCommand m_copyNextCommand;
 
+        private DelegateCommand m_viewOrionCommand;
+
+        private DelegateCommand m_deleteOrionCommand;
+
         private string m_selectedPath;
 
         private List<FileNameInfo> m_allFilesList;
@@ -35,6 +39,40 @@ namespace FeltSpooler.ViewModel
         
         private const string LeonFile = "KMINEW.TXT";
         private const string OrionFile = "KMONEW.TXT";
+
+        private ObservableCollection<string> m_orionPaths;
+
+        public ObservableCollection<string>  OrionPaths
+        {
+            get
+            {
+                return this.m_orionPaths;
+            }
+            set
+            {
+                this.m_orionPaths = value;
+               
+                this.OnPropertyChanged("OrionPaths");
+            }
+        }
+
+        private string m_selectedOrionPath;
+
+        public string SelectedOrionPath
+        {
+            get
+            {
+                return this.m_selectedOrionPath;
+            }
+            set
+            {
+                this.m_selectedOrionPath = value;
+               
+                this.OnPropertyChanged("SelectedOrionPath");
+            }
+        }
+
+
 
         public string SelectedPath
         {
@@ -66,6 +104,34 @@ namespace FeltSpooler.ViewModel
                 return m_openDbCommand;
             }
         }
+
+        public ICommand ViewOrionCommand
+        {
+            get
+            {
+                if (m_viewOrionCommand == null)
+                {
+                    m_viewOrionCommand = new DelegateCommand(this.ViewOrionExecute);
+                }
+
+                return m_viewOrionCommand;
+            }
+        }
+
+        public ICommand DeleteOrionCommand
+        {
+            get
+            {
+                if (m_deleteOrionCommand == null)
+                {
+                    m_deleteOrionCommand = new DelegateCommand(this.DeleteOrionExecute);
+                }
+
+                return m_deleteOrionCommand;
+            }
+        }
+
+      
 
         public ICommand CopyNextCommand
         {
@@ -112,11 +178,13 @@ namespace FeltSpooler.ViewModel
                     if (tokens.Length > 3)
                     {
                         int id;
-                        if (int.TryParse(tokens[3], out id))
+                        if (int.TryParse(tokens[2], out id))
                         {
                             var orion = m_settings.OrionSetting.OrionViewModels.FirstOrDefault(o => o.OrionId == id);
                             if (orion != null)
                             {
+                                string[]  allLines=File.ReadAllLines(fileinfo.FileName);
+                                SetTeamNumber(allLines);
                                 var path = orion.CommunicationSetup.SelectedPath;
                                 copied = CopyFile(path, fileinfo.FileName, OrionFile, OrionUpd);
                             }
@@ -130,6 +198,40 @@ namespace FeltSpooler.ViewModel
                     this.OnPropertyChanged("AllFilesList");
                 }
             }
+        }
+
+        private void SetTeamNumber(string[] allLines)
+        {
+            int minTeam = 20000;
+            int maxteam = 0;
+
+            if (allLines != null)
+            {
+                foreach (var line in allLines)
+                {
+                    if (!string.IsNullOrEmpty(line))
+                    {
+                        var elements = line.Split(new[] { ';' });
+                        if (elements.Length >= 2)
+                        {
+                            int team = -1;
+                            if (int.TryParse(elements[1], out team))
+                            {
+                                if (team > maxteam)
+                                {
+                                    maxteam = team;
+                                }
+                                if (team < minTeam)
+                                {
+                                    minTeam = team;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            this.TeamNumber = string.Format("{0}-{1}", minTeam, maxteam);
         }
 
         private static bool CopyFile(string path, string filename, string outFileName, string outUpdFile)
@@ -165,6 +267,22 @@ namespace FeltSpooler.ViewModel
             }
         }
 
+        private string m_TeamNumber;
+
+        public string TeamNumber
+        {
+            get
+            {
+                return m_TeamNumber;
+            }
+
+            set
+            {
+                  m_TeamNumber=value;
+                this.OnPropertyChanged("TeamNumber");
+            }
+        }
+
         private void OpenDbExecute()
         {
             using (var dlg = new FolderBrowserDialog())
@@ -182,9 +300,41 @@ namespace FeltSpooler.ViewModel
             }
         }
 
+        private void ViewOrionExecute()
+        {
+            if (!string.IsNullOrEmpty(this.m_selectedOrionPath))
+            {
+
+                if (Directory.Exists(this.m_selectedOrionPath))
+                {
+                    var viewModel = new TextWindiwViewModel(m_selectedOrionPath);
+                    TextWindow tet = new TextWindow(viewModel);
+                    tet.ShowDialog();
+                }
+            }
+        }
+
+        private void DeleteOrionExecute()
+        {
+            if (!string.IsNullOrEmpty(this.m_selectedOrionPath))
+            {
+
+                if (Directory.Exists(this.m_selectedOrionPath))
+                {
+                    System.IO.DirectoryInfo di = new DirectoryInfo(m_selectedOrionPath);
+
+                    foreach (FileInfo file in di.GetFiles())
+                    {
+                        file.Delete();
+                    }
+                }
+            }
+        }
+
         private void Init()
         {
             m_settings = SettingsHelper.GetSettings();
+            OrionPaths = new ObservableCollection<string>();
             if (m_settings != null)
             {
                 var backupDir = Path.Combine(m_selectedPath, "Backup");
@@ -200,6 +350,24 @@ namespace FeltSpooler.ViewModel
                     m_allFilesList = allFiles.OrderBy(f => f.CreatedTime).ToList();
                     this.OnPropertyChanged("AllFilesList");
                 }
+
+                if (m_settings.OrionSetting != null)
+                {
+                    foreach (var orion in m_settings.OrionSetting.OrionViewModels)
+                    {
+                        if (orion.CommunicationSetup != null)
+                        {
+                            if (!string.IsNullOrEmpty(orion.CommunicationSetup.SelectedPath))
+                            {
+                                OrionPaths.Add(orion.CommunicationSetup.SelectedPath);
+                            }
+                        }
+                       
+                    }
+                }
+                
+                
+
             }
         }
     }

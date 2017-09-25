@@ -321,6 +321,7 @@ namespace FeltAdmin.Viewmodels
                 if (string.IsNullOrEmpty(minneRange.CommunicationSetup.SelectedPath))
                 {
                     minneRange.CommunicationSetup.SelectedPath = LeonCommunication.CommunicationSetup.SelectedPath;
+                    LeonCommunication.SetMinnePath(minneRange.CommunicationSetup.SelectedPath);
                 }
                 this.m_minneViewModel = new MinneViewModel(minneRange.CommunicationSetup);
                 this.m_minneViewModel.LoadFromDB();

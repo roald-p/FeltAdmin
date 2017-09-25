@@ -288,9 +288,14 @@ namespace FeltResult.ViewModels
             var results = this.m_serviceClient.GetResults(RangeClass, this.m_selectedCompetition).ToList();
 
             var classes = results.Select(r => r.Class).Distinct().OrderBy(r => r).ToList();
-            if (classes.Any(c => c == "2" || c == "3" || c == "4" || c == "5" || c == "V55"))
+            //if (classes.Any(c => c == "2" || c == "3" || c == "4" || c == "5" || c == "V55"))
+            //{
+            //    classes.Add("2-5,V55");
+            //}
+
+            if (classes.Any(c => c == "3" || c == "4" || c == "5" ))
             {
-                classes.Add("2-5,V55");
+                classes.Add("3-5");
             }
 
             ////if (!classes.Any(string.IsNullOrWhiteSpace))
@@ -386,9 +391,9 @@ namespace FeltResult.ViewModels
             List<string> classes = null;
             if (!string.IsNullOrWhiteSpace(m_selectedClass))
             {
-                if (m_selectedClass == "2-5,V55")
+                if (m_selectedClass == "3-5")
                 {
-                    classes = new List<string> { "2", "3", "4", "5", "V55" };
+                    classes = new List<string> {  "3", "4", "5"};
                 }
                 else
                 {

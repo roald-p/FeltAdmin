@@ -52,20 +52,20 @@ namespace FeltAdmin.Orion
                         {
                             if (prevRange.ResultType == currentRange.ResultType)
                             {
-                                sum += prevResult.GetSum(prevRange.ResultType);
+                                sum += prevResult.GetSum(prevRange.ResultType, prevRange.CountingShoots);
                             }
                         }
                         else if (prevOrionId == currentOrionId && prevRange.RangeId < currentRange.RangeId)
                         {
                             if (prevRange.ResultType == currentRange.ResultType)
                             {
-                                sum += prevResult.GetSum(prevRange.ResultType);
+                                sum += prevResult.GetSum(prevRange.ResultType, prevRange.CountingShoots);
                             }
                         }
                     }
                 }
 
-                sum += orionResult.GetSum(currentRange.ResultType);
+                sum += orionResult.GetSum(currentRange.ResultType, currentRange.CountingShoots);
 
                 foreach (var registration in registrationsForShooter)
                 {
@@ -215,11 +215,11 @@ namespace FeltAdmin.Orion
 
                     if (orionRegistration.OrionId > orionResult.OrionId)
                     {
-                        orionRegistration.SumIn += orionResult.GetSum(rangeForThisResult.ResultType);
+                        orionRegistration.SumIn += orionResult.GetSum(rangeForThisResult.ResultType, rangeForThisResult.CountingShoots);
                     }
                     else if (orionRegistration.OrionId == orionResult.OrionId && rangeForThisRegistration.RangeId > rangeForThisResult.RangeId)
                     {
-                        orionRegistration.SumIn += orionResult.GetSum(rangeForThisResult.ResultType);
+                        orionRegistration.SumIn += orionResult.GetSum(rangeForThisResult.ResultType, rangeForThisResult.CountingShoots);
                     }
                 }
             }
