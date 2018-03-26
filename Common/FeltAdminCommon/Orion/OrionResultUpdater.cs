@@ -28,6 +28,7 @@ namespace FeltAdmin.Orion
                 var currentOrionId = 0;
                 var currentRange = this.GetRange(orionResult, out currentOrionId);
                 orionResult.ResultType = currentRange.ResultType;
+                orionResult.CountingShots = currentRange.CountingShoots;
                 int nextRangeId;
                 var nextOrionId = this.GetNextOrionIdAndRangeId(orionResult, out nextRangeId);
                 if (nextOrionId == 0)
@@ -52,13 +53,13 @@ namespace FeltAdmin.Orion
                         {
                             if (prevRange.ResultType == currentRange.ResultType)
                             {
-                                sum += prevResult.GetSum(prevRange.ResultType);
+                                sum += prevResult.GetSum(prevRange.ResultType,prevRange.CountingShoots);
                             }
                         }
                     }
                 }
 
-                sum += orionResult.GetSum(currentRange.ResultType);
+                sum += orionResult.GetSum(currentRange.ResultType, currentRange.CountingShoots);
 
                 foreach (var registration in registrationsForShooter)
                 {
@@ -212,6 +213,7 @@ namespace FeltAdmin.Orion
                 int orionId;
                 var range = this.GetRange(result, out orionId);
                 result.ResultType = range.ResultType;
+                result.CountingShots = range.CountingShoots;
             }
         }
 
@@ -248,11 +250,11 @@ namespace FeltAdmin.Orion
 
                     if (orionRegistration.OrionId > orionResult.OrionId)
                     {
-                        orionRegistration.SumIn += orionResult.GetSum(rangeForThisResult.ResultType);
+                        orionRegistration.SumIn += orionResult.GetSum(rangeForThisResult.ResultType, rangeForThisResult.CountingShoots);
                     }
                     else if (orionRegistration.OrionId == orionResult.OrionId && rangeForThisRegistration.RangeId > rangeForThisResult.RangeId)
                     {
-                        orionRegistration.SumIn += orionResult.GetSum(rangeForThisResult.ResultType);
+                        orionRegistration.SumIn += orionResult.GetSum(rangeForThisResult.ResultType, rangeForThisResult.CountingShoots);
                     }
                 }
             }

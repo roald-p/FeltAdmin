@@ -7,6 +7,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <StackPanel Margin="5" Grid.Row="0" DataContext="{Binding}"  Orientation="Horizontal" VerticalAlignment="Top">
             <Label Margin="5">Velg database:</Label>
@@ -16,6 +17,15 @@
         <ListBox Margin="5" Grid.Row="1" ItemsSource="{Binding AllFilesList}"></ListBox>
         <StackPanel Margin="5" Grid.Row="2" Orientation="Horizontal">
             <Button Margin="5" Command="{Binding CopyNextCommand}" Content="MoveNext"/>
+            <Label Margin="5">Lagnummer:</Label>
+            <TextBox Margin="5" Text="{Binding TeamNumber}" Width="40"/>
+        </StackPanel>
+        <StackPanel Margin="5" Grid.Row="3" Orientation="Horizontal">
+            <Label Margin="5">OrionPaths:</Label>
+            <!--DisplayMemberPath="DatabaseName"-->
+            <ComboBox MinWidth="200" MaxWidth="500" Width="Auto" Margin="5" HorizontalAlignment="Left" ItemsSource="{Binding OrionPaths, Mode=TwoWay}"  SelectedItem="{Binding SelectedOrionPath, Mode=TwoWay}"/>
+            <Button Margin="5" Command="{Binding ViewOrionCommand}" Content="ViewOrion"/>
+            <Button Margin="5" Command="{Binding DeleteOrionCommand}" Content="DeleteOrion"/>
         </StackPanel>
     </Grid>
 </Window>

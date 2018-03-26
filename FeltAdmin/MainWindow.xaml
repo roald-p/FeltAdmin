@@ -75,6 +75,7 @@
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
@@ -94,9 +95,11 @@
                             <ComboBox Margin="5" Grid.Row="5" Grid.Column="1" ItemsSource="{Binding SelectedRange.ResultTypes}" SelectedItem="{Binding SelectedRange.ResultType}" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Label Margin="5" Grid.Row="6" Grid.Column="0" Content="Dobbelthold: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <CheckBox  Margin="5" Grid.Row="6" Grid.Column="1" IsChecked="{Binding SelectedRange.DoubleRange}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <Label Margin="5" Grid.Row="7" Grid.Column="0" Content="Minneskyting: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <CheckBox  Margin="5" Grid.Row="7" Grid.Column="1" IsChecked="{Binding SelectedRange.MinneShooting}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <ContentControl Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding SelectedRange.CommunicationSetup}" ContentTemplate="{StaticResource CommunicationSetup}" Visibility="{Binding SelectedRange.CommunicationSetupVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <Label Margin="5" Grid.Row="7" Grid.Column="0" Content="Antall tellende: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBox Margin="5" Grid.Row="7" Grid.Column="1" Text="{Binding SelectedRange.CountingShoots}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <Label Margin="5" Grid.Row="8" Grid.Column="0" Content="Minneskyting: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <CheckBox  Margin="5" Grid.Row="8" Grid.Column="1" IsChecked="{Binding SelectedRange.MinneShooting}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <ContentControl Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding SelectedRange.CommunicationSetup}" ContentTemplate="{StaticResource CommunicationSetup}" Visibility="{Binding SelectedRange.CommunicationSetupVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                         </Grid>
                     </Border>
                 </Grid>

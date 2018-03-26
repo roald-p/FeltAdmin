@@ -134,5 +134,10 @@ namespace FeltAdmin.Viewmodels
             }
             return errors;
         }
+
+        public void SetMinnePath(string selectedPath)
+        {
+            LeonWriter.RegisterPath(selectedPath);
+        }
     }
 }

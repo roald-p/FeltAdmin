@@ -59,9 +59,11 @@
     <Compile Include="Database\DatabaseApiTests.cs" />
     <Compile Include="LeonReaderTests.cs" />
     <Compile Include="Lisens\Lisenstests.cs" />
+    <Compile Include="Orion\OrionGeneratePausedTests.cs" />
     <Compile Include="Orion\OrionGenerateTests.cs" />
     <Compile Include="Orion\OrionResultTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service\UnitTest1.cs" />
     <Compile Include="TestData\TestDataHelper.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +75,10 @@
       <Project>{90876549-5c93-4138-9ade-3939ddd7b505}</Project>
       <Name>FeltAdmin</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Server\FeltAdminServer\FeltAdminServer.csproj">
+      <Project>{72499A9A-E85B-497E-89B5-1EF86F885B06}</Project>
+      <Name>FeltAdminServer</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Mocks\" />
@@ -83,6 +89,9 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="TestData\FeltAdmin.xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestData\FeltAdmin2OrionPauses.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">

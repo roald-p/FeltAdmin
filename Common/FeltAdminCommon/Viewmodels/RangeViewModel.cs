@@ -24,6 +24,8 @@ namespace FeltAdmin.Viewmodels
 
         private bool m_doubleRange;
 
+        private int m_countingShoots;
+
         private OrionViewModel m_parent;
 
         public RangeViewModel(OrionViewModel parent)
@@ -76,6 +78,9 @@ namespace FeltAdmin.Viewmodels
             }
         }
 
+    
+        
+
         [XmlIgnore]
         public string DoubleRangeStr
         {
@@ -87,6 +92,19 @@ namespace FeltAdmin.Viewmodels
                 }
 
                 return "Enkelthold";
+            }
+        }
+
+        public int CountingShoots
+        {
+            get
+            {
+                return this.m_countingShoots;
+            }
+            set
+            {
+                this.m_countingShoots = value;
+                this.OnPropertyChanged("CountingShoots");
             }
         }
 

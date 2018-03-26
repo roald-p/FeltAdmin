@@ -87,7 +87,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Comparer\ResultComparer.cs" />
+    <Compile Include="ResultComparer.cs" />
     <Compile Include="StartHandling\StarFileHandler.cs" />
     <Compile Include="ViewModels\MainResultViewModel.cs" />
     <Compile Include="ViewModels\RegistrationViewModel.cs" />
@@ -140,6 +140,9 @@
       <Project>{cbc07e4a-577f-472c-b467-06bfe7d24e9e}</Project>
       <Name>FeltAdminCommon</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Comparer\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

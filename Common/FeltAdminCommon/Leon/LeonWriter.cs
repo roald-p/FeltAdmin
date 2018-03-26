@@ -14,19 +14,34 @@ using FeltAdminCommon.Leon;
 
 namespace FeltAdmin.Leon
 {
+    using System.Threading;
+
     public class LeonWriter
     {
         private const string ToLeonUPD = "KMO.UPD";
+
         private const string ToLeonData = "KMONEW.TXT";
+
         private const string ToLeonDataTmp = "KMONEW.TXT.tmp";
+
         private static readonly byte[] s_updFileContent = new byte[] { 0x4B };
 
-        public static void WriteLeonResults(List<int> finishedShooters, List<OrionResult> orionResults, OrionSetupViewModel orionSetup, List<LeonPerson> leonPersons, List<MinneRegistration> minnePersons)
+        private static object syncObject = new object();
+
+        private static string m_minnePath ;
+        public static void WriteLeonResults(
+            List<int> finishedShooters,
+            List<OrionResult> orionResults,
+            OrionSetupViewModel orionSetup,
+            List<LeonPerson> leonPersons,
+            List<MinneRegistration> minnePersons)
         {
             var tmpBasePath = DatabaseApi.GetActiveCompetition();
 
             var tmpPath = Path.Combine(tmpBasePath, "LeonTmp");
             var tmpPathMinne = Path.Combine(tmpBasePath, "MinneLeonTemp");
+
+
             if (!Directory.Exists(tmpPath))
             {
                 Directory.CreateDirectory(tmpPath);
@@ -60,32 +75,53 @@ namespace FeltAdmin.Leon
                 ////foreach (var orion in orionSetup.OrionViewModels)
                 ////{
                 foreach (var rangeViewModel in allRanges)
+                {
+                    if (rangeViewModel.RangeType == RangeType.Shooting)
                     {
-                        if (rangeViewModel.RangeType == RangeType.Shooting)
+                        var resultForThisRange = CalculateOrionAndRange.GetResultForThisRange(
+                            allResultsForShooter,
+                            rangeViewModel.Parent,
+                            rangeViewModel);
+                        if (resultForThisRange == null)
                         {
-                            var resultForThisRange = CalculateOrionAndRange.GetResultForThisRange(allResultsForShooter, rangeViewModel.Parent, rangeViewModel);
-                            if (resultForThisRange == null)
+                            if (rangeViewModel.ResultType == ResultType.Felt)
                             {
-                                if (rangeViewModel.ResultType == ResultType.Felt)
-                                {
-                                    allFeltSeries.Add(string.Empty);
-                                }
+                                allFeltSeries.Add(string.Empty);
                             }
-                            else
+                        }
+                        else
+                        {
+                            if (resultForThisRange.ResultType == ResultType.Felt)
                             {
-                                if (resultForThisRange.ResultType == ResultType.Felt)
+                                sumFelt += resultForThisRange.GetSum();
+                                resultForThisRange.ValidSeries = resultForThisRange.CalculateValidSeriesForRange(rangeViewModel);
+
+                                allFeltSeries.AddRange(resultForThisRange.ValidSeries);
+                            }
+                            else if (resultForThisRange.ResultType == ResultType.Bane)
+                            {
+                                sumBane += resultForThisRange.GetSum();
+                                foreach (var rawSerie in resultForThisRange.Series)
                                 {
-                                    sumFelt += resultForThisRange.GetSum();
-                                    allFeltSeries.AddRange(resultForThisRange.Series);
-                                }
-                                else if (resultForThisRange.ResultType == ResultType.Bane)
-                                {
-                                    sumBane += resultForThisRange.GetSum();
-                                    allMinneSeries.AddRange(resultForThisRange.Series);
+                                    int len = rangeViewModel.CountingShoots;
+
+                                    if (rawSerie.Length < rangeViewModel.CountingShoots)
+                                    {
+                                        len = rawSerie.Length;
+                                    }
+                                    string serieSingle = rawSerie.Substring(0, len);
+                                    int slen = serieSingle.Length;
+                                    while (slen < rangeViewModel.CountingShoots)
+                                    {
+                                        serieSingle = serieSingle + "0";
+                                        slen++;
+                                    }
+                                    allMinneSeries.Add(serieSingle);
                                 }
                             }
                         }
                     }
+                }
                 ////}
 
                 ////foreach (var orionResult in allResultsForShooter)
@@ -141,93 +177,227 @@ namespace FeltAdmin.Leon
                 }
 
                 var finishedPerson = new FinishedPerson
-                                     {
-                                         Name = leonPerson.Name,
-                                         ShooterId = leonPerson.ShooterId,
-                                         Target = leonPerson.Target,
-                                         Team = leonPerson.Team
-                                     };
+                                         {
+                                             Name = leonPerson.Name,
+                                             ShooterId = leonPerson.ShooterId,
+                                             Target = leonPerson.Target,
+                                             Team = leonPerson.Team
+                                         };
                 DatabaseApi.Save(finishedPerson);
             }
 
             if (leonResultsFelt.Any())
             {
+                var writefilenameTmp = Path.Combine(tmpPath, "WRITE"+ToLeonDataTmp);
                 var filenameTmp = Path.Combine(tmpPath, ToLeonDataTmp);
 
-                File.AppendAllLines(filenameTmp, leonResultsFelt, Encoding.GetEncoding("ISO-8859-1"));
+                File.AppendAllLines(writefilenameTmp, leonResultsFelt, Encoding.GetEncoding("ISO-8859-1"));
+                if (File.Exists(filenameTmp))
+                {
+                    Log.Error("File alredy exsist deliting {0}", filenameTmp);
+                    File.Delete(filenameTmp);
+                }
+
+                File.Move(writefilenameTmp, filenameTmp);
             }
 
             if (leonResultsBane.Any())
             {
+                var writefilenameTmp = Path.Combine(tmpPathMinne, "WRITE"+ToLeonDataTmp);
                 var filenameTmp = Path.Combine(tmpPathMinne, ToLeonDataTmp);
-
-                File.AppendAllLines(filenameTmp, leonResultsBane, Encoding.GetEncoding("ISO-8859-1"));
+                File.AppendAllLines(writefilenameTmp, leonResultsBane, Encoding.GetEncoding("ISO-8859-1"));
+                if (File.Exists(filenameTmp))
+                {
+                    Log.Error("File alredy exsist deliting {0}", filenameTmp);
+                    File.Delete(filenameTmp);
+                }
+                File.Move(writefilenameTmp, filenameTmp);
             }
         }
 
-        internal static void CheckTmpFile(string path, bool minne = false)
+        internal static void CheckTmpFile(string path)
         {
-            if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path))
+            lock (syncObject)
             {
-                return;
-            }
-
-            var tmpBasePath = DatabaseApi.GetActiveCompetition();
-            string tmpDir;
-            if (minne == false)
-            {
-                tmpDir = "LeonTmp";
-            }
-            else
-            {
-                tmpDir = "MinneLeonTemp";
-            }
-
-            var tmpPath = Path.Combine(tmpBasePath, tmpDir);
-
-            var filenameTmp = Path.Combine(tmpPath, ToLeonDataTmp);
-            if (File.Exists(filenameTmp))
-            {
-                var updFile = Path.Combine(path, ToLeonUPD);
-                if (!File.Exists(updFile))
+                
+                if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path))
                 {
-                    var filename = Path.Combine(path, ToLeonData);
-                    var fileMoveError = false;
-                    try
+                    return;
+                }
+
+                var tmpBasePath = DatabaseApi.GetActiveCompetition();
+
+
+                string tmpDir;
+                string tmpDirMinne;
+                tmpDir = "LeonTmp";
+                tmpDirMinne = "MinneLeonTemp";
+           
+
+
+                var tmpPath = Path.Combine(tmpBasePath, tmpDir);
+                var tmpPathMinne = Path.Combine(tmpBasePath, tmpDirMinne);
+                var bkupPath = Path.Combine(tmpBasePath, "Backup");
+                var filenameTmp = Path.Combine(tmpPath, ToLeonDataTmp);
+                var filenameMinneTmp = Path.Combine(tmpPathMinne, ToLeonDataTmp);
+                //20170625 - 084813_Leon_kminew
+                string filenamebkupTmp = string.Format("{0}_Leon_{1}.txt", DateTime.Now.ToString("yyyyMMdd-hhmmss"), tmpDir);
+                var filenameBkupTmp = Path.Combine(bkupPath, filenamebkupTmp);
+
+                string filenameMinnebkupTmp = string.Format("{0}_Leon_{1}.txt", DateTime.Now.ToString("yyyyMMdd-hhmmss"), tmpDirMinne);
+                var filenameMinneBkupTmp = Path.Combine(bkupPath, filenameMinnebkupTmp);
+
+                if (File.Exists(filenameTmp))
+                {
+                    Log.Info("starting to export {0} to Path {1}", filenameTmp, path);
+                    var updFile = Path.Combine(path, ToLeonUPD);
+                    var updMinneFile = string.Empty;
+                    if (!string.IsNullOrEmpty(m_minnePath))
                     {
-                        File.Move(filenameTmp, filename);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex, "Unable to move file " + filenameTmp + " to " + filename);
-                        fileMoveError = true;
+                        updMinneFile = Path.Combine(m_minnePath, ToLeonUPD);
                     }
 
-                    if (!fileMoveError)
+                    if (!ExsistTempFiles(path, m_minnePath))
                     {
+                        var filename = Path.Combine(path, ToLeonData);
+
+                        var fileMoveError = false;
                         try
                         {
-                            using (FileStream file = new FileStream(updFile, FileMode.Create, System.IO.FileAccess.Write))
-                            {
-                                file.Write(s_updFileContent, 0, s_updFileContent.Length);
-                                file.Flush(true);
-                                file.Close();
-                            }
+                            File.Copy(filenameTmp, filenameBkupTmp);
+                            File.Move(filenameTmp, filename);
                         }
                         catch (Exception ex)
                         {
-                            Log.Error(ex, "Unable to create file " + updFile);
+                            Log.Error(ex, "Unable to move file " + filenameTmp + " to " + filename);
+                            fileMoveError = true;
+                        }
+
+                        if (!fileMoveError)
+                        {
                             try
                             {
-                                File.Move(filename, filenameTmp);
+                                using (FileStream file = new FileStream(updFile, FileMode.Create, System.IO.FileAccess.Write))
+                                {
+                                    file.Write(s_updFileContent, 0, s_updFileContent.Length);
+                                    file.Flush(true);
+                                    file.Close();
+                                }
                             }
-                            catch (Exception ex1)
+                            catch (Exception ex)
                             {
-                                Log.Error(ex1, "Unable to move back file after UPD file create error " + filename + ", " + filenameTmp);
+                                Log.Error(ex, "Unable to create file " + updFile);
+                                try
+                                {
+                                    File.Move(filename, filenameTmp);
+                                }
+                                catch (Exception ex1)
+                                {
+                                    Log.Error(ex1, "Unable to move back file after UPD file create error " + filename + ", " + filenameTmp);
+                                }
                             }
+
+                            Thread.Sleep(500);
+                           
                         }
                     }
+                    else
+                    {
+                        Log.Info("Cant export to export UPD files exsist {0} or {1}", updFile, updMinneFile);
+                        Thread.Sleep(500);
+                    }
                 }
+                else if (File.Exists(filenameMinneTmp) && !string.IsNullOrEmpty(m_minnePath))
+                {
+                    Log.Info("starting to export {0} to Path {1}", filenameMinneTmp, m_minnePath);
+                   
+                    var updMinneFile = Path.Combine(m_minnePath, ToLeonUPD);
+
+                    if (!ExsistTempFiles(path, m_minnePath))
+                    {
+                        var filename = Path.Combine(m_minnePath, ToLeonData);
+
+                        var fileMoveError = false;
+                        try
+                        {
+                            File.Copy(filenameMinneTmp, filenameMinneBkupTmp);
+                            File.Move(filenameMinneTmp, filename);
+                        }
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex, "Unable to move file " + filenameTmp + " to " + filename);
+                            fileMoveError = true;
+                        }
+
+                        if (!fileMoveError)
+                        {
+                            try
+                            {
+                                using (FileStream file = new FileStream(updMinneFile, FileMode.Create, System.IO.FileAccess.Write))
+                                {
+                                    file.Write(s_updFileContent, 0, s_updFileContent.Length);
+                                    file.Flush(true);
+                                    file.Close();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Log.Error(ex, "Unable to create file " + updMinneFile);
+                                try
+                                {
+                                    File.Move(filename, filenameTmp);
+                                }
+                                catch (Exception ex1)
+                                {
+                                    Log.Error(ex1, "Unable to move back file after UPD file create error " + filename + ", " + filenameTmp);
+                                }
+                            }
+
+                            Thread.Sleep(500);
+
+                        }
+                    }
+                    else
+                    {
+                        Log.Info("Cant export to export UPD files exsist ");
+                        Thread.Sleep(500);
+                    }
+                }
+
+            }
+        }
+
+        private static bool ExsistTempFiles(string path, string minnePath)
+        {
+            if (!string.IsNullOrEmpty(path))
+            {
+                var updFile = Path.Combine(path, ToLeonUPD);
+                if (File.Exists(updFile))
+                {
+                    return true;
+                }
+            }
+
+            if (string.IsNullOrEmpty(minnePath))
+            {
+                return false;
+            }
+
+            var updMinneFile = Path.Combine(minnePath, ToLeonUPD);
+
+            if (File.Exists(updMinneFile))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        public static void RegisterPath(string path)
+        {
+            if (string.IsNullOrEmpty(m_minnePath))
+            {
+                m_minnePath = path;
             }
         }
     }

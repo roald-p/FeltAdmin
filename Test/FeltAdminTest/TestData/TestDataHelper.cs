@@ -7,10 +7,10 @@ namespace FeltAdminTest.TestData
 {
     public class TestDataHelper
     {
-        public static Settings GetSettings()
+        public static Settings GetSettings(string resourcesName)
         {
             var assembly = Assembly.GetExecutingAssembly();
-            var resourceName = "FeltAdminTest.TestData.FeltAdmin.xml";
+            var resourceName = resourcesName;
 
             using (Stream stream = assembly.GetManifestResourceStream(resourceName))
             {
