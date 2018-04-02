@@ -131,10 +131,15 @@ namespace FeltResult.ViewModels
             var results = this.m_serviceClient.GetResults200m(this.m_selectedCompetition).ToList();
 
             var classes = results.Select(r => r.Class).Distinct().OrderBy(r => r).ToList();
-            if (classes.Any(c => c == "2" || c == "3" || c == "4" || c == "5" || c == "V55"))
+            if (classes.Any(c => c == "3" || c == "4" || c == "5"))
             {
-                classes.Add("2-5,V55");
+                classes.Add("3-5");
             }
+
+            ////if (classes.Any(c => c == "2" || c == "3" || c == "4" || c == "5" || c == "V55"))
+            ////{
+            ////    classes.Add("2-5,V55");
+            ////}
 
             if (!classes.Any(string.IsNullOrWhiteSpace))
             {

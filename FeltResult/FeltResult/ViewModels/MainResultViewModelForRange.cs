@@ -360,7 +360,7 @@ namespace FeltResult.ViewModels
                 SelectedTeamIndex = 1;
             }
 
-            if (!m_allRegistrations.Any())
+            if (m_allRegistrations == null || !m_allRegistrations.Any())
             {
                 return;
             }

@@ -6,35 +6,35 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\BOS\Service</_PublishTargetUrl>
+    <_PublishTargetUrl>C:\BOS\Service</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="bin/FeltAdmin.exe">
       <publishTime>01/01/0001 00:00:00</publishTime>
     </File>
     <File Include="bin/FeltAdminCommon.dll">
-      <publishTime>06/20/2017 00:02:18</publishTime>
+      <publishTime>04/02/2018 18:42:00</publishTime>
     </File>
     <File Include="bin/FeltAdminCommon.pdb">
-      <publishTime>06/20/2017 00:02:18</publishTime>
+      <publishTime>04/02/2018 18:42:00</publishTime>
     </File>
     <File Include="bin/FeltAdminServer.dll">
-      <publishTime>06/20/2017 00:34:59</publishTime>
+      <publishTime>04/02/2018 18:42:01</publishTime>
     </File>
     <File Include="bin/FeltAdminServer.pdb">
-      <publishTime>06/20/2017 00:34:58</publishTime>
+      <publishTime>04/02/2018 18:42:01</publishTime>
     </File>
     <File Include="bin/Microsoft.Practices.Prism.dll">
-      <publishTime>07/11/2015 16:35:19</publishTime>
+      <publishTime>06/17/2016 14:50:23</publishTime>
     </File>
     <File Include="bin/Microsoft.Practices.ServiceLocation.dll">
-      <publishTime>07/11/2015 16:35:19</publishTime>
+      <publishTime>06/17/2016 14:50:23</publishTime>
     </File>
     <File Include="FestResultService.svc">
-      <publishTime>03/14/2016 20:32:07</publishTime>
+      <publishTime>06/17/2016 14:50:23</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>06/29/2016 09:47:36</publishTime>
+      <publishTime>04/02/2018 18:09:34</publishTime>
     </File>
   </ItemGroup>
 </Project>
