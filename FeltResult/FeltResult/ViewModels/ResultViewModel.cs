@@ -265,7 +265,10 @@ namespace FeltResult.ViewModels
                     {
                         return 1;
                     }
+                }
 
+                for (int i = m_resultAfterRange - 1; i >= 0; i--)
+                {
                     if (this.Result.FeltHolds[i].InnerHits > y.Result.FeltHolds[i].InnerHits)
                     {
                         return -1;
