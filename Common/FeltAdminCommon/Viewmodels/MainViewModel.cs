@@ -321,7 +321,7 @@ namespace FeltAdmin.Viewmodels
                 if (string.IsNullOrEmpty(minneRange.CommunicationSetup.SelectedPath))
                 {
                     minneRange.CommunicationSetup.SelectedPath = LeonCommunication.CommunicationSetup.SelectedPath;
-                    LeonCommunication.SetMinnePath(minneRange.CommunicationSetup.SelectedPath);
+                    //LeonCommunication.SetMinnePath(minneRange.CommunicationSetup.SelectedPath);
                 }
                 this.m_minneViewModel = new MinneViewModel(minneRange.CommunicationSetup);
                 this.m_minneViewModel.LoadFromDB();
@@ -548,8 +548,8 @@ namespace FeltAdmin.Viewmodels
             //if (innledende.Any())
             //{
                 //var innledendelist = innledende.ToList();
-                Leon.AddNewRegistrations(e.NewRegistrations);
-                var newRegistrations = this.OrionTeamsSetupViewModel.AddNewRegistrations(e.NewRegistrations);
+                var realChanges = Leon.AddNewRegistrations(e.NewRegistrations);
+                var newRegistrations = this.OrionTeamsSetupViewModel.AddNewRegistrations(realChanges);
                 m_orionResultUpdater.AddSums(newRegistrations, this.OrionResultViewModel.OrionResults);
                 this.OrionCommunicationViewModel.UpdateChangesToOrion();
             //}

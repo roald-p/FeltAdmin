@@ -19,9 +19,9 @@ namespace FeltSpooler
     /// <summary>
     /// Interaction logic for TextWindow.xaml
     /// </summary>
-    public partial class TextWindow : Window
+    public partial class StringRegistrations : Window
     {
-        public TextWindow(TextWindiwViewModel model)
+        public StringRegistrations(StringItemsViewModel model)
         {
             DataContext = model;
             InitializeComponent();

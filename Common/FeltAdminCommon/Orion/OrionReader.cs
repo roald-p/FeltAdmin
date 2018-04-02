@@ -73,7 +73,7 @@ namespace FeltAdmin.Orion
                 Directory.CreateDirectory(backupPath);
             }
 
-            var bkupfilename = Path.Combine(backupPath, string.Format("{0}_Orion_{1}_kmonew.txt", DateTime.Now.ToString("yyyyMMdd-hhmmss"), id));
+            var bkupfilename = Path.Combine(backupPath, string.Format("{0}_Orion_{1}_kmonew.txt", DateTime.Now.ToString("yyyyMMdd-HHmmss"), id));
             try
             {
                 File.Move(filename, bkupfilename);

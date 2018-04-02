@@ -636,10 +636,7 @@ namespace FeltAdmin.Orion
                 return new List<string>();
             }
 
-            if (ValidSeries == null)
-            {
-                ValidSeries = new List<string>();
-            }
+            ValidSeries = new List<string>();
             
             foreach (var serie in Series)
             {

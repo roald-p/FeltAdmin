@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
 
@@ -23,6 +24,46 @@ namespace FeltAdmin.Leon
         public int Target { get; set; }
 
         public int SumIn { get; set; }
+
+        public bool Compare(LeonPerson withThis)
+        {
+            if (string.Compare(Name.Trim(), withThis.Name.Trim(), StringComparison.InvariantCulture) != 0)
+            {
+                return false;
+            }
+
+            if (string.Compare(ClubName.Trim(), withThis.ClubName.Trim(), StringComparison.InvariantCulture) != 0)
+            {
+                return false;
+            }
+
+            if (string.Compare(Class.Trim(), withThis.Class.Trim(), StringComparison.InvariantCulture) != 0)
+            {
+                return false;
+            }
+
+            if (ShooterId != withThis.ShooterId)
+            {
+                return false;
+            }
+
+            if (Range != withThis.Range)
+            {
+                return false;
+            }
+
+            if (Team != withThis.Team)
+            {
+                return false;
+            }
+
+            if (Target != withThis.Target)
+            {
+                return false;
+            }
+
+            return true;
+        }
 
         [XmlIgnore]
         public string Key

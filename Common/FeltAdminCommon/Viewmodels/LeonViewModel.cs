@@ -78,8 +78,9 @@ namespace FeltAdmin.Viewmodels
             }
         }
 
-        public void AddNewRegistrations(List<LeonPerson> newRegistrations, bool save = true)
+        public List<LeonPerson> AddNewRegistrations(List<LeonPerson> newRegistrations, bool save = true)
         {
+            var realChanges = new List<LeonPerson>();
             if (m_leonPersons == null)
             {
                 m_leonPersons = new List<LeonPerson>();
@@ -88,6 +89,11 @@ namespace FeltAdmin.Viewmodels
             foreach (var newRegistration in newRegistrations)
             {
                 var found = m_leonPersons.SingleOrDefault(p => p.Team == newRegistration.Team && p.Target == newRegistration.Target);
+                if (found == null || found.Compare(newRegistration) == false)
+                {
+                    realChanges.Add(newRegistration);
+                }
+
                 if (found != null)
                 {
                     m_leonPersons.Remove(found);
@@ -106,6 +112,8 @@ namespace FeltAdmin.Viewmodels
 
             m_leonPersons = m_leonPersons.OrderBy(p => p.Team).ThenBy(p => p.Target).ToList();
             this.BuildLists();
+
+            return realChanges;
         }
 
         private void BuildLists()

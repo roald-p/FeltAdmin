@@ -85,10 +85,10 @@ namespace FeltAdmin.Viewmodels
 
         private void InitGet()
         {
-            var path = CommunicationSetup.SelectedPath;
+            var outputPath = CommunicationSetup.SelectedPath;
             if (NewLeonRegistrations != null)
             {
-                var registrations = this.GetNewRegistrations(path);
+                var registrations = this.GetNewRegistrations(outputPath);
                 if (registrations != null && registrations.Any())
                 {
                     var args = new LeonEventArgs { NewRegistrations = registrations };
@@ -96,7 +96,7 @@ namespace FeltAdmin.Viewmodels
                 }
             }
 
-            LeonWriter.CheckTmpFile(path);
+            LeonWriter.CheckTmpFile(outputPath, "LeonTmp");
         }
 
         public List<LeonPerson> GetNewRegistrations(string path)
@@ -135,9 +135,9 @@ namespace FeltAdmin.Viewmodels
             return errors;
         }
 
-        public void SetMinnePath(string selectedPath)
-        {
-            LeonWriter.RegisterPath(selectedPath);
-        }
+        //public void SetMinnePath(string selectedPath)
+        //{
+        //    LeonWriter.RegisterPath(selectedPath);
+        //}
     }
 }

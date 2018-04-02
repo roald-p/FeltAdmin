@@ -64,12 +64,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="TextWindow.xaml.cs">
-      <DependentUpon>TextWindow.xaml</DependentUpon>
+    <Compile Include="StringRegistrations.xaml.cs">
+      <DependentUpon>StringRegistrations.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\FileNameInfo.cs" />
     <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\TextWindiwViewModel.cs" />
+    <Compile Include="ViewModel\StringItemsViewModel.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -82,7 +82,7 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="TextWindow.xaml">
+    <Page Include="StringRegistrations.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

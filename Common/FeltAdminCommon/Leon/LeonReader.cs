@@ -63,7 +63,7 @@ namespace FeltAdmin.Leon
                 Directory.CreateDirectory(backupPath);
             }
 
-            var bkupfilename = Path.Combine(backupPath, string.Format("{0}_Leon_kminew.txt", DateTime.Now.ToString("yyyyMMdd-hhmmss")));
+            var bkupfilename = Path.Combine(backupPath, string.Format("{0}_Leon_kminew.txt", DateTime.Now.ToString("yyyyMMdd-HHmmss")));
             try
             {
                 File.Move(filename, bkupfilename);

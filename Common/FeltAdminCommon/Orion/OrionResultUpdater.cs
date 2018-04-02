@@ -23,28 +23,28 @@ namespace FeltAdmin.Orion
         {
             var result = new List<OrionRegistration>();
             finishedShouterIds = new List<int>();
-            foreach (var orionResult in newOrionResults)
+            foreach (var newOrionResult in newOrionResults)
             {
                 var currentOrionId = 0;
-                var currentRange = this.GetRange(orionResult, out currentOrionId);
-                orionResult.ResultType = currentRange.ResultType;
-                orionResult.CountingShots = currentRange.CountingShoots;
+                var currentRange = this.GetRange(newOrionResult, out currentOrionId);
+                newOrionResult.ResultType = currentRange.ResultType;
+                newOrionResult.CountingShots = currentRange.CountingShoots;
                 int nextRangeId;
-                var nextOrionId = this.GetNextOrionIdAndRangeId(orionResult, out nextRangeId);
+                var nextOrionId = this.GetNextOrionIdAndRangeId(newOrionResult, out nextRangeId);
                 if (nextOrionId == 0)
                 {
-                    finishedShouterIds.Add(orionResult.ShooterId);
+                    finishedShouterIds.Add(newOrionResult.ShooterId);
                     continue;
                 }
 
                 var registrationsForShooter =
-                    allRegistrations.Where(r => r.ShooterId == orionResult.ShooterId).OrderBy(r => r.RangeId);
+                    allRegistrations.Where(r => r.ShooterId == newOrionResult.ShooterId).OrderBy(r => r.RangeId);
 
                 var sum = 0;
 
                 if (allResults != null)
                 {
-                    var allResultsForShooter = allResults.Where(o => o.ShooterId == orionResult.ShooterId).OrderBy(r => r.Team);
+                    var allResultsForShooter = allResults.Where(o => o.ShooterId == newOrionResult.ShooterId).OrderBy(r => r.Team);
                     foreach (var prevResult in allResultsForShooter)
                     {
                         int prevOrionId;
@@ -59,7 +59,7 @@ namespace FeltAdmin.Orion
                     }
                 }
 
-                sum += orionResult.GetSum(currentRange.ResultType, currentRange.CountingShoots);
+                sum += newOrionResult.GetSum(currentRange.ResultType, currentRange.CountingShoots);
 
                 foreach (var registration in registrationsForShooter)
                 {

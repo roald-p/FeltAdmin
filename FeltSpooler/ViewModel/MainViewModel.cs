@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
-
+using FeltAdmin.Configuration;
 using FeltAdmin.Database.Engine;
 using FeltAdmin.Helpers;
 using FeltAdmin.Viewmodels;
@@ -178,7 +178,7 @@ namespace FeltSpooler.ViewModel
                     if (tokens.Length > 3)
                     {
                         int id;
-                        if (int.TryParse(tokens[2], out id))
+                        if (int.TryParse(tokens[4], out id))
                         {
                             var orion = m_settings.OrionSetting.OrionViewModels.FirstOrDefault(o => o.OrionId == id);
                             if (orion != null)
@@ -188,6 +188,11 @@ namespace FeltSpooler.ViewModel
                                 var path = orion.CommunicationSetup.SelectedPath;
                                 copied = CopyFile(path, fileinfo.FileName, OrionFile, OrionUpd);
                             }
+                        }
+                        else
+                        {
+                            m_allFilesList.RemoveAt(0);
+                            this.OnPropertyChanged("AllFilesList");
                         }
                     }
                 }
@@ -291,6 +296,14 @@ namespace FeltSpooler.ViewModel
                 {
                     dlg.SelectedPath = SelectedPath;
                 }
+                else
+                {
+                    var databasePath = ConfigurationLoader.GetAppSettingsValue("DatabasePath");
+                    if (!string.IsNullOrWhiteSpace(databasePath) && Directory.Exists(databasePath))
+                    {
+                        dlg.SelectedPath = databasePath;
+                    }
+                }
 
                 var result = dlg.ShowDialog();
                 if (result == DialogResult.OK)
@@ -307,8 +320,8 @@ namespace FeltSpooler.ViewModel
 
                 if (Directory.Exists(this.m_selectedOrionPath))
                 {
-                    var viewModel = new TextWindiwViewModel(m_selectedOrionPath);
-                    TextWindow tet = new TextWindow(viewModel);
+                    var viewModel = new StringItemsViewModel(m_selectedOrionPath, "KMINEW.TXT");
+                    var tet = new StringRegistrations(viewModel);
                     tet.ShowDialog();
                 }
             }
@@ -321,13 +334,26 @@ namespace FeltSpooler.ViewModel
 
                 if (Directory.Exists(this.m_selectedOrionPath))
                 {
-                    System.IO.DirectoryInfo di = new DirectoryInfo(m_selectedOrionPath);
+                    // Delete registrations first
+                    DeleteFile(m_selectedOrionPath, "KMINEW.TXT");
+                    DeleteFile(m_selectedOrionPath, "KMI.UPD");
 
-                    foreach (FileInfo file in di.GetFiles())
-                    {
-                        file.Delete();
-                    }
+                    //System.IO.DirectoryInfo di = new DirectoryInfo(m_selectedOrionPath);
+
+                    //foreach (FileInfo file in di.GetFiles())
+                    //{
+                    //    file.Delete();
+                    //}
                 }
+            }
+        }
+
+        private static void DeleteFile(string path, string filename)
+        {
+            var fileToDelete = Path.Combine(path, filename);
+            if (File.Exists(fileToDelete))
+            {
+                File.Delete(fileToDelete);
             }
         }
 
@@ -337,7 +363,7 @@ namespace FeltSpooler.ViewModel
             OrionPaths = new ObservableCollection<string>();
             if (m_settings != null)
             {
-                var backupDir = Path.Combine(m_selectedPath, "Backup");
+                var backupDir = Path.Combine(m_selectedPath, "Backup_Orig");
                 if (Directory.Exists(backupDir))
                 {
                     var allFiles = new List<FileNameInfo>();
@@ -362,12 +388,8 @@ namespace FeltSpooler.ViewModel
                                 OrionPaths.Add(orion.CommunicationSetup.SelectedPath);
                             }
                         }
-                       
                     }
                 }
-                
-                
-
             }
         }
     }

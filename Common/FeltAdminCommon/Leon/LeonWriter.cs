@@ -29,6 +29,7 @@ namespace FeltAdmin.Leon
         private static object syncObject = new object();
 
         private static string m_minnePath ;
+
         public static void WriteLeonResults(
             List<int> finishedShooters,
             List<OrionResult> orionResults,
@@ -177,94 +178,69 @@ namespace FeltAdmin.Leon
                 }
 
                 var finishedPerson = new FinishedPerson
-                                         {
-                                             Name = leonPerson.Name,
-                                             ShooterId = leonPerson.ShooterId,
-                                             Target = leonPerson.Target,
-                                             Team = leonPerson.Team
-                                         };
+                {
+                    Name = leonPerson.Name,
+                    ShooterId = leonPerson.ShooterId,
+                    Target = leonPerson.Target,
+                    Team = leonPerson.Team
+                };
                 DatabaseApi.Save(finishedPerson);
             }
 
-            if (leonResultsFelt.Any())
+            lock (syncObject)
             {
-                var writefilenameTmp = Path.Combine(tmpPath, "WRITE"+ToLeonDataTmp);
-                var filenameTmp = Path.Combine(tmpPath, ToLeonDataTmp);
-
-                File.AppendAllLines(writefilenameTmp, leonResultsFelt, Encoding.GetEncoding("ISO-8859-1"));
-                if (File.Exists(filenameTmp))
+                if (leonResultsFelt.Any())
                 {
-                    Log.Error("File alredy exsist deliting {0}", filenameTmp);
-                    File.Delete(filenameTmp);
+                    //var writefilenameTmp = Path.Combine(tmpPath, "WRITE"+ToLeonDataTmp);
+                    var filenameTmp = Path.Combine(tmpPath, ToLeonDataTmp);
+                    File.AppendAllLines(filenameTmp, leonResultsFelt, Encoding.GetEncoding("ISO-8859-1"));
+                    //if (File.Exists(filenameTmp))
+                    //{
+                    //    Log.Error("File alredy exsist deliting {0}", filenameTmp);
+                    //    File.Delete(filenameTmp);
+                    //}
+
+                    //File.Move(writefilenameTmp, filenameTmp);
                 }
 
-                File.Move(writefilenameTmp, filenameTmp);
-            }
-
-            if (leonResultsBane.Any())
-            {
-                var writefilenameTmp = Path.Combine(tmpPathMinne, "WRITE"+ToLeonDataTmp);
-                var filenameTmp = Path.Combine(tmpPathMinne, ToLeonDataTmp);
-                File.AppendAllLines(writefilenameTmp, leonResultsBane, Encoding.GetEncoding("ISO-8859-1"));
-                if (File.Exists(filenameTmp))
+                if (leonResultsBane.Any())
                 {
-                    Log.Error("File alredy exsist deliting {0}", filenameTmp);
-                    File.Delete(filenameTmp);
+                    //var writefilenameTmp = Path.Combine(tmpPathMinne, "WRITE"+ToLeonDataTmp);
+                    var filenameTmp = Path.Combine(tmpPathMinne, ToLeonDataTmp);
+                    File.AppendAllLines(filenameTmp, leonResultsBane, Encoding.GetEncoding("ISO-8859-1"));
+                    //if (File.Exists(filenameTmp))
+                    //{
+                    //    Log.Error("File alredy exsist deliting {0}", filenameTmp);
+                    //    File.Delete(filenameTmp);
+                    //}
+                    //File.Move(writefilenameTmp, filenameTmp);
                 }
-                File.Move(writefilenameTmp, filenameTmp);
             }
         }
 
-        internal static void CheckTmpFile(string path)
+        internal static void CheckTmpFile(string outputPath, string tmpDir)
         {
+            if (string.IsNullOrWhiteSpace(outputPath) || !Directory.Exists(outputPath))
+            {
+                return;
+            }
+
             lock (syncObject)
             {
-                
-                if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path))
-                {
-                    return;
-                }
 
                 var tmpBasePath = DatabaseApi.GetActiveCompetition();
-
-
-                string tmpDir;
-                string tmpDirMinne;
-                tmpDir = "LeonTmp";
-                tmpDirMinne = "MinneLeonTemp";
-           
-
-
                 var tmpPath = Path.Combine(tmpBasePath, tmpDir);
-                var tmpPathMinne = Path.Combine(tmpBasePath, tmpDirMinne);
-                var bkupPath = Path.Combine(tmpBasePath, "Backup");
+
                 var filenameTmp = Path.Combine(tmpPath, ToLeonDataTmp);
-                var filenameMinneTmp = Path.Combine(tmpPathMinne, ToLeonDataTmp);
-                //20170625 - 084813_Leon_kminew
-                string filenamebkupTmp = string.Format("{0}_Leon_{1}.txt", DateTime.Now.ToString("yyyyMMdd-hhmmss"), tmpDir);
-                var filenameBkupTmp = Path.Combine(bkupPath, filenamebkupTmp);
-
-                string filenameMinnebkupTmp = string.Format("{0}_Leon_{1}.txt", DateTime.Now.ToString("yyyyMMdd-hhmmss"), tmpDirMinne);
-                var filenameMinneBkupTmp = Path.Combine(bkupPath, filenameMinnebkupTmp);
-
                 if (File.Exists(filenameTmp))
                 {
-                    Log.Info("starting to export {0} to Path {1}", filenameTmp, path);
-                    var updFile = Path.Combine(path, ToLeonUPD);
-                    var updMinneFile = string.Empty;
-                    if (!string.IsNullOrEmpty(m_minnePath))
+                    var updFile = Path.Combine(outputPath, ToLeonUPD);
+                    if (!File.Exists(updFile))
                     {
-                        updMinneFile = Path.Combine(m_minnePath, ToLeonUPD);
-                    }
-
-                    if (!ExsistTempFiles(path, m_minnePath))
-                    {
-                        var filename = Path.Combine(path, ToLeonData);
-
+                        var filename = Path.Combine(outputPath, ToLeonData);
                         var fileMoveError = false;
                         try
                         {
-                            File.Copy(filenameTmp, filenameBkupTmp);
                             File.Move(filenameTmp, filename);
                         }
                         catch (Exception ex)
@@ -296,109 +272,201 @@ namespace FeltAdmin.Leon
                                     Log.Error(ex1, "Unable to move back file after UPD file create error " + filename + ", " + filenameTmp);
                                 }
                             }
+                        }
+                    }
+                }
+            }
+        }
+        //internal static void CheckTmpFile(string path)
+        //{
+        //    lock (syncObject)
+        //    {
+                
+        //        if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path))
+        //        {
+        //            return;
+        //        }
 
-                            Thread.Sleep(500);
+        //        var tmpBasePath = DatabaseApi.GetActiveCompetition();
+
+
+        //        string tmpDir;
+        //        string tmpDirMinne;
+        //        tmpDir = "LeonTmp";
+        //        tmpDirMinne = "MinneLeonTemp";
+           
+
+
+        //        var tmpPath = Path.Combine(tmpBasePath, tmpDir);
+        //        var tmpPathMinne = Path.Combine(tmpBasePath, tmpDirMinne);
+        //        var bkupPath = Path.Combine(tmpBasePath, "BackupOutput");
+
+        //        if (!Directory.Exists(bkupPath))
+        //        {
+        //            Directory.CreateDirectory(bkupPath);
+        //        }
+
+        //        var filenameTmp = Path.Combine(tmpPath, ToLeonDataTmp);
+        //        var filenameMinneTmp = Path.Combine(tmpPathMinne, ToLeonDataTmp);
+        //        //20170625 - 084813_Leon_kminew
+        //        string filenamebkupTmp = string.Format("{0}_Leon_{1}.txt", DateTime.Now.ToString("yyyyMMdd-HHmmss"), tmpDir);
+        //        var filenameBkupTmp = Path.Combine(bkupPath, filenamebkupTmp);
+
+        //        string filenameMinnebkupTmp = string.Format("{0}_Leon_{1}.txt", DateTime.Now.ToString("yyyyMMdd-HHmmss"), tmpDirMinne);
+        //        var filenameMinneBkupTmp = Path.Combine(bkupPath, filenameMinnebkupTmp);
+
+        //        if (File.Exists(filenameTmp))
+        //        {
+        //            Log.Info("starting to export {0} to Path {1}", filenameTmp, path);
+        //            var updFile = Path.Combine(path, ToLeonUPD);
+        //            var updMinneFile = string.Empty;
+        //            if (!string.IsNullOrEmpty(m_minnePath))
+        //            {
+        //                updMinneFile = Path.Combine(m_minnePath, ToLeonUPD);
+        //            }
+
+        //            if (!ExsistTempFiles(path, m_minnePath))
+        //            {
+        //                var filename = Path.Combine(path, ToLeonData);
+
+        //                var fileMoveError = false;
+        //                try
+        //                {
+        //                    File.Copy(filenameTmp, filenameBkupTmp);
+        //                    File.Move(filenameTmp, filename);
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    Log.Error(ex, "Unable to move file " + filenameTmp + " to " + filename);
+        //                    fileMoveError = true;
+        //                }
+
+        //                if (!fileMoveError)
+        //                {
+        //                    try
+        //                    {
+        //                        using (FileStream file = new FileStream(updFile, FileMode.Create, System.IO.FileAccess.Write))
+        //                        {
+        //                            file.Write(s_updFileContent, 0, s_updFileContent.Length);
+        //                            file.Flush(true);
+        //                            file.Close();
+        //                        }
+        //                    }
+        //                    catch (Exception ex)
+        //                    {
+        //                        Log.Error(ex, "Unable to create file " + updFile);
+        //                        try
+        //                        {
+        //                            File.Move(filename, filenameTmp);
+        //                        }
+        //                        catch (Exception ex1)
+        //                        {
+        //                            Log.Error(ex1, "Unable to move back file after UPD file create error " + filename + ", " + filenameTmp);
+        //                        }
+        //                    }
+
+        //                    Thread.Sleep(500);
                            
-                        }
-                    }
-                    else
-                    {
-                        Log.Info("Cant export to export UPD files exsist {0} or {1}", updFile, updMinneFile);
-                        Thread.Sleep(500);
-                    }
-                }
-                else if (File.Exists(filenameMinneTmp) && !string.IsNullOrEmpty(m_minnePath))
-                {
-                    Log.Info("starting to export {0} to Path {1}", filenameMinneTmp, m_minnePath);
+        //                }
+        //            }
+        //            else
+        //            {
+        //                Log.Info("Cant export to export UPD files exsist {0} or {1}", updFile, updMinneFile);
+        //                Thread.Sleep(500);
+        //            }
+        //        }
+        //        else if (File.Exists(filenameMinneTmp) && !string.IsNullOrEmpty(m_minnePath))
+        //        {
+        //            Log.Info("starting to export {0} to Path {1}", filenameMinneTmp, m_minnePath);
                    
-                    var updMinneFile = Path.Combine(m_minnePath, ToLeonUPD);
+        //            var updMinneFile = Path.Combine(m_minnePath, ToLeonUPD);
 
-                    if (!ExsistTempFiles(path, m_minnePath))
-                    {
-                        var filename = Path.Combine(m_minnePath, ToLeonData);
+        //            if (!ExsistTempFiles(path, m_minnePath))
+        //            {
+        //                var filename = Path.Combine(m_minnePath, ToLeonData);
 
-                        var fileMoveError = false;
-                        try
-                        {
-                            File.Copy(filenameMinneTmp, filenameMinneBkupTmp);
-                            File.Move(filenameMinneTmp, filename);
-                        }
-                        catch (Exception ex)
-                        {
-                            Log.Error(ex, "Unable to move file " + filenameTmp + " to " + filename);
-                            fileMoveError = true;
-                        }
+        //                var fileMoveError = false;
+        //                try
+        //                {
+        //                    File.Copy(filenameMinneTmp, filenameMinneBkupTmp);
+        //                    File.Move(filenameMinneTmp, filename);
+        //                }
+        //                catch (Exception ex)
+        //                {
+        //                    Log.Error(ex, "Unable to move file " + filenameTmp + " to " + filename);
+        //                    fileMoveError = true;
+        //                }
 
-                        if (!fileMoveError)
-                        {
-                            try
-                            {
-                                using (FileStream file = new FileStream(updMinneFile, FileMode.Create, System.IO.FileAccess.Write))
-                                {
-                                    file.Write(s_updFileContent, 0, s_updFileContent.Length);
-                                    file.Flush(true);
-                                    file.Close();
-                                }
-                            }
-                            catch (Exception ex)
-                            {
-                                Log.Error(ex, "Unable to create file " + updMinneFile);
-                                try
-                                {
-                                    File.Move(filename, filenameTmp);
-                                }
-                                catch (Exception ex1)
-                                {
-                                    Log.Error(ex1, "Unable to move back file after UPD file create error " + filename + ", " + filenameTmp);
-                                }
-                            }
+        //                if (!fileMoveError)
+        //                {
+        //                    try
+        //                    {
+        //                        using (FileStream file = new FileStream(updMinneFile, FileMode.Create, System.IO.FileAccess.Write))
+        //                        {
+        //                            file.Write(s_updFileContent, 0, s_updFileContent.Length);
+        //                            file.Flush(true);
+        //                            file.Close();
+        //                        }
+        //                    }
+        //                    catch (Exception ex)
+        //                    {
+        //                        Log.Error(ex, "Unable to create file " + updMinneFile);
+        //                        try
+        //                        {
+        //                            File.Move(filename, filenameTmp);
+        //                        }
+        //                        catch (Exception ex1)
+        //                        {
+        //                            Log.Error(ex1, "Unable to move back file after UPD file create error " + filename + ", " + filenameTmp);
+        //                        }
+        //                    }
 
-                            Thread.Sleep(500);
+        //                    Thread.Sleep(500);
 
-                        }
-                    }
-                    else
-                    {
-                        Log.Info("Cant export to export UPD files exsist ");
-                        Thread.Sleep(500);
-                    }
-                }
+        //                }
+        //            }
+        //            else
+        //            {
+        //                Log.Info("Cant export to export UPD files exsist ");
+        //                Thread.Sleep(500);
+        //            }
+        //        }
 
-            }
-        }
+        //    }
+        //}
 
-        private static bool ExsistTempFiles(string path, string minnePath)
-        {
-            if (!string.IsNullOrEmpty(path))
-            {
-                var updFile = Path.Combine(path, ToLeonUPD);
-                if (File.Exists(updFile))
-                {
-                    return true;
-                }
-            }
+        //private static bool ExsistTempFiles(string path, string minnePath)
+        //{
+        //    if (!string.IsNullOrEmpty(path))
+        //    {
+        //        var updFile = Path.Combine(path, ToLeonUPD);
+        //        if (File.Exists(updFile))
+        //        {
+        //            return true;
+        //        }
+        //    }
 
-            if (string.IsNullOrEmpty(minnePath))
-            {
-                return false;
-            }
+        //    if (string.IsNullOrEmpty(minnePath))
+        //    {
+        //        return false;
+        //    }
 
-            var updMinneFile = Path.Combine(minnePath, ToLeonUPD);
+        //    var updMinneFile = Path.Combine(minnePath, ToLeonUPD);
 
-            if (File.Exists(updMinneFile))
-            {
-                return true;
-            }
+        //    if (File.Exists(updMinneFile))
+        //    {
+        //        return true;
+        //    }
 
-            return false;
-        }
+        //    return false;
+        //}
 
-        public static void RegisterPath(string path)
-        {
-            if (string.IsNullOrEmpty(m_minnePath))
-            {
-                m_minnePath = path;
-            }
-        }
+        //public static void RegisterPath(string path)
+        //{
+        //    if (string.IsNullOrEmpty(m_minnePath))
+        //    {
+        //        m_minnePath = path;
+        //    }
+        //}
     }
 }

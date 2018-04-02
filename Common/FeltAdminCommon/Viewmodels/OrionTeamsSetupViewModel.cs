@@ -306,7 +306,7 @@ namespace FeltAdmin.Viewmodels
                         }
                         else
                         {
-                            if (results.Any(r => r.ShooterId == orionRegistration.ShooterId))
+                            if (false == true && results.Any(r => r.ShooterId == orionRegistration.ShooterId))
                             {
                                 m_newRegistrationsThatMustSelectFirstRange.Add(orionRegistration);
                             }
