@@ -76,8 +76,24 @@ namespace FeltAdminServer
             DatabaseApi.SelectCompetition200m(competition);
             var settings = SettingsHelper.GetSettings();
             var rawResults = DatabaseApi.LoadCompetitionFromTable(TableName.OrionResult);
+            var registrations = DatabaseApi.LoadCompetitionFromTable(TableName.LeonRegistration);
             var actualResults = this.AddNewResults(rawResults.OfType<OrionResult>().ToList(), settings);
-            return BuildResultObjects(actualResults);
+            var results = BuildResultObjects(actualResults);
+            foreach (var item in results)
+            {
+                if (registrations.Any())
+                {
+                    var registration = registrations.OfType<LeonPerson>().Last(r => r.ShooterId == item.ShooterId);
+                    if (registration != null)
+                    {
+                        item.Name = registration.Name;
+                        item.Class = registration.Class;
+                        item.ClubName = registration.ClubName;
+                    }
+                }
+            }
+
+            return results;
         }
 
         private List<Result> GetResults100m(string competition)
