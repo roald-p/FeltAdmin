@@ -12,7 +12,7 @@ namespace FeltAdmin
 
     using FeltAdminCommon.Lisens;
 
-    /// <summary>
+    /// <summary> 
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
