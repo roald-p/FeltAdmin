@@ -4,7 +4,7 @@
         xmlns:Converters="clr-namespace:FeltAdmin.Converters;assembly=FeltAdminCommon"
         xmlns:Viewmodels="clr-namespace:FeltAdmin.Viewmodels;assembly=FeltAdminCommon"
         xmlns:Orion="clr-namespace:FeltAdmin.Orion;assembly=FeltAdminCommon"
-        Title="FeltAdmin" Height="561" Width="854" 
+        Title="FeltAdmin" Height="742" Width="854" 
         >
     <Window.Resources>
         <Converters:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter" />
@@ -79,27 +79,27 @@
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto"/>
-                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
                             </Grid.ColumnDefinitions>
                             <Label Margin="5" Grid.Row="0" Grid.Column="0" Content="HoldId: " VerticalAlignment="Center"/>
-                            <TextBox Margin="5" Grid.Row="0" Grid.Column="1" Text="{Binding SelectedRange.RangeId, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderBrush="SteelBlue"/>
+                            <TextBox Margin="5" Grid.Row="0" Grid.Column="1" Text="{Binding SelectedRange.RangeId, UpdateSourceTrigger=PropertyChanged}" MinWidth="100" VerticalAlignment="Center" HorizontalAlignment="Left" BorderBrush="SteelBlue"/>
                             <Label Margin="5" Grid.Row="1" Grid.Column="0" Content="Type: " VerticalAlignment="Center"/>
-                            <TextBox Margin="5" Grid.Row="1" Grid.Column="1" Text="{Binding SelectedRange.RangeType, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderBrush="SteelBlue" IsReadOnly="True"/>
+                            <TextBox Margin="5" Grid.Row="1" Grid.Column="1" Text="{Binding SelectedRange.RangeType, UpdateSourceTrigger=PropertyChanged}" MinWidth="100" VerticalAlignment="Center" HorizontalAlignment="Left" BorderBrush="SteelBlue" IsTabStop="False" IsReadOnly="True"/>
                             <Label Margin="5" Grid.Row="2" Grid.Column="0" Content="Navn: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <TextBox Margin="5" Grid.Row="2" Grid.Column="1" Text="{Binding SelectedRange.Name, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBox Margin="5" Grid.Row="2" Grid.Column="1" Text="{Binding SelectedRange.Name, UpdateSourceTrigger=PropertyChanged}" MinWidth="100" VerticalAlignment="Center" HorizontalAlignment="Left" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Label Margin="5" Grid.Row="3" Grid.Column="0" Content="Første skive: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <TextBox Margin="5" Grid.Row="3" Grid.Column="1" Text="{Binding SelectedRange.FirstTarget, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBox Margin="5" Grid.Row="3" Grid.Column="1" Text="{Binding SelectedRange.FirstTarget, UpdateSourceTrigger=PropertyChanged}" MinWidth="100" VerticalAlignment="Center" HorizontalAlignment="Left" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Label Margin="5" Grid.Row="4" Grid.Column="0" Content="Siste skive: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <TextBox Margin="5" Grid.Row="4" Grid.Column="1" Text="{Binding SelectedRange.LastTarget, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBox Margin="5" Grid.Row="4" Grid.Column="1" Text="{Binding SelectedRange.LastTarget, UpdateSourceTrigger=PropertyChanged}" MinWidth="100" VerticalAlignment="Center" HorizontalAlignment="Left" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Label Margin="5" Grid.Row="5" Grid.Column="0" Content="Resultattype: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <ComboBox Margin="5" Grid.Row="5" Grid.Column="1" ItemsSource="{Binding SelectedRange.ResultTypes}" SelectedItem="{Binding SelectedRange.ResultType}" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <ComboBox Margin="5" Grid.Row="5" Grid.Column="1" ItemsSource="{Binding SelectedRange.ResultTypes}" HorizontalAlignment="Left" MinWidth="100" SelectedItem="{Binding SelectedRange.ResultType}" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Label Margin="5" Grid.Row="6" Grid.Column="0" Content="Dobbelthold: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <CheckBox  Margin="5" Grid.Row="6" Grid.Column="1" IsChecked="{Binding SelectedRange.DoubleRange}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <CheckBox  Margin="5" Grid.Row="6" Grid.Column="1" IsChecked="{Binding SelectedRange.DoubleRange}" VerticalAlignment="Center" HorizontalAlignment="Left" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Label Margin="5" Grid.Row="7" Grid.Column="0" Content="Antall tellende: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <TextBox Margin="5" Grid.Row="7" Grid.Column="1" Text="{Binding SelectedRange.CountingShoots, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBox Margin="5" Grid.Row="7" Grid.Column="1" Text="{Binding SelectedRange.CountingShoots, UpdateSourceTrigger=PropertyChanged}" MinWidth="100" VerticalAlignment="Center" HorizontalAlignment="Left" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Label Margin="5" Grid.Row="8" Grid.Column="0" Content="Minneskyting: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <CheckBox  Margin="5" Grid.Row="8" Grid.Column="1" IsChecked="{Binding SelectedRange.MinneShooting}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <ContentControl Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding SelectedRange.CommunicationSetup}" ContentTemplate="{StaticResource CommunicationSetup}" Visibility="{Binding SelectedRange.CommunicationSetupVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <CheckBox  Margin="5" Grid.Row="8" Grid.Column="1" IsChecked="{Binding SelectedRange.MinneShooting}" VerticalAlignment="Center" HorizontalAlignment="Left" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <ContentControl Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding SelectedRange.CommunicationSetup}" ContentTemplate="{StaticResource CommunicationSetup}" IsEnabled="{Binding SelectedRange.CommunicationSetupVisible}"/>
                         </Grid>
                     </Border>
                 </Grid>
