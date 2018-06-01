@@ -101,9 +101,9 @@ namespace FeltAdmin.Orion
 
             string Result = AllSeries;
 
-            int len = this.m_countingShots;
+            int len = countingShots;
             
-            if (AllSeries.Length< this.m_countingShots)
+            if (AllSeries.Length< countingShots)
             {
                 len = AllSeries.Length;
             }
@@ -152,7 +152,7 @@ namespace FeltAdmin.Orion
                 return substring.Count(a => a == '*');
             }
 
-            return this.GetInnerHits();
+            return this.GetInnerHits(countingShots);
         }
 
         public int GetSum(ResultType resultType,int countingShots)
@@ -188,7 +188,7 @@ namespace FeltAdmin.Orion
             return sum;
         }
         
-        public List<string> GetPrintableSeries()
+        public List<string> GetPrintableSeries(int countingShots)
         {
             if (m_resultType == ResultType.Bane)
             {
@@ -198,7 +198,7 @@ namespace FeltAdmin.Orion
             var result = new List<string>();
             foreach (var serie in Series)
             {
-                var sum = GetValue(m_resultType,this.m_countingShots, serie);
+                var sum = GetValue(m_resultType, countingShots, serie);
                 var innerhits = serie.Count(s => s == '*');
 
                 result.Add(string.Format("{0}/{1}", sum, innerhits));

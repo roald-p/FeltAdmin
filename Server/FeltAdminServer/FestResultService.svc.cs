@@ -76,8 +76,24 @@ namespace FeltAdminServer
             DatabaseApi.SelectCompetition200m(competition);
             var settings = SettingsHelper.GetSettings();
             var rawResults = DatabaseApi.LoadCompetitionFromTable(TableName.OrionResult);
+            var registrations = DatabaseApi.LoadCompetitionFromTable(TableName.LeonRegistration);
             var actualResults = this.AddNewResults(rawResults.OfType<OrionResult>().ToList(), settings);
-            return BuildResultObjects(actualResults);
+            var results = BuildResultObjects(actualResults);
+            foreach (var item in results)
+            {
+                if (registrations.Any())
+                {
+                    var registration = registrations.OfType<LeonPerson>().Last(r => r.ShooterId == item.ShooterId);
+                    if (registration != null)
+                    {
+                        item.Name = registration.Name;
+                        item.Class = registration.Class;
+                        item.ClubName = registration.ClubName;
+                    }
+                }
+            }
+
+            return results;
         }
 
         private List<Result> GetResults100m(string competition)
@@ -171,8 +187,8 @@ namespace FeltAdminServer
                                 {
                                     if (orionResult.DoubleRange)
                                     {
-                                        var fh1 = new FeltHold { Hits = orionResult.GetSum(ResultType.Felt, 1), InnerHits = orionResult.GetInnerHits(1) };
-                                        var fh2 = new FeltHold { Hits = orionResult.GetSum(ResultType.Felt, 2), InnerHits = orionResult.GetInnerHits(2) };
+                                        var fh1 = new FeltHold { Hits = orionResult.GetSum(ResultType.Felt, rangeViewModel.CountingShoots, 1), InnerHits = orionResult.GetInnerHits(1, rangeViewModel.CountingShoots) };
+                                        var fh2 = new FeltHold { Hits = orionResult.GetSum(ResultType.Felt, rangeViewModel.CountingShoots, 2), InnerHits = orionResult.GetInnerHits(2, rangeViewModel.CountingShoots) };
                                         resultForShooter.FeltHolds.Add(fh1);
                                         resultForShooter.TotalSum += fh1.Hits;
                                         resultForShooter.TotalInnerHits += fh1.InnerHits;
@@ -185,17 +201,17 @@ namespace FeltAdminServer
                                     }
                                     else
                                     {
-                                        var fh = new FeltHold { Hits = orionResult.GetSum(), InnerHits = orionResult.GetInnerHits() };
+                                        var fh = new FeltHold { Hits = orionResult.GetSum(ResultType.Felt, rangeViewModel.CountingShoots), InnerHits = orionResult.GetInnerHits(0, rangeViewModel.CountingShoots) };
                                         resultForShooter.FeltHolds.Add(fh);
                                         resultForShooter.TotalSum += fh.Hits;
                                         resultForShooter.TotalInnerHits += fh.InnerHits;
-                                        series.AddRange(orionResult.GetPrintableSeries());
+                                        series.AddRange(orionResult.GetPrintableSeries(rangeViewModel.CountingShoots));
                                     }
                                 }
                                 else
                                 {
-                                    resultForShooter.Minne = orionResult.GetSum();
-                                    resultForShooter.MinneInner = orionResult.GetInnerHits();
+                                    resultForShooter.Minne = orionResult.GetSum(ResultType.Bane, rangeViewModel.CountingShoots);
+                                    resultForShooter.MinneInner = orionResult.GetInnerHits(rangeViewModel.CountingShoots);
                                 }
                                 
                             }

@@ -76,7 +76,7 @@
       <Name>FeltAdmin</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Server\FeltAdminServer\FeltAdminServer.csproj">
-      <Project>{72499A9A-E85B-497E-89B5-1EF86F885B06}</Project>
+      <Project>{72499a9a-e85b-497e-89b5-1ef86f885b06}</Project>
       <Name>FeltAdminServer</Name>
     </ProjectReference>
   </ItemGroup>
