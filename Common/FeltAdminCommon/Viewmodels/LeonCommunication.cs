@@ -96,7 +96,7 @@ namespace FeltAdmin.Viewmodels
                 }
             }
 
-            LeonWriter.CheckTmpFile(outputPath, "LeonTmp");
+            LeonWriter.CheckAnyTempFiles(outputPath, "LeonTmp", "MinneLeonTemp");
         }
 
         public List<LeonPerson> GetNewRegistrations(string path)

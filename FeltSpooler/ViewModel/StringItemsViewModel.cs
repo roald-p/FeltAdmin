@@ -30,7 +30,7 @@ namespace FeltSpooler.ViewModel
             }
             else
             {
-                Registrations = new List<string> { $"File not present {fileName}" };
+                Registrations = new List<string> { string.Format("File not present {0}",fileName)};
             }
         }
 
@@ -40,7 +40,7 @@ namespace FeltSpooler.ViewModel
             set
             {
                 m_registrations = value;
-                OnPropertyChanged(nameof(Registrations));
+                OnPropertyChanged("Registrations");
             }
         }
 

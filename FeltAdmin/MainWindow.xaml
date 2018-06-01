@@ -13,15 +13,15 @@
         <DataTemplate x:Key="CommunicationSetup" DataType="Viewmodels:CommunicationSetup">
             <StackPanel DataContext="{Binding}"  Orientation="Horizontal" VerticalAlignment="Top">
                 <Label>kommunikasjonskatalog:</Label>
-                <TextBox Text="{Binding SelectedPath}" Width="400"/>
+                <TextBox Text="{Binding SelectedPath, UpdateSourceTrigger=PropertyChanged}" Width="400"/>
                 <Button Command="{Binding OpenFileDialogCommand}" Content="..."/>
             </StackPanel>
         </DataTemplate>
 
         <DataTemplate x:Key="RangeTemplate" DataType="Viewmodels:RangeViewModel">
             <StackPanel DataContext="{Binding}" Orientation="Horizontal" VerticalAlignment="Center">
-                <TextBox Margin="5" Text="{Binding RangeId}"/>
-                <TextBox Margin="5" Text="{Binding Name, Mode=TwoWay}"/>
+                <TextBox Margin="5" Text="{Binding RangeId, UpdateSourceTrigger=PropertyChanged}"/>
+                <TextBox Margin="5" Text="{Binding Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
             </StackPanel>
         </DataTemplate>
         
@@ -82,21 +82,21 @@
                                 <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
                             <Label Margin="5" Grid.Row="0" Grid.Column="0" Content="HoldId: " VerticalAlignment="Center"/>
-                            <TextBox Margin="5" Grid.Row="0" Grid.Column="1" Text="{Binding SelectedRange.RangeId}" VerticalAlignment="Center" BorderBrush="SteelBlue"/>
+                            <TextBox Margin="5" Grid.Row="0" Grid.Column="1" Text="{Binding SelectedRange.RangeId, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderBrush="SteelBlue"/>
                             <Label Margin="5" Grid.Row="1" Grid.Column="0" Content="Type: " VerticalAlignment="Center"/>
-                            <TextBox Margin="5" Grid.Row="1" Grid.Column="1" Text="{Binding SelectedRange.RangeType}" VerticalAlignment="Center" BorderBrush="SteelBlue" IsReadOnly="True"/>
+                            <TextBox Margin="5" Grid.Row="1" Grid.Column="1" Text="{Binding SelectedRange.RangeType, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderBrush="SteelBlue" IsReadOnly="True"/>
                             <Label Margin="5" Grid.Row="2" Grid.Column="0" Content="Navn: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <TextBox Margin="5" Grid.Row="2" Grid.Column="1" Text="{Binding SelectedRange.Name}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBox Margin="5" Grid.Row="2" Grid.Column="1" Text="{Binding SelectedRange.Name, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Label Margin="5" Grid.Row="3" Grid.Column="0" Content="Første skive: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <TextBox Margin="5" Grid.Row="3" Grid.Column="1" Text="{Binding SelectedRange.FirstTarget}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBox Margin="5" Grid.Row="3" Grid.Column="1" Text="{Binding SelectedRange.FirstTarget, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Label Margin="5" Grid.Row="4" Grid.Column="0" Content="Siste skive: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <TextBox Margin="5" Grid.Row="4" Grid.Column="1" Text="{Binding SelectedRange.LastTarget}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBox Margin="5" Grid.Row="4" Grid.Column="1" Text="{Binding SelectedRange.LastTarget, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Label Margin="5" Grid.Row="5" Grid.Column="0" Content="Resultattype: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <ComboBox Margin="5" Grid.Row="5" Grid.Column="1" ItemsSource="{Binding SelectedRange.ResultTypes}" SelectedItem="{Binding SelectedRange.ResultType}" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Label Margin="5" Grid.Row="6" Grid.Column="0" Content="Dobbelthold: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <CheckBox  Margin="5" Grid.Row="6" Grid.Column="1" IsChecked="{Binding SelectedRange.DoubleRange}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Label Margin="5" Grid.Row="7" Grid.Column="0" Content="Antall tellende: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
-                            <TextBox Margin="5" Grid.Row="7" Grid.Column="1" Text="{Binding SelectedRange.CountingShoots}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                            <TextBox Margin="5" Grid.Row="7" Grid.Column="1" Text="{Binding SelectedRange.CountingShoots, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <Label Margin="5" Grid.Row="8" Grid.Column="0" Content="Minneskyting: " VerticalAlignment="Center" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <CheckBox  Margin="5" Grid.Row="8" Grid.Column="1" IsChecked="{Binding SelectedRange.MinneShooting}" VerticalAlignment="Center" BorderBrush="SteelBlue" Visibility="{Binding SelectedRange.RangeDetailsVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
                             <ContentControl Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" Content="{Binding SelectedRange.CommunicationSetup}" ContentTemplate="{StaticResource CommunicationSetup}" Visibility="{Binding SelectedRange.CommunicationSetupVisible, Converter={StaticResource BoolToVisibilityConverter}}"/>
@@ -210,7 +210,7 @@
                             </Grid.RowDefinitions>
                             <StackPanel Grid.Row="0" Orientation="Horizontal">
                                 <Label Content="OrionId: " VerticalAlignment="Center"/>
-                                <TextBox Text="{Binding SelectedOrion.OrionId}" VerticalAlignment="Center" BorderBrush="White"/>
+                                <TextBox Text="{Binding SelectedOrion.OrionId, UpdateSourceTrigger=PropertyChanged}" VerticalAlignment="Center" BorderBrush="White"/>
                             </StackPanel>
                             <ContentPresenter Grid.Row="1" Content="{Binding SelectedOrion.CommunicationSetup}" ContentTemplate="{StaticResource CommunicationSetup}"/>
                             <ContentPresenter Grid.Row="2" Content="{Binding SelectedOrion}" ContentTemplate="{StaticResource RangeView}"/>
@@ -328,7 +328,7 @@
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock MinWidth="100" Margin="5">Stevnenavn:</TextBlock>
-                                    <TextBox MinWidth="200" Margin="5" Text="{Binding NewDatabaseName}"/>
+                                    <TextBox MinWidth="200" Margin="5" Text="{Binding NewDatabaseName, UpdateSourceTrigger=PropertyChanged}"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
                                     <TextBlock MinWidth="100" Margin="5">Startdato:</TextBlock>
@@ -364,7 +364,7 @@
                         <StackPanel Orientation="Vertical">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Width="120" Margin="5">Ny stevnemal, navn:</TextBlock>
-                                <TextBox MinWidth="200" Margin="5" Text="{Binding NewTemplateName}"/>
+                                    <TextBox MinWidth="200" Margin="5" Text="{Binding NewTemplateName, UpdateSourceTrigger=PropertyChanged}"/>
                                     <Button Command="{Binding CreateTemplateCommand}" Margin="5" Width="70" HorizontalAlignment="Left" Content="Opprett"/>
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal">
@@ -513,7 +513,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel Orientation="Horizontal">
                     <Label VerticalAlignment="Center">Angi opptil hvilket lagnummer det skal registreres:</Label>
-                    <TextBox VerticalAlignment="Center" Background="Blue" Foreground="BlanchedAlmond" Grid.Row="0" Text="{Binding LeonTeamToRegister, Mode=OneWayToSource}"/>
+                    <TextBox VerticalAlignment="Center" Background="Blue" Foreground="BlanchedAlmond" Grid.Row="0" Text="{Binding LeonTeamToRegister, Mode=OneWayToSource, UpdateSourceTrigger=PropertyChanged}"/>
                 </StackPanel>
                 <Button Grid.Row="1" Command="{Binding EtterRegistrerCommand}" Content="Registrer til Leon"/>
             </Grid>

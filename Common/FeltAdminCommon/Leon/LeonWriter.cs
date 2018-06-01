@@ -28,7 +28,7 @@ namespace FeltAdmin.Leon
 
         private static object syncObject = new object();
 
-        private static string m_minnePath ;
+        private static string m_minnePath;
 
         public static void WriteLeonResults(
             List<int> finishedShooters,
@@ -144,7 +144,7 @@ namespace FeltAdmin.Leon
                     var allShots = string.Join(";", allFeltSeries).ToUpper();
 
                     var leonLine = string.Format(
-                        "{0};{1};{2};{3};{4};{5};{6};{7};{8}",
+                        "{0};{1};{2};{3};{4};{5};{6};{7};{8};",
                         leonPerson.Range,
                         leonPerson.Team,
                         leonPerson.Target,
@@ -163,7 +163,7 @@ namespace FeltAdmin.Leon
                     var allShots = string.Join(";", allMinneSeries).ToUpper();
 
                     var leonLine = string.Format(
-                        "{0};{1};{2};{3};{4};{5};{6};{7};{8}",
+                        "{0};{1};{2};{3};{4};{5};{6};{7};{8};",
                         minnePerson.Range,
                         minnePerson.Team,
                         minnePerson.Target,
@@ -218,11 +218,35 @@ namespace FeltAdmin.Leon
             }
         }
 
-        internal static void CheckTmpFile(string outputPath, string tmpDir)
+        private static bool HasUPD(string path)
+        {
+            var updFile = Path.Combine(path, ToLeonUPD);
+            return File.Exists(updFile);
+        }
+
+        internal static void CheckAnyTempFiles(string feltPath, string feltTempDir, string minneTempDir)
+        {
+            if (HasUPD(feltPath))
+            {
+                return;
+            }
+
+            if (HasUPD(m_minnePath))
+            {
+                return;
+            }
+
+            if (CheckTmpFile(feltPath, feltTempDir) == false)
+            {
+                CheckTmpFile(m_minnePath, minneTempDir);
+            }
+        }
+
+        internal static bool CheckTmpFile(string outputPath, string tmpDir)
         {
             if (string.IsNullOrWhiteSpace(outputPath) || !Directory.Exists(outputPath))
             {
-                return;
+                return false;
             }
 
             lock (syncObject)
@@ -232,51 +256,63 @@ namespace FeltAdmin.Leon
                 var tmpPath = Path.Combine(tmpBasePath, tmpDir);
 
                 var filenameTmp = Path.Combine(tmpPath, ToLeonDataTmp);
-                if (File.Exists(filenameTmp))
+                if (!File.Exists(filenameTmp))
                 {
-                    var updFile = Path.Combine(outputPath, ToLeonUPD);
-                    if (!File.Exists(updFile))
+                    return false;
+                }
+
+                var updFile = Path.Combine(outputPath, ToLeonUPD);
+                if (!File.Exists(updFile))
+                {
+                    var filename = Path.Combine(outputPath, ToLeonData);
+                    var fileMoveError = false;
+                    try
                     {
-                        var filename = Path.Combine(outputPath, ToLeonData);
-                        var fileMoveError = false;
+                        File.Move(filenameTmp, filename);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex, "Unable to move file " + filenameTmp + " to " + filename);
+                        fileMoveError = true;
+                    }
+
+                    if (!fileMoveError)
+                    {
                         try
                         {
-                            File.Move(filenameTmp, filename);
+                            using (FileStream file = new FileStream(updFile, FileMode.Create, System.IO.FileAccess.Write))
+                            {
+                                file.Write(s_updFileContent, 0, s_updFileContent.Length);
+                                file.Flush(true);
+                                file.Close();
+                            }
+
+                            return true;
                         }
                         catch (Exception ex)
                         {
-                            Log.Error(ex, "Unable to move file " + filenameTmp + " to " + filename);
-                            fileMoveError = true;
-                        }
-
-                        if (!fileMoveError)
-                        {
+                            Log.Error(ex, "Unable to create file " + updFile);
                             try
                             {
-                                using (FileStream file = new FileStream(updFile, FileMode.Create, System.IO.FileAccess.Write))
-                                {
-                                    file.Write(s_updFileContent, 0, s_updFileContent.Length);
-                                    file.Flush(true);
-                                    file.Close();
-                                }
+                                File.Move(filename, filenameTmp);
                             }
-                            catch (Exception ex)
+                            catch (Exception ex1)
                             {
-                                Log.Error(ex, "Unable to create file " + updFile);
-                                try
-                                {
-                                    File.Move(filename, filenameTmp);
-                                }
-                                catch (Exception ex1)
-                                {
-                                    Log.Error(ex1, "Unable to move back file after UPD file create error " + filename + ", " + filenameTmp);
-                                }
+                                Log.Error(ex1, "Unable to move back file after UPD file create error " + filename + ", " + filenameTmp);
                             }
                         }
                     }
                 }
             }
+
+            return false;
         }
+
+        internal static void RegisterMinnePath(string outputPath)
+        {
+            m_minnePath = outputPath;
+        }
+
         //internal static void CheckTmpFile(string path)
         //{
         //    lock (syncObject)
@@ -468,5 +504,6 @@ namespace FeltAdmin.Leon
         //        m_minnePath = path;
         //    }
         //}
+
     }
 }

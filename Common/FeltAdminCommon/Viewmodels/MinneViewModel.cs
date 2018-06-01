@@ -21,6 +21,8 @@ namespace FeltAdmin.Viewmodels
         public MinneViewModel(CommunicationSetup setup)
         {
             m_communicationSetup = setup;
+            var outputPath = this.m_communicationSetup.SelectedPath;
+            LeonWriter.RegisterMinnePath(outputPath);
         }
 
         public List<MinneRegistration> MinneRegistrations
@@ -73,14 +75,13 @@ namespace FeltAdmin.Viewmodels
         private void InitGet()
         {
             var outputPath = this.m_communicationSetup.SelectedPath;
-            //LeonWriter.RegisterPath(path);
             var registrations = this.GetNewRegistrations(outputPath);
             if (registrations != null && registrations.Any())
             {
                 this.AddNewRegistrations(registrations, true);
             }
 
-            LeonWriter.CheckTmpFile(outputPath, "MinneLeonTemp");
+            ////LeonWriter.CheckTmpFile(outputPath, "MinneLeonTemp");
         }
 
         public List<MinneRegistration> GetNewRegistrations(string path)

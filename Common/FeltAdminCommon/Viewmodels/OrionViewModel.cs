@@ -1,4 +1,5 @@
-﻿using Microsoft.Practices.Prism.Commands;
+﻿using FeltAdminCommon.Helpers;
+using Microsoft.Practices.Prism.Commands;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;
@@ -99,12 +100,14 @@ namespace FeltAdmin.Viewmodels
             if (m_rangeView == null)
             {
                 m_rangeView = new ObservableCollection<RangeViewModel>();
-                newRange.RangeId = 1;
+                //newRange.RangeId = 1;
             }
-            else
-            {
-                newRange.RangeId = m_rangeView.Max(r => r.RangeId) + 1;
-            }
+            ////else
+            ////{
+            ////    newRange.RangeId = m_rangeView.Max(r => r.RangeId) + 1;
+            ////}
+
+            newRange.RangeId = OrionRangeIdHelper.GetNextRangeId();
 
             m_rangeView.Add(newRange);
             this.OnPropertyChanged("RangeViews");
@@ -119,19 +122,21 @@ namespace FeltAdmin.Viewmodels
             if (m_rangeView == null)
             {
                 m_rangeView = new ObservableCollection<RangeViewModel>();
-                newRange.RangeId = 1;
+                //newRange.RangeId = 1;
             }
-            else
-            {
-                if (m_rangeView.Count > 0)
-                {
-                    newRange.RangeId = m_rangeView.Max(r => r.RangeId) + 1;
-                }
-                else
-                {
-                    newRange.RangeId = 1;
-                }
-            }
+            ////else
+            ////{
+            ////    if (m_rangeView.Count > 0)
+            ////    {
+            ////        newRange.RangeId = m_rangeView.Max(r => r.RangeId) + 1;
+            ////    }
+            ////    else
+            ////    {
+            ////        newRange.RangeId = 1;
+            ////    }
+            ////}
+
+            newRange.RangeId = OrionRangeIdHelper.GetNextRangeId();
 
             m_rangeView.Add(newRange);
             this.OnPropertyChanged("RangeViews");
