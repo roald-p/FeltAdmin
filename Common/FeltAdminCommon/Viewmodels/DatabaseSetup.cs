@@ -5,8 +5,8 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Annotations;
-using System.Windows.Forms;
 using System.Windows.Input;
 
 using FeltAdmin.Database.Engine;
@@ -15,6 +15,7 @@ using FeltAdmin.Diagnostics;
 using FeltAdminCommon.Viewmodels;
 
 using Microsoft.Practices.Prism.Commands;
+using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace FeltAdmin.Viewmodels
 {
@@ -137,6 +138,15 @@ namespace FeltAdmin.Viewmodels
             if (!DatabaseApi.DbSelected)
             {
                 MessageBox.Show("Database must be selected or created");
+                return;
+            }
+
+            var settings = SettingsHelper.GetSettings();
+            var errors = settings.OrionSetting.Validate(settings.LeonCommunicationSetting);
+            if (errors != null && errors.Count > 0)
+            {
+                var messages = string.Join(Environment.NewLine, errors);
+                System.Windows.MessageBox.Show(messages, "Feil i konfigurasjon", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
 

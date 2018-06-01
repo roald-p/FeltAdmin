@@ -186,9 +186,9 @@ namespace FeltAdmin.Viewmodels
             this.OnPropertyChanged("SortedRanges");
         }
 
-        internal List<string> Validate()
+        internal List<string> Validate(LeonCommunication lc)
         {
-            var errors = new List<string>();
+            var errors = lc.Validate();
             if (SortedRanges == null)
             {
                 errors.Add("Det finnes ingen holdid generert ");
@@ -235,7 +235,23 @@ namespace FeltAdmin.Viewmodels
                 errors.Add("Forskjellig antall skiver på hold");
             }
 
-            // Missing communication catalogs
+            // Shooting ranges with zero counting shoots
+            foreach (var rangeViewModel in SortedRanges)
+            {
+                if (rangeViewModel.RangeType == RangeType.Shooting && rangeViewModel.CountingShoots < 1)
+                {
+                    errors.Add(string.Format("Tellende skudd = {0} for HoldId= {1}", rangeViewModel.CountingShoots, rangeViewModel.RangeId));
+                }
+            }
+
+            
+            // Missing and duplicate communication catalogs
+            var catalogs = new Dictionary<string, string>();
+            if (!string.IsNullOrWhiteSpace(lc.CommunicationSetup.SelectedPath))
+            {
+                catalogs.Add(lc.CommunicationSetup.SelectedPath, "Leon kommunikasjon");
+            }
+
             foreach (var orionViewModel in m_orionViewModels)
             {
                 if (string.IsNullOrWhiteSpace(orionViewModel.CommunicationSetup.SelectedPath))
@@ -245,6 +261,15 @@ namespace FeltAdmin.Viewmodels
                 else if (!Directory.Exists(orionViewModel.CommunicationSetup.SelectedPath))
                 {
                     errors.Add("Kommunikasjonskatalog for orion finnes ikke: " + orionViewModel.CommunicationSetup.SelectedPath);
+                }
+
+                if (catalogs.ContainsKey(orionViewModel.CommunicationSetup.SelectedPath))
+                {
+                    errors.Add(string.Format("Kommunikasjonskatalog \"{0}\" for OrionId = {1} er allerede i bruk for {2}", orionViewModel.CommunicationSetup.SelectedPath, orionViewModel.OrionId, catalogs[orionViewModel.CommunicationSetup.SelectedPath]));
+                }
+                else
+                {
+                    catalogs.Add(orionViewModel.CommunicationSetup.SelectedPath, string.Format("OrionId = {0}", orionViewModel.OrionId));
                 }
             }
 
@@ -260,6 +285,16 @@ namespace FeltAdmin.Viewmodels
                     {
                         errors.Add("Kommunikasjonskatalog for minneskyting finnes ikke: " + rangeViewModel.CommunicationSetup.SelectedPath);
                     }
+
+                    if (catalogs.ContainsKey(rangeViewModel.CommunicationSetup.SelectedPath))
+                    {
+                        errors.Add(string.Format("Kommunikasjonskatalog \"{0}\" for minne på HoldId = {1} er allerede i bruk for {2}", rangeViewModel.CommunicationSetup.SelectedPath, rangeViewModel.RangeId, catalogs[rangeViewModel.CommunicationSetup.SelectedPath]));
+                    }
+                    else
+                    {
+                        catalogs.Add(rangeViewModel.CommunicationSetup.SelectedPath, string.Format("OrionId = {0}", rangeViewModel.RangeId));
+                    }
+
                 }
             }
 

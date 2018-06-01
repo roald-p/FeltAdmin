@@ -348,12 +348,10 @@ namespace FeltAdmin.Viewmodels
 
         public void SaveSettingsTemplateExecute()
         {
-            var errors = MainOrionViewModel.Validate();
-            var moreErrors = LeonCommunication.Validate();
+            var errors = MainOrionViewModel.Validate(LeonCommunication);
 
-            if (errors.Count > 0 || moreErrors.Count > 0)
+            if (errors.Count > 0)
             {
-                errors.AddRange(moreErrors);
                 var messages = string.Join(Environment.NewLine, errors);
                 System.Windows.MessageBox.Show(messages, "Feil i konfigurasjon", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;

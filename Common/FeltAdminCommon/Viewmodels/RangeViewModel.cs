@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Xml.Serialization;
-
+using FeltAdmin.Configuration;
 
 namespace FeltAdmin.Viewmodels
 {
@@ -32,6 +32,16 @@ namespace FeltAdmin.Viewmodels
         {
             this.CommunicationSetup = new CommunicationSetup();
             m_parent = parent;
+            m_countingShoots = 6;
+            var counting = ConfigurationLoader.GetAppSettingsValue("DefaultCountingShoots");
+            if (!string.IsNullOrWhiteSpace(counting))
+            {
+                int shots = 0;
+                if (int.TryParse(counting, out shots))
+                {
+                    m_countingShoots = shots;
+                }
+            }
         }
 
         public RangeViewModel()
