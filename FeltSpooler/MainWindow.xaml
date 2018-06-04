@@ -5,6 +5,8 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
@@ -14,13 +16,21 @@
             <TextBox Margin="5" Text="{Binding SelectedPath}" Width="400"/>
             <Button Margin="5" Command="{Binding OpenDbCommand}" Content="..."/>
         </StackPanel>
-        <ListBox Margin="5" Grid.Row="1" ItemsSource="{Binding AllFilesList}"></ListBox>
-        <StackPanel Margin="5" Grid.Row="2" Orientation="Horizontal">
+        <StackPanel Margin="5" Grid.Row="1" DataContext="{Binding}"  Orientation="Horizontal" VerticalAlignment="Top">
+            <Label Margin="5">Simuler orion:</Label>
+            <CheckBox Margin="5" IsChecked="{Binding SimulateOrion}" VerticalAlignment="Center"/>
+        </StackPanel>
+        <StackPanel Margin="5" Grid.Row="2" DataContext="{Binding}"  Orientation="Horizontal" VerticalAlignment="Top">
+            <Label Margin="5">Simuler Leon:</Label>
+            <CheckBox Margin="5" IsChecked="{Binding SimulateLeon}" VerticalAlignment="Center"/>
+        </StackPanel>
+        <ListBox Margin="5" Grid.Row="3" ItemsSource="{Binding AllFilesList}"></ListBox>
+        <StackPanel Margin="5" Grid.Row="4" Orientation="Horizontal">
             <Button Margin="5" Command="{Binding CopyNextCommand}" Content="MoveNext"/>
             <Label Margin="5">Lagnummer:</Label>
             <TextBox Margin="5" Text="{Binding TeamNumber}" Width="40"/>
         </StackPanel>
-        <StackPanel Margin="5" Grid.Row="3" Orientation="Horizontal">
+        <StackPanel Margin="5" Grid.Row="5" Orientation="Horizontal">
             <Label Margin="5">OrionPaths:</Label>
             <!--DisplayMemberPath="DatabaseName"-->
             <ComboBox MinWidth="200" MaxWidth="500" Width="Auto" Margin="5" HorizontalAlignment="Left" ItemsSource="{Binding OrionPaths, Mode=TwoWay}"  SelectedItem="{Binding SelectedOrionPath, Mode=TwoWay}"/>

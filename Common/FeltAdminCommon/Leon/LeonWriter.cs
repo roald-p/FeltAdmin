@@ -265,6 +265,25 @@ namespace FeltAdmin.Leon
                 if (!File.Exists(updFile))
                 {
                     var filename = Path.Combine(outputPath, ToLeonData);
+
+                    var backupDirName = "ToLeonBackup";
+                    var backupDir = Path.Combine(tmpBasePath, backupDirName);
+                    var backupFilename = Path.Combine(backupDir, $"{DateTime.Now.ToString("yyyyMMdd-HHmmss")}_Leon_kmonew.txt");
+
+                    try
+                    {
+                        if (!Directory.Exists(backupDir))
+                        {
+                            Directory.CreateDirectory(backupDir);
+                        }
+
+                        File.Copy(filenameTmp, backupFilename);
+                    }
+                    catch (Exception exCopy)
+                    {
+                        Log.Error(exCopy, "Unable to copy file " + filenameTmp + " to " + filename);
+                    }
+
                     var fileMoveError = false;
                     try
                     {

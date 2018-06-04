@@ -157,6 +157,24 @@ namespace FeltAdmin.Orion
                         var filename = Path.Combine(path, ToOrionData);
                         var fileMoveError = false;
 
+                        var backupDirName = "ToOrionBackup";
+                        var backupDir = Path.Combine(tmpBasePath, backupDirName);
+                        var backupFilename = Path.Combine(backupDir, $"{DateTime.Now.ToString("yyyyMMdd-HHmmss")}_orion_{orion.OrionId}_kminew.txt");
+
+                        try
+                        {
+                            if (!Directory.Exists(backupDir))
+                            {
+                                Directory.CreateDirectory(backupDir);
+                            }
+
+                            File.Copy(filenameTmp, backupFilename);
+                        }
+                        catch (Exception exCopy)
+                        {
+                            Log.Error(exCopy, "Unable to copy file " + filenameTmp + " to " + filename);
+                        }
+
                         try
                         {
                             File.Move(filenameTmp, filename);

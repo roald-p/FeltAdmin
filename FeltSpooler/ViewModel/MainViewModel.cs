@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Threading;
 using FeltAdmin.Configuration;
 using FeltAdmin.Database.Engine;
 using FeltAdmin.Helpers;
@@ -18,6 +19,8 @@ namespace FeltSpooler.ViewModel
 {
     public class MainViewModel : ViewModelBase
     {
+        private DispatcherTimer m_dispatcherTimer;
+
         private Settings m_settings;
 
         private DelegateCommand m_openDbCommand;
@@ -146,6 +149,8 @@ namespace FeltSpooler.ViewModel
             }
         }
 
+        public bool SimulateOrion { get; set; }
+        public bool SimulateLeon { get; set; }
         private void CopyNextExecute()
         {
             if (m_allFilesList != null && m_allFilesList.Any())
@@ -309,6 +314,65 @@ namespace FeltSpooler.ViewModel
                 if (result == DialogResult.OK)
                 {
                     SelectedPath = dlg.SelectedPath;
+                    if (m_dispatcherTimer == null)
+                    {
+                        m_dispatcherTimer = new DispatcherTimer();
+                        m_dispatcherTimer.Tick += dispatcherTimer_Tick;
+                        m_dispatcherTimer.Interval = new TimeSpan(0, 0, 2);
+                        m_dispatcherTimer.Start();
+                    }
+                }
+            }
+        }
+
+        private void dispatcherTimer_Tick(object sender, EventArgs e)
+        {
+            // delete orion input files
+            if (SimulateOrion)
+            {
+                foreach (var orionPath in m_orionPaths)
+                {
+                    if (Directory.Exists(orionPath))
+                    {
+                        var updFile = Path.Combine(orionPath, "KMI.UPD");
+                        if (File.Exists(updFile))
+                        {
+                            DeleteFile(orionPath, "KMINEW.TXT");
+                            DeleteFile(orionPath, "KMI.UPD");
+                        }
+                    }
+                }
+            }
+
+            if (SimulateLeon)
+            {
+                if (m_settings != null && m_settings.LeonCommunicationSetting != null &&
+                    m_settings.LeonCommunicationSetting.CommunicationSetup != null &&
+                    !string.IsNullOrWhiteSpace(m_settings.LeonCommunicationSetting.CommunicationSetup.SelectedPath))
+                {
+                    if (Directory.Exists(m_settings.LeonCommunicationSetting.CommunicationSetup.SelectedPath))
+                    {
+                        var updFile = Path.Combine(m_settings.LeonCommunicationSetting.CommunicationSetup.SelectedPath, "KMO.UPD");
+                        if (File.Exists(updFile))
+                        {
+                            DeleteFile(m_settings.LeonCommunicationSetting.CommunicationSetup.SelectedPath, "KMONEW.TXT");
+                            DeleteFile(m_settings.LeonCommunicationSetting.CommunicationSetup.SelectedPath, "KMO.UPD");
+                        }
+                    }
+                }
+
+                var minne = m_settings.OrionSetting.OrionViewModels.SelectMany(r => r.RangeViews).SingleOrDefault(r => r.MinneShooting);
+                if (minne != null)
+                {
+                    if (Directory.Exists(minne.CommunicationSetup.SelectedPath))
+                    {
+                        var updFile = Path.Combine(minne.CommunicationSetup.SelectedPath, "KMO.UPD");
+                        if (File.Exists(updFile))
+                        {
+                            DeleteFile(minne.CommunicationSetup.SelectedPath, "KMONEW.TXT");
+                            DeleteFile(minne.CommunicationSetup.SelectedPath, "KMO.UPD");
+                        }
+                    }
                 }
             }
         }
