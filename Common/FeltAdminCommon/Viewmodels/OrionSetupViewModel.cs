@@ -262,8 +262,7 @@ namespace FeltAdmin.Viewmodels
                 {
                     errors.Add("Kommunikasjonskatalog for orion finnes ikke: " + orionViewModel.CommunicationSetup.SelectedPath);
                 }
-
-                if (catalogs.ContainsKey(orionViewModel.CommunicationSetup.SelectedPath))
+                else if (catalogs.ContainsKey(orionViewModel.CommunicationSetup.SelectedPath))
                 {
                     errors.Add(string.Format("Kommunikasjonskatalog \"{0}\" for OrionId = {1} er allerede i bruk for {2}", orionViewModel.CommunicationSetup.SelectedPath, orionViewModel.OrionId, catalogs[orionViewModel.CommunicationSetup.SelectedPath]));
                 }
