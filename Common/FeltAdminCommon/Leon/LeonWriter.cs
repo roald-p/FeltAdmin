@@ -268,7 +268,7 @@ namespace FeltAdmin.Leon
 
                     var backupDirName = "ToLeonBackup";
                     var backupDir = Path.Combine(tmpBasePath, backupDirName);
-                    var backupFilename = Path.Combine(backupDir, $"{DateTime.Now.ToString("yyyyMMdd-HHmmss")}_Leon_kmonew.txt");
+                    var backupFilename = Path.Combine(backupDir, string.Format("{0}_Leon_kmonew.txt",DateTime.Now.ToString("yyyyMMdd-HHmmss")));
 
                     try
                     {
