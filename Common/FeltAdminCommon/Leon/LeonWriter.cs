@@ -187,13 +187,18 @@ namespace FeltAdmin.Leon
                 DatabaseApi.Save(finishedPerson);
             }
 
+            WriteToTempOutput(leonResultsFelt, tmpPath, leonResultsBane, tmpPathMinne);
+        }
+
+        private static void WriteToTempOutput(List<string> listFeltLeon, string tmpPathFelt, List<string> listMinneLeon, string tmpPathMinne)
+        {
             lock (syncObject)
             {
-                if (leonResultsFelt.Any())
+                if (listFeltLeon != null && listFeltLeon.Any())
                 {
                     //var writefilenameTmp = Path.Combine(tmpPath, "WRITE"+ToLeonDataTmp);
-                    var filenameTmp = Path.Combine(tmpPath, ToLeonDataTmp);
-                    File.AppendAllLines(filenameTmp, leonResultsFelt, Encoding.GetEncoding("ISO-8859-1"));
+                    var filenameTmp = Path.Combine(tmpPathFelt, ToLeonDataTmp);
+                    File.AppendAllLines(filenameTmp, listFeltLeon, Encoding.GetEncoding("ISO-8859-1"));
                     //if (File.Exists(filenameTmp))
                     //{
                     //    Log.Error("File alredy exsist deliting {0}", filenameTmp);
@@ -203,11 +208,11 @@ namespace FeltAdmin.Leon
                     //File.Move(writefilenameTmp, filenameTmp);
                 }
 
-                if (leonResultsBane.Any())
+                if (listMinneLeon != null && listMinneLeon.Any())
                 {
                     //var writefilenameTmp = Path.Combine(tmpPathMinne, "WRITE"+ToLeonDataTmp);
                     var filenameTmp = Path.Combine(tmpPathMinne, ToLeonDataTmp);
-                    File.AppendAllLines(filenameTmp, leonResultsBane, Encoding.GetEncoding("ISO-8859-1"));
+                    File.AppendAllLines(filenameTmp, listMinneLeon, Encoding.GetEncoding("ISO-8859-1"));
                     //if (File.Exists(filenameTmp))
                     //{
                     //    Log.Error("File alredy exsist deliting {0}", filenameTmp);
@@ -216,6 +221,13 @@ namespace FeltAdmin.Leon
                     //File.Move(writefilenameTmp, filenameTmp);
                 }
             }
+        }
+
+        public static void WriteFinalResultsToLeon(List<string> listFeltLeon)
+        {
+            var tmpBasePath = DatabaseApi.GetActiveCompetition();
+            var tmpPath = Path.Combine(tmpBasePath, "LeonTmp");
+            WriteToTempOutput(listFeltLeon, tmpPath, null, null);
         }
 
         private static bool HasUPD(string path)

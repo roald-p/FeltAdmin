@@ -119,8 +119,10 @@ namespace FeltAdmin.Viewmodels
 
         private string m_selectedTemplatesfileName;
 
-      
-        
+        private List<LeonFinalRegistration> m_leonFinalRegistrations;
+
+
+
         public delegate void DisableDbSelect(object sender);
 
         public event DisableDbSelect DisableDb;
@@ -328,10 +330,39 @@ namespace FeltAdmin.Viewmodels
                 this.m_minneViewModel.StartReadNewRegistrations();
             }
 
+            var leonFinalRegistrations = DatabaseApi.LoadCompetitionFromTable(TableName.LeonFinalRegistration);
+            this.AddNewRegistrations(leonFinalRegistrations.OfType<LeonFinalRegistration>().ToList());
+
             ProductionMode = true;
             MainOrionViewModel.SendPropChanged();
         }
 
+        private void AddNewRegistrations(List<LeonFinalRegistration> registrations)
+        {
+            if (m_leonFinalRegistrations == null)
+            {
+                m_leonFinalRegistrations = new List<LeonFinalRegistration>();
+            }
+
+            foreach (var leonFinalRegistration in registrations)
+            {
+                AddSingleLeonFinalReg(leonFinalRegistration);
+            }
+        }
+
+        private void AddSingleLeonFinalReg(LeonFinalRegistration registration)
+        {
+            var existingReg = m_leonFinalRegistrations.SingleOrDefault(r => r.Team == registration.Team && r.Target == registration.Target);
+            if (existingReg != null)
+            {
+                m_leonFinalRegistrations.Remove(existingReg);
+            }
+
+            if (existingReg == null || !registration.IsEmpty)
+            {
+                m_leonFinalRegistrations.Add(registration);
+            }
+        }
 
         private void ExitSettingsTemplateExecute()
         {
@@ -495,67 +526,159 @@ namespace FeltAdmin.Viewmodels
         void OrionResultViewModel_NewOrionResults(object sender, Orion.OrionResultsEventArgs e)
         {
             var newResults = e.NewResults;
-            List<int> finishedShooters;
-            var updatedRegistrations = m_orionResultUpdater.GetUpdatedRegistrationsAfterResultRegistration(
-                newResults,
-                this.OrionTeamsSetupViewModel.OrionRegistrations,
-                this.OrionResultViewModel.OrionResults,
-                out finishedShooters);
-            if (finishedShooters.Any())
+            IEnumerable<OrionResult> finalResults = null;
+            List<OrionResult> restResults = null;
+            var finalOrion = m_mainOrionViewModel.OrionViewModels.SingleOrDefault(o => o.FinalRange == true);
+            if (finalOrion != null && m_leonFinalRegistrations != null && m_leonFinalRegistrations.Any())
             {
-                var finishedPersons = Leon.LeonPersons.Where(l => finishedShooters.Contains(l.ShooterId));
-                var maxTeamNumber = finishedPersons.Max(f => f.Team);
-                var shouldBeFinished = Leon.LeonPersons.Where(l => l.Team <= maxTeamNumber).Select(l => l.ShooterId);
-                var finishedRegistrations =
-                    DatabaseApi.LoadCompetitionFromTable(TableName.FinishedShooter).OfType<FinishedPerson>().Select(f => f.ShooterId);
-                var missingPersons = shouldBeFinished.Except(finishedRegistrations).Except(finishedShooters);
-                finishedShooters.AddRange(missingPersons);
+                var firstFinaleTeam = m_leonFinalRegistrations.OrderBy(r => r.Team).FirstOrDefault();
+                if (firstFinaleTeam != null && newResults.Any(r => r.OrionId == finalOrion.OrionId && r.Team >= firstFinaleTeam.Team))
+                {
+                    finalResults = newResults.Where(r => r.OrionId == finalOrion.OrionId && r.Team >= firstFinaleTeam.Team);
+                }
             }
 
-            this.OrionCommunicationViewModel.UpdateChangesToOrion(updatedRegistrations);
-            this.OrionResultViewModel.AddNewRegistrations(newResults);
-
-            if (finishedShooters != null && finishedShooters.Any())
+            if (finalResults != null && finalResults.Any())
             {
-                if (m_minneViewModel != null && m_minneViewModel.MinneRegistrations != null)
+                restResults = newResults.Except(finalResults).ToList();
+                var leonResultsFinal = new List<string>();
+
+                foreach (var finalResult in finalResults)
                 {
-                    LeonWriter.WriteLeonResults(
-                        finishedShooters,
-                        this.OrionResultViewModel.OrionResults,
-                        this.MainOrionViewModel,
-                        this.Leon.LeonPersons,
-                        this.m_minneViewModel.MinneRegistrations);
+                    var leonFinalReg = m_leonFinalRegistrations.SingleOrDefault(l => l.ShooterId == finalResult.ShooterId);
+                    if (leonFinalReg != null)
+                    {
+                        var series = finalResult.GetFinalSeriesFromDoubleRange();
+                        if (series != null && series.Any())
+                        {
+                                var allShots = string.Join(";", series).ToUpper();
+
+                                var leonLine = string.Format(
+                                    "{0};{1};{2};{3};{4};{5};{6};{7};{8};",
+                                    leonFinalReg.Range,
+                                    leonFinalReg.Team,
+                                    leonFinalReg.Target,
+                                    leonFinalReg.ShooterId,
+                                    leonFinalReg.Name,
+                                    leonFinalReg.ClubName,
+                                    leonFinalReg.Class,
+                                    0,
+                                    allShots);
+
+                                leonResultsFinal.Add(leonLine);
+                            }
+                    }
                 }
-                else
+
+                if (leonResultsFinal.Any())
                 {
-                    LeonWriter.WriteLeonResults(
-                        finishedShooters,
-                        this.OrionResultViewModel.OrionResults,
-                        this.MainOrionViewModel,
-                        this.Leon.LeonPersons,
-                        null);
+                    LeonWriter.WriteFinalResultsToLeon(leonResultsFinal);
+                }
+            }
+            else
+            {
+                restResults = newResults;
+            }
+
+            if (restResults != null && restResults.Any())
+            {
+                List<int> finishedShooters;
+                var updatedRegistrations = m_orionResultUpdater.GetUpdatedRegistrationsAfterResultRegistration(
+                    restResults,
+                    this.OrionTeamsSetupViewModel.OrionRegistrations,
+                    this.OrionResultViewModel.OrionResults,
+                    out finishedShooters);
+                if (finishedShooters.Any())
+                {
+                    var finishedPersons = Leon.LeonPersons.Where(l => finishedShooters.Contains(l.ShooterId));
+                    var maxTeamNumber = finishedPersons.Max(f => f.Team);
+                    var shouldBeFinished = Leon.LeonPersons.Where(l => l.Team <= maxTeamNumber).Select(l => l.ShooterId);
+                    var finishedRegistrations = DatabaseApi.LoadCompetitionFromTable(TableName.FinishedShooter).OfType<FinishedPerson>()
+                        .Select(f => f.ShooterId);
+                    var missingPersons = shouldBeFinished.Except(finishedRegistrations).Except(finishedShooters);
+                    finishedShooters.AddRange(missingPersons);
+                }
+
+                this.OrionCommunicationViewModel.UpdateChangesToOrion(updatedRegistrations);
+                this.OrionResultViewModel.AddNewRegistrations(restResults);
+
+                if (finishedShooters != null && finishedShooters.Any())
+                {
+                    if (m_minneViewModel != null && m_minneViewModel.MinneRegistrations != null)
+                    {
+                        LeonWriter.WriteLeonResults(
+                            finishedShooters,
+                            this.OrionResultViewModel.OrionResults,
+                            this.MainOrionViewModel,
+                            this.Leon.LeonPersons,
+                            this.m_minneViewModel.MinneRegistrations);
+                    }
+                    else
+                    {
+                        LeonWriter.WriteLeonResults(
+                            finishedShooters,
+                            this.OrionResultViewModel.OrionResults,
+                            this.MainOrionViewModel,
+                            this.Leon.LeonPersons,
+                            null);
+                    }
                 }
             }
         }
 
         void LeonCommunication_NewLeonRegistrations(object sender, LeonCommunication.LeonEventArgs e)
         {
-            //var finale = e.NewRegistrations.Where(r => r.Team > 100);
-            //var innledende = e.NewRegistrations.Where(r => r.Team <= 100);
+            IEnumerable<LeonPerson> innledende;
+            IEnumerable<LeonPerson> finale = null;
+            var finalOrion = m_mainOrionViewModel.OrionViewModels.FirstOrDefault(o => o.FinalRange == true);
+            if (finalOrion == null)
+            {
+                innledende = e.NewRegistrations;
+            }
+            else
+            {
+                finale = e.NewRegistrations.Where(r => r.Team > 100);
+                innledende = e.NewRegistrations.Where(r => r.Team <= 100);
+            }
 
-            //if (innledende.Any())
-            //{
-                //var innledendelist = innledende.ToList();
-                var realChanges = Leon.AddNewRegistrations(e.NewRegistrations);
+            if (innledende.Any())
+            {
+                var innledendelist = innledende.ToList();
+                var realChanges = Leon.AddNewRegistrations(innledendelist);
                 var newRegistrations = this.OrionTeamsSetupViewModel.AddNewRegistrations(realChanges);
                 m_orionResultUpdater.AddSums(newRegistrations, this.OrionResultViewModel.OrionResults);
                 this.OrionCommunicationViewModel.UpdateChangesToOrion();
-            //}
+            }
 
-            //if (finale.Any())
-            //{
+            if (finale != null && finale.Any())
+            {
+                var newRegs = new List<OrionRegistration>();
 
-            //}
+                foreach (var leonPerson in finale)
+                {
+                    var resutsForPerson = OrionResultViewModel.OrionResults.Where(r => r.ShooterId == leonPerson.ShooterId);
+                    int sum = 0;
+                    foreach (var orionResult in resutsForPerson)
+                    {
+                        if (orionResult.ResultType == ResultType.Bane)
+                        {
+                            continue;
+                        }
+
+                        sum += orionResult.GetSum(ResultType.Felt, 6);
+                    }
+
+                    var leonFinaleReg = new LeonFinalRegistration(leonPerson);
+                    leonFinaleReg.SumIn = sum;
+
+                    var orionFinalRegistration = leonFinaleReg.GetOrionRegistration(finalOrion.OrionId, sum);
+                    newRegs.Add(orionFinalRegistration);
+                    AddSingleLeonFinalReg(leonFinaleReg);
+                    DatabaseApi.Save(leonFinaleReg);
+                }
+
+                this.OrionCommunicationViewModel.UpdateFinalChangesToOrion(newRegs);
+            }
         }
 
         void OrionTeamsSetupViewModel_MoveRegistrations(object sender, FeltAdminCommon.Orion.MoveEventArgs e)

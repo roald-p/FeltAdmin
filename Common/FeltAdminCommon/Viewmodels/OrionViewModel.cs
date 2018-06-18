@@ -22,6 +22,7 @@ namespace FeltAdmin.Viewmodels
         private DelegateCommand m_removeRangeCommand;
 
         private RangeViewModel m_selectedRange;
+        private bool m_finalRange;
 
         [XmlIgnore]
         public ICommand RemoveRange
@@ -190,6 +191,16 @@ namespace FeltAdmin.Viewmodels
             {
                 this.m_orionId = value;
                 this.OnPropertyChanged("OrionId");
+            }
+        }
+
+        public bool FinalRange
+        {
+            get => m_finalRange;
+            set
+            {
+                m_finalRange = value;
+                OnPropertyChanged(nameof(FinalRange));
             }
         }
 

@@ -191,6 +191,9 @@ namespace FeltAdmin.Database.Engine
                     case TableName.FinishedShooter:
                         result.Add(FinishedPerson.Parse(line));
                         break;
+                    case TableName.LeonFinalRegistration:
+                        result.Add(LeonFinalRegistration.Parse(line));
+                        break;
                 }
             }
 

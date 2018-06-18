@@ -24,7 +24,7 @@ namespace FeltSpooler.ViewModel
         private Settings m_settings;
 
         private DelegateCommand m_openDbCommand;
-
+        private DelegateCommand m_restartCommand;
         private DelegateCommand m_copyNextCommand;
 
         private DelegateCommand m_viewOrionCommand;
@@ -108,6 +108,19 @@ namespace FeltSpooler.ViewModel
             }
         }
 
+        public ICommand RestartCommand
+        {
+            get
+            {
+                if (m_restartCommand == null)
+                {
+                    m_restartCommand = new DelegateCommand(this.RestartExecute);
+                }
+
+                return m_restartCommand;
+            }
+        }
+        
         public ICommand ViewOrionCommand
         {
             get
@@ -322,6 +335,14 @@ namespace FeltSpooler.ViewModel
                         m_dispatcherTimer.Start();
                     }
                 }
+            }
+        }
+
+        private void RestartExecute()
+        {
+            if (!string.IsNullOrWhiteSpace(m_selectedPath) && Directory.Exists(m_selectedPath))
+            {
+                this.Init();
             }
         }
 

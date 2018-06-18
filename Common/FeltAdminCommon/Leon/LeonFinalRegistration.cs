@@ -1,13 +1,16 @@
-﻿
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using System.Xml.Serialization;
-
 using FeltAdmin.Database.API;
+using FeltAdmin.Leon;
+using FeltAdmin.Orion;
 
-namespace FeltAdmin.Leon
+namespace FeltAdminCommon.Leon
 {
-    public class LeonPerson : IDatabaseObject
+    public class LeonFinalRegistration : IDatabaseObject
     {
         public string Name { get; set; }
 
@@ -25,54 +28,20 @@ namespace FeltAdmin.Leon
 
         public int SumIn { get; set; }
 
-        public bool Compare(LeonPerson withThis)
+        public LeonFinalRegistration(LeonPerson lp)
         {
-            if (string.Compare(Name.Trim(), withThis.Name.Trim(), StringComparison.InvariantCulture) != 0)
-            {
-                return false;
-            }
-
-            if (string.Compare(ClubName.Trim(), withThis.ClubName.Trim(), StringComparison.InvariantCulture) != 0)
-            {
-                return false;
-            }
-
-            if (string.Compare(Class.Trim(), withThis.Class.Trim(), StringComparison.InvariantCulture) != 0)
-            {
-                return false;
-            }
-
-            if (ShooterId != withThis.ShooterId)
-            {
-                return false;
-            }
-
-            if (Range != withThis.Range)
-            {
-                return false;
-            }
-
-            if (Team != withThis.Team)
-            {
-                return false;
-            }
-
-            if (Target != withThis.Target)
-            {
-                return false;
-            }
-
-            return true;
+            Name = lp.Name;
+            ClubName = lp.ClubName;
+            ShooterId = lp.ShooterId;
+            Class = lp.Class;
+            Range = lp.Range;
+            Team = lp.Team;
+            Target = lp.Target;
+            SumIn = lp.SumIn;
         }
 
-        [XmlIgnore]
-        public string Key
-        {
-            get
-            {
-                return string.Join("+", Range, Team, Target);
-            }
-        }
+        public LeonFinalRegistration()
+        {}
 
         [XmlIgnore]
         public bool IsEmpty
@@ -88,7 +57,7 @@ namespace FeltAdmin.Leon
         {
             get
             {
-                return TableName.LeonRegistration;
+                return TableName.LeonFinalRegistration;
             }
         }
 
@@ -110,10 +79,9 @@ namespace FeltAdmin.Leon
                 return row;
             }
         }
-
-        public static LeonPerson Parse(string keyvaluePairs)
+        public static LeonFinalRegistration Parse(string keyvaluePairs)
         {
-            var result = new LeonPerson();
+            var result = new LeonFinalRegistration();
             var tuples = keyvaluePairs.Split(';');
             foreach (var tuple in tuples)
             {
@@ -126,7 +94,7 @@ namespace FeltAdmin.Leon
                     case "ShooterId":
                         result.ShooterId = int.Parse(keyvaluePair[1].Trim());
                         break;
-                    case "Class":   
+                    case "Class":
                         result.Class = keyvaluePair[1].Trim();
                         break;
                     case "ClubName":
@@ -147,6 +115,21 @@ namespace FeltAdmin.Leon
                 }
             }
 
+            return result;
+        }
+
+        public OrionRegistration GetOrionRegistration(int orionId, int sumIn)
+        {
+            var result = new OrionRegistration();
+            result.ShooterId = ShooterId;
+            result.Class = Class;
+            result.ClubName = ClubName;
+            result.Name = Name;
+            result.OrionId = orionId;
+            result.RangeId = Range;
+            result.SumIn = sumIn;
+            result.Target = Target;
+            result.Team = Team;
             return result;
         }
     }

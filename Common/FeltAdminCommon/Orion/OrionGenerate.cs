@@ -100,6 +100,19 @@ namespace FeltAdmin.Orion
             }
         }
 
+        public static void TransferAllFinaleRegistrations(List<OrionRegistration> orionFinalRegistrations, OrionSetupViewModel orionViewModel)
+        {
+            foreach (var orion in orionViewModel.OrionViewModels)
+            {
+                var allRegistrationsForThisOrion = orionFinalRegistrations.Where(o => o.OrionId == orion.OrionId).OrderBy(o => o.Team).ThenBy(o => o.Target);
+                if (allRegistrationsForThisOrion.Any())
+                {
+                    WriteAllRegistrationsToOrion(orion.CommunicationSetup.SelectedPath, allRegistrationsForThisOrion, orion.OrionId);
+                }
+            }
+
+        }
+
         private static void WriteAllRegistrationsToOrion(string selectedPath, IEnumerable<OrionRegistration> allRegistrationsForThisOrion, int orionId)
         {
             var tmpBasePath = DatabaseApi.GetActiveCompetition();

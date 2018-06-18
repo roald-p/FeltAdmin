@@ -81,5 +81,13 @@ namespace FeltAdmin.Viewmodels
         {
             m_dispatcherTimer.Tick -= m_dispatcherTimer_Tick;
         }
+
+        public void UpdateFinalChangesToOrion(List<OrionRegistration> orionFinalRegistrations)
+        {
+            if (orionFinalRegistrations.Any())
+            {
+                OrionGenerate.TransferAllFinaleRegistrations(orionFinalRegistrations, m_orionSetup);
+            }
+        }
     }
 }

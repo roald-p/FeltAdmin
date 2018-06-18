@@ -272,6 +272,7 @@ namespace FeltAdmin.Viewmodels
                 }
             }
 
+            // Minne
             var minnerange = SortedRanges.Where(r => r.MinneShooting == true);
             {
                 foreach (var rangeViewModel in minnerange)
@@ -295,6 +296,15 @@ namespace FeltAdmin.Viewmodels
                     }
 
                 }
+            }
+
+            // Final shooting
+            var finalOrions = m_orionViewModels.Where(o => o.FinalRange == true);
+            if (finalOrions != null && finalOrions.Count() > 1)
+            {
+                var orionIds = finalOrions.Select(o => o.OrionId);
+                var errorMessage = $"Finale bare stsøttet for en orion og må være dobbelthold på en kommando, orion-id'er med finale: {string.Join(",", orionIds)}";
+                errors.Add(errorMessage);
             }
 
             return errors;

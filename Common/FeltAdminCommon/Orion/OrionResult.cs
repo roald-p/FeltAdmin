@@ -720,5 +720,24 @@ namespace FeltAdmin.Orion
 
             return ValidSeries;
         }
+
+        public List<string> GetFinalSeriesFromDoubleRange()
+        {
+            var result = new List<string>();
+            if (Series != null && Series.Count > 0)
+            {
+                var serie = string.Join("", Series);
+                if (serie.Length <= 6)
+                {
+                    result.Add(serie);
+                    return result;
+                }
+
+                result.Add(serie.Substring(0, 6));
+                result.Add(serie.Substring(6, serie.Length - 6));
+            }
+
+            return result;
+        }
     }
 }

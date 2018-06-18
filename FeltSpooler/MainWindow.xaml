@@ -15,6 +15,7 @@
             <Label Margin="5">Velg database:</Label>
             <TextBox Margin="5" Text="{Binding SelectedPath}" Width="400"/>
             <Button Margin="5" Command="{Binding OpenDbCommand}" Content="..."/>
+            <Button Margin="5" Command="{Binding RestartCommand}" Content="Restart"/>
         </StackPanel>
         <StackPanel Margin="5" Grid.Row="1" DataContext="{Binding}"  Orientation="Horizontal" VerticalAlignment="Top">
             <Label Margin="5">Simuler orion:</Label>
