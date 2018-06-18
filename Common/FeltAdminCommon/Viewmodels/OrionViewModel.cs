@@ -200,7 +200,7 @@ namespace FeltAdmin.Viewmodels
             set
             {
                 m_finalRange = value;
-                OnPropertyChanged(nameof(FinalRange));
+                OnPropertyChanged("FinalRange");
             }
         }
 

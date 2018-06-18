@@ -78,6 +78,7 @@
     <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Properties\PublishProfiles\bos.pubxml" />
     <None Include="Properties\PublishProfiles\FeltAdmin.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

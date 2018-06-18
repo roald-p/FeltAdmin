@@ -303,7 +303,7 @@ namespace FeltAdmin.Viewmodels
             if (finalOrions != null && finalOrions.Count() > 1)
             {
                 var orionIds = finalOrions.Select(o => o.OrionId);
-                var errorMessage = $"Finale bare stsøttet for en orion og må være dobbelthold på en kommando, orion-id'er med finale: {string.Join(",", orionIds)}";
+                var errorMessage = string.Format("Finale bare stsøttet for en orion og må være dobbelthold på en kommando, orion-id'er med finale: {0}", string.Join(",", orionIds));
                 errors.Add(errorMessage);
             }
 
