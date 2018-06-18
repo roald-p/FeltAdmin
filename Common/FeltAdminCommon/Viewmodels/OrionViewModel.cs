@@ -196,7 +196,7 @@ namespace FeltAdmin.Viewmodels
 
         public bool FinalRange
         {
-            get => m_finalRange;
+            get {return m_finalRange; } 
             set
             {
                 m_finalRange = value;
