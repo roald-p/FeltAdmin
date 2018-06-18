@@ -631,14 +631,17 @@ namespace FeltAdmin.Viewmodels
             IEnumerable<LeonPerson> innledende;
             IEnumerable<LeonPerson> finale = null;
             var finalOrion = m_mainOrionViewModel.OrionViewModels.FirstOrDefault(o => o.FinalRange == true);
-            if (finalOrion == null)
+
+            if (finalOrion != null && Leon != null && Leon.LeonPersons != null && Leon.LeonPersons.Any() &&
+                e.NewRegistrations.All(r => Leon.LeonPersons.Select(l => l.ShooterId).Contains(r.ShooterId)))
             {
-                innledende = e.NewRegistrations;
+                var maxTeamNumber = Leon.LeonPersons.Max(l => l.Team);
+                finale = e.NewRegistrations.Where(r => r.Team > 100 && r.Team > maxTeamNumber);
+                innledende = e.NewRegistrations.Where(r => r.Team <= 100 || r.Team <= maxTeamNumber);
             }
             else
             {
-                finale = e.NewRegistrations.Where(r => r.Team > 100);
-                innledende = e.NewRegistrations.Where(r => r.Team <= 100);
+                innledende = e.NewRegistrations;
             }
 
             if (innledende.Any())

@@ -7,7 +7,7 @@
         <OrionId>1</OrionId>
         <RangeViews>
           <RangeViewModel>
-            <RangeType>Range</RangeType>
+            <RangeType>Shooting</RangeType>
             <RangeId>1</RangeId>
             <Name>Minne</Name>
             <FirstTarget>1</FirstTarget>
@@ -20,7 +20,7 @@
             <LastTarget>0</LastTarget>
           </RangeViewModel>
           <RangeViewModel>
-            <RangeType>Range</RangeType>
+            <RangeType>Shooting</RangeType>
             <RangeId>3</RangeId>
             <Name>Hold 1</Name>
             <FirstTarget>5</FirstTarget>
@@ -33,7 +33,7 @@
             <LastTarget>0</LastTarget>
           </RangeViewModel>
           <RangeViewModel>
-            <RangeType>Range</RangeType>
+            <RangeType>Shooting</RangeType>
             <RangeId>5</RangeId>
             <Name>Hold 2</Name>
             <FirstTarget>9</FirstTarget>
@@ -52,7 +52,7 @@
         <OrionId>2</OrionId>
         <RangeViews>
           <RangeViewModel>
-            <RangeType>Range</RangeType>
+            <RangeType>Shooting</RangeType>
             <RangeId>1</RangeId>
             <Name>Hold 3</Name>
             <FirstTarget>1</FirstTarget>
@@ -71,7 +71,7 @@
         <OrionId>3</OrionId>
         <RangeViews>
           <RangeViewModel>
-            <RangeType>Range</RangeType>
+            <RangeType>Shooting</RangeType>
             <RangeId>1</RangeId>
             <Name>Hold 4</Name>
             <FirstTarget>1</FirstTarget>
@@ -90,7 +90,7 @@
         <OrionId>4</OrionId>
         <RangeViews>
           <RangeViewModel>
-            <RangeType>Range</RangeType>
+            <RangeType>Shooting</RangeType>
             <RangeId>1</RangeId>
             <Name>Hold 5</Name>
             <FirstTarget>1</FirstTarget>

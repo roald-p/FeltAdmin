@@ -727,6 +727,10 @@ namespace FeltAdmin.Orion
             if (Series != null && Series.Count > 0)
             {
                 var serie = string.Join("", Series);
+                if (serie.Length == 0)
+                {
+                    return result;
+                }
                 if (serie.Length <= 6)
                 {
                     result.Add(serie);
@@ -734,7 +738,14 @@ namespace FeltAdmin.Orion
                 }
 
                 result.Add(serie.Substring(0, 6));
-                result.Add(serie.Substring(6, serie.Length - 6));
+                if (serie.Length > 12)
+                {
+                    result.Add(serie.Substring(6, 6));
+                }
+                else
+                {
+                    result.Add(serie.Substring(6, serie.Length - 6));
+                }
             }
 
             return result;
