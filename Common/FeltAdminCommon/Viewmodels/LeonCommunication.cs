@@ -73,7 +73,7 @@ namespace FeltAdmin.Viewmodels
             {
                 m_dispatcherTimer = new DispatcherTimer();
                 m_dispatcherTimer.Tick += dispatcherTimer_Tick;
-                m_dispatcherTimer.Interval = new TimeSpan(0, 0, 5);
+                m_dispatcherTimer.Interval = new TimeSpan(0, 0, 2);
                 m_dispatcherTimer.Start();
             }
         }

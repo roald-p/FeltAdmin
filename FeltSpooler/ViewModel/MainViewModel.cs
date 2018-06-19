@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -95,6 +96,20 @@ namespace FeltSpooler.ViewModel
             }
         }
 
+        public bool AutoRun
+        {
+            get
+            {
+                return m_autoRun;
+            }
+
+            set
+            {
+                m_autoRun = value;
+                OnPropertyChanged("AutoRun");
+            }
+        }
+
         public ICommand OpenDbCommand
         {
             get
@@ -164,18 +179,35 @@ namespace FeltSpooler.ViewModel
 
         public bool SimulateOrion { get; set; }
         public bool SimulateLeon { get; set; }
-        private void CopyNextExecute()
+
+        private async void CopyNextExecute()
         {
+            do
+            {
+                var updateFileList = await Task.Run(() => CopyNextFile());
+
+                if (updateFileList)
+                {
+                    m_allFilesList.RemoveAt(0);
+                    this.OnPropertyChanged("AllFilesList");
+                }
+            }
+            while (AutoRun && m_allFilesList != null && m_allFilesList.Any());
+        }
+
+        private bool CopyNextFile()
+        {
+            bool updateFileList = false;
+
             if (m_allFilesList != null && m_allFilesList.Any())
             {
                 var fileinfo = m_allFilesList.First();
                 var fi = new FileInfo(fileinfo.FileName);
                 var name = fi.Name;
-                bool copied = false;
                 if (name.Contains("Leon"))
                 {
                     var path = m_settings.LeonCommunicationSetting.CommunicationSetup.SelectedPath;
-                    copied = CopyFile(path, fileinfo.FileName, LeonFile, LeonUpd);
+                    updateFileList = CopyFile(path, fileinfo.FileName, LeonFile, LeonUpd);
                 }
                 else if (name.Contains("Minne"))
                 {
@@ -183,11 +215,11 @@ namespace FeltSpooler.ViewModel
                     if (range != null)
                     {
                         var path = range.CommunicationSetup.SelectedPath;
-                        copied = CopyFile(path, fileinfo.FileName, LeonFile, LeonUpd);
+                        updateFileList = CopyFile(path, fileinfo.FileName, LeonFile, LeonUpd);
                     }
                     else
                     {
-                        copied = true;
+                        updateFileList = true;
                     }
                 }
                 else if (name.Contains("Orion"))
@@ -201,26 +233,26 @@ namespace FeltSpooler.ViewModel
                             var orion = m_settings.OrionSetting.OrionViewModels.FirstOrDefault(o => o.OrionId == id);
                             if (orion != null)
                             {
-                                string[]  allLines=File.ReadAllLines(fileinfo.FileName);
+                                string[] allLines = File.ReadAllLines(fileinfo.FileName);
                                 SetTeamNumber(allLines);
                                 var path = orion.CommunicationSetup.SelectedPath;
-                                copied = CopyFile(path, fileinfo.FileName, OrionFile, OrionUpd);
+                                updateFileList = CopyFile(path, fileinfo.FileName, OrionFile, OrionUpd);
                             }
                         }
                         else
                         {
-                            m_allFilesList.RemoveAt(0);
-                            this.OnPropertyChanged("AllFilesList");
+                            updateFileList = true;
                         }
                     }
                 }
 
-                if (copied)
+                if (AutoRun)
                 {
-                    m_allFilesList.RemoveAt(0);
-                    this.OnPropertyChanged("AllFilesList");
+                    Thread.Sleep(100);
                 }
             }
+
+            return updateFileList;
         }
 
         private void SetTeamNumber(string[] allLines)
@@ -291,6 +323,7 @@ namespace FeltSpooler.ViewModel
         }
 
         private string m_TeamNumber;
+        private bool m_autoRun;
 
         public string TeamNumber
         {
