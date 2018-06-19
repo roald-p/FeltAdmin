@@ -548,25 +548,23 @@ namespace FeltAdmin.Viewmodels
                     var leonFinalReg = m_leonFinalRegistrations.SingleOrDefault(l => l.ShooterId == finalResult.ShooterId);
                     if (leonFinalReg != null)
                     {
-                        var series = finalResult.GetFinalSeriesFromDoubleRange();
-                        if (series != null && series.Any())
+                        var series = finalResult.GetFinalSerieAsOneRange();
+                        if (!string.IsNullOrWhiteSpace(series))
                         {
-                                var allShots = string.Join(";", series).ToUpper();
+                            var leonLine = string.Format(
+                                "{0};{1};{2};{3};{4};{5};{6};{7};{8};",
+                                leonFinalReg.Range,
+                                leonFinalReg.Team,
+                                leonFinalReg.Target,
+                                leonFinalReg.ShooterId,
+                                leonFinalReg.Name,
+                                leonFinalReg.ClubName,
+                                leonFinalReg.Class,
+                                0,
+                                series);
 
-                                var leonLine = string.Format(
-                                    "{0};{1};{2};{3};{4};{5};{6};{7};{8};",
-                                    leonFinalReg.Range,
-                                    leonFinalReg.Team,
-                                    leonFinalReg.Target,
-                                    leonFinalReg.ShooterId,
-                                    leonFinalReg.Name,
-                                    leonFinalReg.ClubName,
-                                    leonFinalReg.Class,
-                                    0,
-                                    allShots);
-
-                                leonResultsFinal.Add(leonLine);
-                            }
+                            leonResultsFinal.Add(leonLine);
+                        }
                     }
                 }
 

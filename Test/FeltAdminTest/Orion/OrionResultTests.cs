@@ -138,6 +138,107 @@ namespace FeltAdminTest.Orion
             Assert.AreEqual("X*X*0*", result[1]);
         }
 
+        [TestMethod]
+        public void GetFinalSerieAsOneRange_12Shots()
+        {
+            var fromOion = "2;101;4;1234;Hugh Cardiff;Bodø Østre;4;55;*XX0X0XX0XX*";
+            var or = OrionResult.ParseFromOrion(fromOion);
+
+            var result = or.GetFinalSerieAsOneRange();
+
+            Assert.AreEqual("*XX0X0XX0XX*", result);
+        }
+
+        [TestMethod]
+        public void GetFinalSerieAsOneRange_11Shots()
+        {
+            var fromOion = "2;101;4;1234;Hugh Cardiff;Bodø Østre;4;55;*XX0X0XX0XX";
+            var or = OrionResult.ParseFromOrion(fromOion);
+
+            var result = or.GetFinalSerieAsOneRange();
+
+            Assert.AreEqual("*XX0X0XX0XX", result);
+        }
+
+        [TestMethod]
+        public void GetFinalSerieAsOneRange_7Shots()
+        {
+            var fromOion = "2;101;4;1234;Hugh Cardiff;Bodø Østre;4;55;*XX0X0X";
+            var or = OrionResult.ParseFromOrion(fromOion);
+
+            var result = or.GetFinalSerieAsOneRange();
+
+            Assert.AreEqual("*XX0X0X", result);
+        }
+
+        [TestMethod]
+        public void GetFinalSerieAsOneRange_6Shots()
+        {
+            var fromOion = "2;101;4;1234;Hugh Cardiff;Bodø Østre;4;55;*XX0X0";
+            var or = OrionResult.ParseFromOrion(fromOion);
+
+            var result = or.GetFinalSerieAsOneRange();
+
+            Assert.AreEqual("*XX0X0", result);
+        }
+
+        [TestMethod]
+        public void GetFinalSerieAsOneRange_5Shots()
+        {
+            var fromOion = "2;101;4;1234;Hugh Cardiff;Bodø Østre;4;55;*XX0X";
+            var or = OrionResult.ParseFromOrion(fromOion);
+
+            var result = or.GetFinalSerieAsOneRange();
+
+            Assert.AreEqual("*XX0X", result);
+        }
+
+        [TestMethod]
+        public void GetFinalSerieAsOneRange_1Shots()
+        {
+            var fromOion = "2;101;4;1234;Hugh Cardiff;Bodø Østre;4;55;*";
+            var or = OrionResult.ParseFromOrion(fromOion);
+
+            var result = or.GetFinalSerieAsOneRange();
+
+            Assert.AreEqual("*", result);
+        }
+
+        [TestMethod]
+        public void GetFinalSerieAsOneRange_0Shots()
+        {
+            var fromOion = "2;101;4;1234;Hugh Cardiff;Bodø Østre;4;55;";
+            var or = OrionResult.ParseFromOrion(fromOion);
+
+            var result = or.GetFinalSerieAsOneRange();
+
+            Assert.AreEqual("", result);
+        }
+
+        [TestMethod]
+        public void GetFinalSerieAsOneRange_13Shots()
+        {
+            var fromOion = "2;101;4;1234;Hugh Cardiff;Bodø Østre;4;55;X*X*0*X*X*0*X";
+            var or = OrionResult.ParseFromOrion(fromOion);
+
+            var result = or.GetFinalSerieAsOneRange();
+
+            Assert.AreEqual("X*X*0*X*X*0*X", result);
+        }
+        [TestMethod]
+        public void GetFinalSerieAsOneRange_14Shots()
+        {
+            var fromOion = "2;101;4;1234;Hugh Cardiff;Bodø Østre;4;55;X*X*0*X*X*0*XX";
+            var or = OrionResult.ParseFromOrion(fromOion);
+
+            var result = or.GetFinalSerieAsOneRange();
+
+            Assert.AreEqual("X*X*0*X*X*0*XX", result);
+        }
+
+
+
+
         private void AssertResult(
             OrionResult result,
             int orionid,
