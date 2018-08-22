@@ -631,7 +631,7 @@ namespace FeltAdmin.Viewmodels
             var finalOrion = m_mainOrionViewModel.OrionViewModels.FirstOrDefault(o => o.FinalRange == true);
 
             if (finalOrion != null && Leon != null && Leon.LeonPersons != null && Leon.LeonPersons.Any() &&
-                e.NewRegistrations.All(r => Leon.LeonPersons.Select(l => l.ShooterId).Contains(r.ShooterId)))
+                e.NewRegistrations.All(r => r.IsEmpty || Leon.LeonPersons.Select(l => l.ShooterId).Contains(r.ShooterId)))
             {
                 var maxTeamNumber = Leon.LeonPersons.Max(l => l.Team);
                 finale = e.NewRegistrations.Where(r => r.Team > 100 && r.Team > maxTeamNumber);
