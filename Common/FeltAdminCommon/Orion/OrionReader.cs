@@ -6,6 +6,7 @@ using FeltAdmin.Diagnostics;
 using FeltAdmin.FileHandlers;
 using System.Collections.Generic;
 using System.IO;
+using FeltAdmin.Viewmodels;
 
 namespace FeltAdmin.Orion
 {
@@ -38,7 +39,7 @@ namespace FeltAdmin.Orion
             return false;
         }
 
-        public List<OrionResult> GetOrionResult()
+        public List<OrionResult> GetOrionResult(OrionViewModel orionViewModel)
         {
             if (this.CheckForNewFile() == false)
             {
@@ -57,7 +58,7 @@ namespace FeltAdmin.Orion
                     continue;
                 }
 
-                var or = OrionResult.ParseFromOrion(line);
+                var or = OrionResult.ParseFromOrion(line, orionViewModel);
                 id = or.OrionId.ToString();
                 if (or.ShooterId > 0)
                 {

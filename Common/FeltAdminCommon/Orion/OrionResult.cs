@@ -4,7 +4,7 @@ using FeltAdmin.Database.API;
 using FeltAdmin.Diagnostics;
 using System.Collections.Generic;
 using System.Linq;
-
+using FeltAdmin.Helpers;
 using FeltAdmin.Viewmodels;
 
 namespace FeltAdmin.Orion
@@ -517,7 +517,7 @@ namespace FeltAdmin.Orion
 
         }
 
-        public static OrionResult ParseFromOrion(string orionResultLine)
+        public static OrionResult ParseFromOrion(string orionResultLine, OrionViewModel orionViewModel)
         {
             if (string.IsNullOrWhiteSpace(orionResultLine))
             {
@@ -532,9 +532,9 @@ namespace FeltAdmin.Orion
                              Team = TryGetIntFromToken(tokens[1], "Team"),
                              Target = TryGetIntFromToken(tokens[2], "Target"),
                              ShooterId = TryGetIntFromToken(tokens[3], "ShooterId"),
-                             Name = tokens[4],
-                             ClubName = tokens[5],
-                             Class = tokens[6],
+                             Name = tokens[4].Trim(),
+                             ClubName = tokens[5].Trim(),
+                             Class = tokens[6].Trim(),
                              TotalSum = TryGetIntFromToken(tokens[7], "TotalSum")
                          };
 
@@ -544,11 +544,84 @@ namespace FeltAdmin.Orion
 
                 for (int c = 8; c < tokens.Length; c++)
                 {
-                    result.Series.Add(tokens[c]);
+                    if (tokens[c].Contains("#"))
+                    {
+                        ResultType resultType = GetResultType(result, orionViewModel);
+                        result.Series.Add(ParsePegasus(tokens[c], resultType));
+                    }
+                    else
+                    {
+                        result.Series.Add(tokens[c]);
+                    }
                 }
             }
 
             result.AllSeries = string.Join(";", result.Series);
+            return result;
+        }
+
+        private static ResultType GetResultType(OrionResult result, OrionViewModel orionViewModel)
+        {
+            if (orionViewModel == null)
+            {
+                return ResultType.Felt;
+            }
+
+            foreach (var rangeViewModel in orionViewModel.RangeViews)
+            {
+                if (rangeViewModel.FirstTarget >= result.Target && rangeViewModel.LastTarget <= result.Target)
+                {
+                    return rangeViewModel.ResultType;
+                }
+            }
+
+            return ResultType.Felt;
+        }
+
+        private static string ParsePegasus(string serie, ResultType resultType)
+        {
+            string result = string.Empty;
+            var shots = serie.Split('#');
+            foreach (var shot in shots)
+            {
+                if (string.IsNullOrWhiteSpace(shot))
+                {
+                    continue;
+                }
+
+                if (shot.StartsWith("*"))
+                {
+                    result += "*";
+                }
+                else if (shot.ToLower().StartsWith("x"))
+                {
+                    result += "X";
+                }
+                else
+                {
+                    var number = shot[0].ToString();
+                    int value;
+                    if (int.TryParse(number, out value))
+                    {
+                        if (resultType == ResultType.Felt)
+                        {
+                            if (value > 0)
+                            {
+                                result += "X";
+                            }
+                            else
+                            {
+                                result += "0";
+                            }
+                        }
+                        else
+                        {
+                            result += number;
+                        }
+                    }
+                }
+            }
+
             return result;
         }
 

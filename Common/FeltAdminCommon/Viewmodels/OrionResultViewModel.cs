@@ -59,7 +59,7 @@ namespace FeltAdmin.Viewmodels
                 {
                     var path = orionViewModel.CommunicationSetup.SelectedPath;
                     var reader = new OrionReader(path);
-                    var newResultsForThisOrion = reader.GetOrionResult();
+                    var newResultsForThisOrion = reader.GetOrionResult(orionViewModel);
                     if (newResultsForThisOrion != null && newResultsForThisOrion.Any())
                     {
                         newResults.AddRange(newResultsForThisOrion);
