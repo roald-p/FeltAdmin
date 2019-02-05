@@ -40,11 +40,12 @@ namespace FeltAdmin
 
             var fileAppsender = new FileAppender(logfile, enumLowestTrace, LoggingLevels.Trace);
             Log.AddAppender(fileAppsender);
-            //if (!LisensChecker.Validate(Skytterlag, DateTime.Now, Lisens))
-            //{
-            //    Log.Error("Lisens not valid for {0}", Skytterlag);
-            //    Application.Current.Shutdown();
-            //}
+            if (!LisensChecker.Validate(Skytterlag, DateTime.Now, Lisens))
+            {
+                Log.Error("Lisens not valid for {0}", Skytterlag);
+                System.Windows.Forms.MessageBox.Show(string.Format("Lisens ikke gyldig eller gått ut på dato for {0}", Skytterlag));
+                Application.Current.Shutdown();
+            }
 
             Log.Info("FeltAdmin started");
 
