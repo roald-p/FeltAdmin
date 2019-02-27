@@ -3,7 +3,7 @@ using System.IO;
 using System.Windows.Documents;
 using System.Windows.Forms.VisualStyles;
 
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Input;

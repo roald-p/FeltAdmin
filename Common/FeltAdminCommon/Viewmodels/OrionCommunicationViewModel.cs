@@ -5,7 +5,7 @@ using System.Windows.Documents;
 using System.Windows.Threading;
 
 using FeltAdmin.Orion;
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
 using System.Windows.Input;
 
 namespace FeltAdmin.Viewmodels

@@ -13,8 +13,7 @@ using FeltAdmin.Database.Engine;
 using FeltAdmin.Diagnostics;
 
 using FeltAdminCommon.Viewmodels;
-
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace FeltAdmin.Viewmodels

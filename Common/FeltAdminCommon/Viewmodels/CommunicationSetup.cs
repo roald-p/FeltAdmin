@@ -6,10 +6,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using Prism.Commands;
 
 using FeltAdmin.Helpers;
-
-using Microsoft.Practices.Prism.Commands;
 
 namespace FeltAdmin.Viewmodels
 {

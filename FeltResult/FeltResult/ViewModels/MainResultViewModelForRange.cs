@@ -13,7 +13,7 @@ using FeltAdminServer.Data;
 
 using FeltResult.Comparer;
 
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
 
 namespace FeltResult.ViewModels
 {

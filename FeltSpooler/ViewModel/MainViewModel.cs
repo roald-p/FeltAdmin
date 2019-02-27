@@ -13,7 +13,7 @@ using FeltAdmin.Database.Engine;
 using FeltAdmin.Helpers;
 using FeltAdmin.Viewmodels;
 
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
 
 namespace FeltSpooler.ViewModel
 {

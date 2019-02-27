@@ -11,7 +11,7 @@ using FeltAdmin.Orion;
 
 using FeltAdminCommon.Leon;
 
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
 using System.Windows.Input;
 
 
