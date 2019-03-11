@@ -233,5 +233,9 @@ namespace FeltAdmin.Database.Engine
             return m_templatePath;
         }
         
+        public static string GetDatabaseBasePath()
+        {
+            return m_databaseBasePath;
+        }
     }
 }

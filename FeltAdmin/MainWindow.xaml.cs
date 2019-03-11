@@ -9,7 +9,7 @@ namespace FeltAdmin
     using System.IO;
     using System.Security.Cryptography;
     using System.Text;
-
+    using System.Threading;
     using FeltAdminCommon.Lisens;
 
     /// <summary>
@@ -17,11 +17,22 @@ namespace FeltAdmin
     /// </summary>
     public partial class MainWindow : Window
     {
+        private static Mutex singleton;
         public MainWindow()
         {
             var model = this.InitViewModels();
             this.DataContext = model;
             this.InitializeComponent();
+            var databaseBasePath = ConfigurationLoader.GetAppSettingsValue("DatabasePath");
+            var databasepathwithoutslash = databaseBasePath.Replace('\\','_');
+            singleton = new Mutex(true, databasepathwithoutslash);
+            if (!singleton.WaitOne(TimeSpan.Zero, true))
+            {
+                //there is already another instance running!
+                Log.Error($"En annen prosess kjører allerede på samme konfigurasjon {databaseBasePath}");
+                System.Windows.Forms.MessageBox.Show($"En annen prosess kjører allerede på samme konfigurasjon {databaseBasePath}. Bare en instans kan kjøre samtidig", "FEIL. En annen prosess kjører allerede", System.Windows.Forms.MessageBoxButtons.OK);
+                Application.Current.Shutdown();
+            }
 
             var logfile = ConfigurationLoader.GetAppSettingsValue("LogFile");
 
@@ -43,6 +54,7 @@ namespace FeltAdmin
             if (!LisensChecker.Validate(Skytterlag, DateTime.Now, Lisens))
             {
                 Log.Error("Lisens not valid for {0}", Skytterlag);
+                System.Windows.Forms.MessageBox.Show($"Lisens ikke gyldig for {Skytterlag}", "FEIL. Lisenssjekk", System.Windows.Forms.MessageBoxButtons.OK);
                 Application.Current.Shutdown();
             }
 
