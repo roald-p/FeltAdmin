@@ -7,6 +7,8 @@ using FeltAdmin.FileHandlers;
 using System.Collections.Generic;
 using System.IO;
 using FeltAdmin.Viewmodels;
+using FeltAdmin.Database.API;
+using FeltAdminCommon.Orion;
 
 namespace FeltAdmin.Orion
 {
@@ -51,6 +53,13 @@ namespace FeltAdmin.Orion
             var allLines = m_fileHandler.ReadAllLines(filename);
             var id = "NoId";
             var result = new List<OrionResult>();
+
+            List<OrionNewTarget> pathTargets = null;
+            if (allLines != null && allLines.Count > 0)
+            {
+                pathTargets = GetPatchTargets();                
+            }
+
             foreach (var line in allLines)
             {
                 if (string.IsNullOrWhiteSpace(line))
@@ -62,6 +71,7 @@ namespace FeltAdmin.Orion
                 id = or.OrionId.ToString();
                 if (or.ShooterId > 0)
                 {
+                    PatchOrion(or, pathTargets);
                     DatabaseApi.Save(or);
                     result.Add(or);
                 }
@@ -83,6 +93,45 @@ namespace FeltAdmin.Orion
             catch (Exception ex)
             {
                 Log.Error(ex, "Unable to move to backup: " + filename);
+            }
+
+            return result;
+        }
+
+        private void PatchOrion(OrionResult or, List<OrionNewTarget> pathTargets)
+        {
+            var patch = pathTargets.FirstOrDefault(p => p.NewOrionId == or.OrionId && p.NewTarget == or.Target);
+            if (patch != null)
+            {
+                or.OrionId = patch.OriginalOrionId;
+                or.Target = patch.OriginalTarget;
+            }
+        }
+
+        private List<OrionNewTarget> GetPatchTargets()
+        {
+            var allTouples = DatabaseApi.LoadCompetitionFromTable(TableName.OrionNewTarget);
+            if (allTouples == null || !allTouples.Any())
+            {
+                return new List<OrionNewTarget>();
+            }
+
+            var allTargetPatches = allTouples.OfType<OrionNewTarget>().ToList();
+            var result = new List<OrionNewTarget>();
+            foreach(var patch in allTargetPatches)
+            {
+                var toRemove = result.FirstOrDefault(r => r.OriginalOrionId == patch.OriginalOrionId && r.OriginalTarget == patch.OriginalTarget);
+                if (toRemove != null)
+                {
+                    result.Remove(toRemove);
+                }
+
+                if (patch.OriginalOrionId == patch.NewOrionId && patch.OriginalTarget == patch.NewTarget)
+                {
+                    continue;
+                }
+
+                result.Add(patch);
             }
 
             return result;

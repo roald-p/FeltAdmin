@@ -13,6 +13,7 @@ using FeltAdmin.Leon;
 using FeltAdmin.Orion;
 
 using FeltAdminCommon.Leon;
+using FeltAdminCommon.Orion;
 
 namespace FeltAdmin.Database.Engine
 {
@@ -190,6 +191,9 @@ namespace FeltAdmin.Database.Engine
                         break;
                     case TableName.FinishedShooter:
                         result.Add(FinishedPerson.Parse(line));
+                        break;
+                    case TableName.OrionNewTarget:
+                        result.Add(OrionNewTarget.Parse(line));
                         break;
                 }
             }

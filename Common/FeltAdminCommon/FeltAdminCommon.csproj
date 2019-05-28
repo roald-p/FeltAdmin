@@ -82,6 +82,7 @@
     <Compile Include="Lisens\Lisens.cs" />
     <Compile Include="Orion\MoveEventArgs.cs" />
     <Compile Include="Orion\OrionGenerate.cs" />
+    <Compile Include="Orion\OrionNewTarget.cs" />
     <Compile Include="Orion\OrionReader.cs" />
     <Compile Include="Orion\OrionRegistration.cs" />
     <Compile Include="Orion\OrionResult.cs" />
