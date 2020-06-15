@@ -231,14 +231,20 @@ namespace FeltAdmin.Leon
                 return;
             }
 
-            if (HasUPD(m_minnePath))
+            if (!string.IsNullOrWhiteSpace(m_minnePath))
             {
-                return;
+                if (HasUPD(m_minnePath))
+                {
+                    return;
+                }
             }
 
             if (CheckTmpFile(feltPath, feltTempDir) == false)
             {
-                CheckTmpFile(m_minnePath, minneTempDir);
+                if (!string.IsNullOrWhiteSpace(m_minnePath))
+                {
+                    CheckTmpFile(m_minnePath, minneTempDir);
+                }
             }
         }
 

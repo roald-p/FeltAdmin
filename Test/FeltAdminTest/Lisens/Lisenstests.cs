@@ -11,9 +11,8 @@ namespace FeltAdminTest.Lisens
         [TestMethod]
         public void TestMethod1()
         {
-            var lisens = LisensChecker.GenerateLisens("Bodø-Østre Skytterlag", new DateTime(2030, 06, 30));
-
-            Assert.IsTrue(LisensChecker.Validate("Bodø-Østre Skytterlag", DateTime.Now, lisens));
+            var lisens = LisensChecker.GenerateLisens("Overhalla Skytterlag", new DateTime(2021, 08, 23));
+            Assert.IsTrue(LisensChecker.Validate("Overhalla Skytterlag", DateTime.Now, lisens));
         }
     }
 }
