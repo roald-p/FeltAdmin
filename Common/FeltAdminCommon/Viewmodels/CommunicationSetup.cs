@@ -8,8 +8,7 @@ using System.Windows.Forms;
 using System.Windows.Input;
 
 using FeltAdmin.Helpers;
-
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
 
 namespace FeltAdmin.Viewmodels
 {

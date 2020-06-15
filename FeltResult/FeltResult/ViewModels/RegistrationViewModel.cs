@@ -14,8 +14,7 @@ using FeltAdminCommon;
 using FeltAdminServer.Data;
 
 using FeltResult.StartHandling;
-
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
 
 namespace FeltResult.ViewModels
 {

@@ -11,7 +11,6 @@ using FeltAdmin.Orion;
 
 using FeltAdminCommon.Leon;
 
-using Microsoft.Practices.Prism.Commands;
 using System.Windows.Input;
 
 
@@ -23,6 +22,7 @@ namespace FeltAdmin.Viewmodels
     using System.Windows.Forms;
 
     using FeltAdmin.Diagnostics;
+    using Prism.Commands;
 
     public class MainViewModel : ViewModelBase
     {

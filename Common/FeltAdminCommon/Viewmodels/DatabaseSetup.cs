@@ -14,12 +14,12 @@ using FeltAdmin.Diagnostics;
 
 using FeltAdminCommon.Viewmodels;
 
-using Microsoft.Practices.Prism.Commands;
 using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace FeltAdmin.Viewmodels
 {
     using FeltAdmin.Helpers;
+    using Prism.Commands;
 
     public class DatabaseSetup : ViewModelBase
     {

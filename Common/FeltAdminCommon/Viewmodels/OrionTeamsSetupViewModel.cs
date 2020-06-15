@@ -5,8 +5,7 @@ using FeltAdmin.Leon;
 using FeltAdmin.Orion;
 
 using FeltAdminCommon.Orion;
-
-using Microsoft.Practices.Prism.Commands;
+using Prism.Commands;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
