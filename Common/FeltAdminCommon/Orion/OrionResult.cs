@@ -569,7 +569,7 @@ namespace FeltAdmin.Orion
 
             foreach (var rangeViewModel in orionViewModel.RangeViews)
             {
-                if (rangeViewModel.FirstTarget >= result.Target && rangeViewModel.LastTarget <= result.Target)
+                if (result.Target >= rangeViewModel.FirstTarget && result.Target <= rangeViewModel.LastTarget)
                 {
                     return rangeViewModel.ResultType;
                 }
